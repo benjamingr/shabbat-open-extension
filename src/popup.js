@@ -68,8 +68,8 @@
       // Header line: is it Shabbat now?
       const nowEl = document.getElementById("shabbat-now");
       nowEl.textContent = win.active
-        ? "כעת שבת בישראל · יציאה " + L.formatTimeIL(win.end)
-        : "כניסת שבת הקרובה: " + L.formatTimeIL(win.start);
+        ? "כעת שבת בישראל"
+        : "מסמן אתרים ישראליים שסגורים בשבת";
 
       chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
         const tab = tabs[0];

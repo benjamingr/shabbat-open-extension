@@ -62,11 +62,7 @@
 
     const sub = document.createElement("div");
     sub.className = "scb-sub";
-    const bits = [L.STATUS_LABEL_HE[site.status] || "שומר שבת"];
-    if (!win.active && win.start) {
-      bits.push("כניסת שבת הקרובה " + L.formatTimeIL(win.start));
-    }
-    sub.textContent = bits.join(" · ");
+    sub.textContent = L.STATUS_LABEL_HE[site.status] || "שומר שבת";
 
     text.appendChild(headline);
     text.appendChild(sub);

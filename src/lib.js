@@ -188,16 +188,6 @@
     return rank >= min;
   }
 
-  function formatTimeIL(date) {
-    if (!date) return "";
-    return new Intl.DateTimeFormat("he-IL", {
-      timeZone: REF_TZ,
-      weekday: "short",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(date);
-  }
-
   globalThis.ShabbatLib = {
     DEFAULTS,
     sunsetUTC,
@@ -206,7 +196,6 @@
     matchSite,
     isStrong,
     meetsConfidence,
-    formatTimeIL,
     STATUS_LABEL_HE,
     CONFIDENCE_LABEL_HE,
     CONFIDENCE_RANK,

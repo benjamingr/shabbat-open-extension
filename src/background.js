@@ -50,13 +50,10 @@ async function updateBadge(tabId, url) {
   });
 
   const statusHe = L.STATUS_LABEL_HE[site.status] || "שומר שבת";
-  const timing = win.active
-    ? "כעת שבת בישראל"
-    : "כניסת שבת הקרובה " + L.formatTimeIL(win.start);
-  chrome.action.setTitle({
-    tabId,
-    title: `${site.name} — ${statusHe}\n${timing}`,
-  });
+  const title = win.active
+    ? `${site.name} — ${statusHe}\nכעת שבת בישראל`
+    : `${site.name} — ${statusHe}`;
+  chrome.action.setTitle({ tabId, title });
 }
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
