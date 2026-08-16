@@ -35,8 +35,9 @@ script's `matches` are generated from the list, not `<all_urls>`.
 - **Extension enabled** — master on/off.
 
 The banner always shows on a listed site. Shabbat times are computed internally
-(Jerusalem sunset, 30 min before / 40 min after) only to color the "currently
-Shabbat" cue and the popup's next-entry line — there's no timing to configure.
+(Jerusalem sunset, 30 min before / 40 min after) only to drive the "currently
+Shabbat" cue (banner tint, gold badge, popup indicator) — there's no timing to
+configure.
 
 ## The data
 
