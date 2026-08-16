@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../src/popup.css" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1280px;height:800px;overflow:hidden}
+  .slide{width:1280px;height:800px;position:relative;overflow:hidden;
+    font-family:"Assistant","Heebo","Segoe UI",system-ui,Arial,sans-serif;
+    background:radial-gradient(1200px 700px at 25% -10%,#4a3a80,#2a2350 55%,#191331);
+    color:#f6f1dd;direction:rtl;display:flex;align-items:center;justify-content:space-around;padding:0 70px}
+  .copy{max-width:480px}
+  .eyebrow{font-size:16px;letter-spacing:.16em;font-weight:800;color:#e6c14a;margin-bottom:14px}
+  h1{font-size:48px;font-weight:800;line-height:1.15;margin-bottom:18px}
+  ul{list-style:none;font-size:20px;line-height:1.9;opacity:.9}
+  li{padding-right:34px;position:relative}
+  li::before{content:"✓";position:absolute;right:0;color:#7fd6a0;font-weight:800}
+  .popupframe{width:336px;background:var(--bg);border-radius:16px;overflow:hidden;
+    box-shadow:0 40px 90px rgba(0,0,0,.6);transform:scale(1.28);transform-origin:center}
+  /* keep the popup in its light theme regardless of OS */
+  .popupframe{color-scheme:light}
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="copy">
+    <div class="eyebrow">הפופ־אפ של ההרחבה</div>
+    <h1>כל המידע<br>במבט אחד</h1>
+    <ul>
+      <li>סטטוס האתר: סגור בשבת או מצהיר בלבד</li>
+      <li>רמת ודאות + קישור למקור/עדות</li>
+      <li>חיווי "כעת שבת" וזמן כניסת שבת</li>
+      <li>בחירת סמל התראה: ⚠️ או 🕯️</li>
+    </ul>
+  </div>
+
+  <div class="popupframe">
+    <header class="hdr">
+      <span class="flame">🕯️</span>
+      <div class="hdr-txt">
+        <h1>סגור בשבת</h1>
+        <div class="hdr-sub">כניסת שבת הקרובה: יום ו׳ 18:46</div>
+      </div>
+    </header>
+    <section class="status">
+      <div class="status-body">
+        <div class="site-name">אור־עד תאורה</div>
+        <div class="status-line">האתר נחסם לגלישה בשבת</div>
+        <div class="pill-row">
+          <span class="pill closed">סגור בשבת</span>
+          <span class="pill confidence">מאומת</span>
+        </div>
+        <a class="evidence">מקור / עדות</a>
+      </div>
+    </section>
+    <section class="settings">
+      <h2 class="section-title">הגדרות</h2>
+      <div class="field">
+        <div class="field-head"><label>סמל ההתראה</label></div>
+        <select><option>⚠️ משולש אזהרה</option></select>
+        <p class="hint">⚠️ שימו לב · האתר סגור בשבת ⚠️</p>
+      </div>
+      <div class="field">
+        <div class="field-head"><label>סף ודאות מינימלי</label></div>
+        <select><option>בינוני ומעלה — כל האתרים</option></select>
+      </div>
+      <div class="field switch-field">
+        <label>הרחבה פעילה</label>
+        <label class="switch"><input type="checkbox" checked><span class="track"><span class="thumb"></span></span></label>
+      </div>
+    </section>
+  </div>
+</div>
+</body>
+</html>

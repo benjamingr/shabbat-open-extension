@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1280px;height:800px;overflow:hidden}
+  .slide{width:1280px;height:800px;position:relative;overflow:hidden;
+    font-family:"Assistant","Heebo","Segoe UI",system-ui,Arial,sans-serif;
+    background:radial-gradient(1400px 700px at 70% -15%,#4a3a80,#2a2350 55%,#191331);
+    color:#f6f1dd;direction:rtl;display:flex;flex-direction:column;align-items:center}
+  .head{display:flex;align-items:center;gap:16px;margin-top:52px}
+  .head img{width:60px;height:60px;border-radius:14px}
+  .head .txt h1{font-size:40px;font-weight:800;line-height:1.1}
+  .head .txt .sub{font-size:19px;opacity:.82;margin-top:4px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:34px;width:1120px}
+  .chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;
+    padding:14px 16px;display:flex;align-items:center;gap:12px}
+  .chip .dot{width:11px;height:11px;border-radius:50%;flex:0 0 auto}
+  .chip .n{font-weight:700;font-size:17px}
+  .chip .c{font-size:13px;opacity:.7;margin-top:2px}
+  .legend{margin-top:26px;display:flex;gap:26px;font-size:15px;opacity:.85}
+  .legend span{display:inline-flex;align-items:center;gap:8px}
+  .legend .dot{width:11px;height:11px;border-radius:50%}
+  .g{background:#2fbf6b}.y{background:#e6c14a}
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="head">
+    <img src="../icons/icon128.png" alt="" />
+    <div class="txt">
+      <h1>45 אתרים ישראליים — כולם אומתו ידנית</h1>
+      <div class="sub">רשימה שנבדקה אתר־אתר, ומתעדכנת. מסחר, אופנה, יודאיקה, חשמל, מזון ועוד.</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="chip"><span class="dot y"></span><div><div class="n">אור־עד תאורה</div><div class="c">תאורה · נחסם בשבת</div></div></div>
+    <div class="chip"><span class="dot y"></span><div><div class="n">הייטקסטור</div><div class="c">חשמל ואלקטרוניקה · נחסם בשבת</div></div></div>
+    <div class="chip"><span class="dot y"></span><div><div class="n">אצל מישל</div><div class="c">כלי בית · נחסם בשבת</div></div></div>
+    <div class="chip"><span class="dot y"></span><div><div class="n">פורור</div><div class="c">אופנת גברים · נחסם בשבת</div></div></div>
+    <div class="chip"><span class="dot y"></span><div><div class="n">פלייבקול</div><div class="c">מוזיקה · נחסם בשבת</div></div></div>
+    <div class="chip"><span class="dot y"></span><div><div class="n">אופני דניאל</div><div class="c">אופניים · נחסם בשבת</div></div></div>
+    <div class="chip"><span class="dot y"></span><div><div class="n">נמון</div><div class="c">אופנה · נחסם בשבת</div></div></div>
+    <div class="chip"><span class="dot y"></span><div><div class="n">רויה — יוקרה יהודית</div><div class="c">יודאיקה · נחסם בשבת</div></div></div>
+    <div class="chip"><span class="dot y"></span><div><div class="n">נובו קייקס</div><div class="c">מאפייה · נחסם בשבת</div></div></div>
+    <div class="chip"><span class="dot g"></span><div><div class="n">פיצפונים</div><div class="c">מוצרי תינוקות · שומר שבת</div></div></div>
+    <div class="chip"><span class="dot g"></span><div><div class="n">טרקלין חשמל</div><div class="c">מוצרי חשמל · שומר שבת</div></div></div>
+    <div class="chip"><span class="dot g"></span><div><div class="n">בייבי ליין</div><div class="c">מוצרי תינוקות · שומר שבת</div></div></div>
+  </div>
+
+  <div class="legend">
+    <span><span class="dot y"></span> חסימה/סגירה בפועל בשבת</span>
+    <span><span class="dot g"></span> מצהיר ששומר שבת</span>
+  </div>
+</div>
+</body>
+</html>

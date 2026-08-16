@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../src/banner.css" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1400px;height:560px;overflow:hidden}
+  .slide{width:1400px;height:560px;overflow:hidden;
+    font-family:"Assistant","Heebo","Segoe UI",system-ui,Arial,sans-serif;
+    background:radial-gradient(1400px 800px at 78% -25%,#4a3a80,#2a2350 55%,#191331);
+    color:#f6f1dd;direction:rtl;display:flex;align-items:center;justify-content:space-between;padding:0 90px;gap:60px}
+  .left{flex:0 0 560px}
+  .brand{display:flex;align-items:center;gap:18px;margin-bottom:22px}
+  .brand img{width:88px;height:88px;border-radius:20px;box-shadow:0 16px 40px rgba(0,0,0,.45)}
+  .brand h1{font-size:56px;font-weight:800}
+  .tag{font-size:26px;line-height:1.4;opacity:.9}
+  .pills{margin-top:26px;display:flex;gap:12px}
+  .pill{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:8px 16px;font-size:16px;font-weight:600}
+  .right{flex:1;display:flex;flex-direction:column;gap:16px;align-items:stretch}
+  .winbar{height:38px;background:#e9e9f0;border-radius:12px 12px 0 0;display:flex;align-items:center;gap:7px;padding:0 14px;direction:ltr}
+  .winbar .dot{width:11px;height:11px;border-radius:50%}
+  .mock{border-radius:14px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.5)}
+  #shabbat-closed-banner.shabbat-closed-banner{position:static;animation:none;box-shadow:none;font-size:17px}
+  #shabbat-closed-banner .scb-headline{font-size:19px}
+  .body{background:#fff;height:120px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:16px}
+  .card{border:1px solid #eee;border-radius:10px;background:#fafafa}
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="left">
+    <div class="brand">
+      <img src="../icons/icon128.png" alt="" />
+      <h1>סגור בשבת</h1>
+    </div>
+    <div class="tag">באנר ברור בראש אתרי מסחר ישראליים שומרי שבת — כדי שתדעו עוד לפני שאתם מנסים להזמין.</div>
+    <div class="pills">
+      <span class="pill">45 אתרים מאומתים</span>
+      <span class="pill">חיווי זמן שבת</span>
+      <span class="pill">פרטיות מלאה</span>
+    </div>
+  </div>
+  <div class="right">
+    <div class="mock">
+      <div class="winbar"><span class="dot" style="background:#ff5f57"></span><span class="dot" style="background:#febc2e"></span><span class="dot" style="background:#28c840"></span></div>
+      <div id="shabbat-closed-banner" class="shabbat-closed-banner" dir="rtl">
+        <div class="scb-text">
+          <div class="scb-headline">⚠️ שימו לב · האתר סגור בשבת ⚠️</div>
+          <div class="scb-sub">האתר נחסם לגלישה בשבת · כניסת שבת הקרובה יום ו׳ 18:46</div>
+        </div>
+        <div class="scb-spacer"></div>
+        <div class="scb-actions"><a class="scb-link">מקור</a><button class="scb-close">✕</button></div>
+      </div>
+      <div class="body"><div class="card"></div><div class="card"></div><div class="card"></div></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

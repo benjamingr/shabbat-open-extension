@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="../src/banner.css" />
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{width:1280px;height:800px;overflow:hidden}
+  .slide{width:1280px;height:800px;position:relative;overflow:hidden;
+    font-family:"Assistant","Heebo","Segoe UI",system-ui,Arial,sans-serif;
+    background:radial-gradient(1400px 700px at 72% -15%,#4a3a80,#2a2350 55%,#191331);
+    color:#f6f1dd;direction:rtl;display:flex;flex-direction:column;align-items:center}
+  .eyebrow{margin-top:60px;font-size:16px;letter-spacing:.16em;font-weight:800;color:#e6c14a}
+  h1{font-size:46px;font-weight:800;margin:12px 40px 8px;text-align:center;line-height:1.15}
+  .sub{font-size:21px;opacity:.82;margin-bottom:30px;text-align:center;max-width:940px;padding:0 40px}
+  .window{width:1060px;border-radius:16px;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.55);background:#fff}
+  .winbar{height:44px;background:#e9e9f0;display:flex;align-items:center;gap:8px;padding:0 16px;direction:ltr}
+  .winbar .dot{width:12px;height:12px;border-radius:50%}
+  .winbar .addr{margin-left:14px;background:#fff;border-radius:8px;height:27px;flex:1;max-width:560px;
+    display:flex;align-items:center;padding:0 12px;color:#555;font-size:13px}
+  #shabbat-closed-banner.shabbat-closed-banner{position:static;animation:none;box-shadow:none}
+  .store-head{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;background:#fff;border-bottom:1px solid #eee}
+  .store-head .logo{font-weight:800;font-size:22px;color:#222}
+  .store-head .nav{display:flex;gap:22px;color:#777;font-size:15px}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;padding:24px 28px 30px;background:#fafafa}
+  .card{background:#fff;border:1px solid #eee;border-radius:12px;overflow:hidden}
+  .card .img{height:118px;background:linear-gradient(135deg,#ede9f5,#dbd1ee)}
+  .card .b{padding:12px}
+  .card .t{height:10px;background:#e6e6ea;border-radius:5px;width:82%}
+  .card .p{height:13px;background:#d8c9a0;border-radius:6px;width:42%;margin-top:9px}
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="eyebrow">סגור בשבת · CLOSED ON SHABBAT</div>
+  <h1>דעו מראש אילו אתרים סגורים בשבת</h1>
+  <div class="sub">באנר ברור בראש כל אתר מסחר ישראלי שומר שבת — לפני שאתם מנסים להזמין.</div>
+  <div class="window">
+    <div class="winbar">
+      <span class="dot" style="background:#ff5f57"></span>
+      <span class="dot" style="background:#febc2e"></span>
+      <span class="dot" style="background:#28c840"></span>
+      <div class="addr">🔒 www.or-ad.com</div>
+    </div>
+    <div id="shabbat-closed-banner" class="shabbat-closed-banner" dir="rtl">
+      <div class="scb-text">
+        <div class="scb-headline">⚠️ שימו לב · האתר סגור בשבת ⚠️</div>
+        <div class="scb-sub">האתר נחסם לגלישה בשבת · כניסת שבת הקרובה יום ו׳ 18:46</div>
+      </div>
+      <div class="scb-spacer"></div>
+      <div class="scb-actions">
+        <a class="scb-link">מקור</a>
+        <button class="scb-close">✕</button>
+      </div>
+    </div>
+    <div class="store-head">
+      <div class="logo">אור־עד תאורה</div>
+      <div class="nav"><span>בית</span><span>מנורות</span><span>גופי תאורה</span><span>מבצעים</span></div>
+    </div>
+    <div class="grid">
+      <div class="card"><div class="img"></div><div class="b"><div class="t"></div><div class="p"></div></div></div>
+      <div class="card"><div class="img"></div><div class="b"><div class="t"></div><div class="p"></div></div></div>
+      <div class="card"><div class="img"></div><div class="b"><div class="t"></div><div class="p"></div></div></div>
+      <div class="card"><div class="img"></div><div class="b"><div class="t"></div><div class="p"></div></div></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
