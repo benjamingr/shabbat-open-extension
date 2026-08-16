@@ -134,4 +134,5 @@ so DST is handled automatically.
 | `scripts/build-data.mjs` | Regenerates `sites.js` + manifest matches |
 | `scripts/merge-candidates.mjs` | Merge verified new sites into `sites.json` |
 | `scripts/make-icons.mjs` | Regenerate the PNG icons |
-| `_preview/` | Dev-only popup/banner previews (not shipped) |
+| `dev-preview/` | Dev-only popup/banner previews (not shipped) |
+| `dev-store/` | Dev-only store screenshot/promo slides (not shipped) |
