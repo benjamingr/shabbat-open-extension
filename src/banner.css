@@ -1,0 +1,125 @@
+/* Injected on listed sites. Everything is scoped under #shabbat-closed-banner
+   and uses !important selectively so host-page CSS can't distort the banner. */
+
+#shabbat-closed-banner.shabbat-closed-banner {
+  position: fixed;
+  top: 0;
+  inset-inline: 0;
+  z-index: 2147483647; /* above virtually everything */
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 10px clamp(12px, 4vw, 28px);
+  font-family: "Assistant", "Segoe UI", system-ui, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.35;
+  text-align: right;
+  color: #241f10;
+  background: linear-gradient(90deg, #f7edc9 0%, #efdca4 100%);
+  border: none;
+  border-bottom: 2px solid #c9a227;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.16);
+  direction: rtl;
+  animation: scb-drop 0.28s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+/* Active state = it is currently Shabbat in Israel: dusk palette. */
+#shabbat-closed-banner.shabbat-closed-banner.is-active {
+  color: #f6f1dd;
+  background: linear-gradient(90deg, #241d47 0%, #3a2d6b 60%, #4a3a80 100%);
+  border-bottom-color: #e6c14a;
+}
+
+#shabbat-closed-banner .scb-text {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+#shabbat-closed-banner .scb-headline {
+  margin: 0;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+}
+#shabbat-closed-banner .scb-sub {
+  margin-top: 2px;
+  font-size: 12.5px;
+  font-weight: 500;
+  opacity: 0.82;
+}
+
+#shabbat-closed-banner .scb-spacer {
+  flex: 1 1 auto;
+}
+
+#shabbat-closed-banner .scb-actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+#shabbat-closed-banner .scb-link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-size: 12.5px;
+  font-weight: 600;
+  opacity: 0.85;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+#shabbat-closed-banner .scb-link:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.08);
+}
+#shabbat-closed-banner.is-active .scb-link:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+#shabbat-closed-banner .scb-close {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 15px;
+  line-height: 1;
+  padding: 6px 8px;
+  border-radius: 6px;
+  opacity: 0.65;
+}
+#shabbat-closed-banner .scb-close:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.1);
+}
+#shabbat-closed-banner.is-active .scb-close:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+@media (max-width: 560px) {
+  #shabbat-closed-banner.shabbat-closed-banner {
+    gap: 10px;
+    padding: 9px 14px;
+  }
+  #shabbat-closed-banner .scb-headline {
+    font-size: 15px;
+  }
+  #shabbat-closed-banner .scb-sub {
+    font-size: 11.5px;
+  }
+}
+
+@keyframes scb-drop {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #shabbat-closed-banner.shabbat-closed-banner {
+    animation: none !important;
+  }
+}

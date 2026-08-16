@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="popup.css" />
+    <title>סגור בשבת</title>
+  </head>
+  <body>
+    <header class="hdr">
+      <span class="flame" aria-hidden="true">🕯️</span>
+      <div class="hdr-txt">
+        <h1>סגור בשבת</h1>
+        <div class="hdr-sub" id="shabbat-now">—</div>
+      </div>
+    </header>
+
+    <!-- Current site status -->
+    <section class="status" id="status" aria-live="polite">
+      <div id="status-body" class="status-body">טוען…</div>
+    </section>
+
+    <!-- Settings -->
+    <section class="settings">
+      <h2 class="section-title">הגדרות</h2>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="alertSymbol">סמל ההתראה</label>
+        </div>
+        <select id="alertSymbol">
+          <option value="⚠️">⚠️ משולש אזהרה</option>
+          <option value="🕯️">🕯️ נר שבת</option>
+        </select>
+        <p class="hint" id="symbolPreview">⚠️ שימו לב · האתר סגור בשבת ⚠️</p>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="minConfidence">סף ודאות מינימלי</label>
+        </div>
+        <select id="minConfidence">
+          <option value="medium">בינוני ומעלה — כל האתרים</option>
+          <option value="high">גבוה ומעלה</option>
+          <option value="verified">מאומת בלבד — סגירה שאומתה</option>
+        </select>
+        <p class="hint">אתרים מתחת לסף לא יתויגו ולא יציגו באנר.</p>
+      </div>
+
+      <div class="field switch-field">
+        <label for="enabled">הרחבה פעילה</label>
+        <label class="switch">
+          <input id="enabled" type="checkbox" />
+          <span class="track"><span class="thumb"></span></span>
+        </label>
+      </div>
+    </section>
+
+    <footer class="foot">
+      הבאנר מוצג בכל אתר שברשימה. החיווי "כעת שבת" מחושב לפי שקיעה בירושלים; חגים
+      (יום־טוב) אינם נכללים.
+    </footer>
+
+    <script src="../data/sites.js"></script>
+    <script src="lib.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../src/banner.css" />
+    <title>banner preview</title>
+    <style>
+      body { margin: 0; font-family: system-ui, Arial, sans-serif; }
+      .fakepage { padding: 24px; }
+      .fakepage h2 { color: #333; }
+      .demo { position: relative; border: 1px dashed #bbb; margin: 40px 16px; padding-top: 0; }
+      .demo .label { position: absolute; top: -22px; right: 0; font: 12px system-ui; color: #888; }
+      /* make the two banners static (not fixed) so both show stacked for preview */
+      .demo .shabbat-closed-banner { position: static !important; animation: none !important; }
+      .fakepage p { color:#555; max-width: 640px; }
+    </style>
+  </head>
+  <body>
+    <div class="demo">
+      <span class="label">⚠️ ברירת מחדל — סטטוס "סגור בשבת"</span>
+      <div id="b1"></div>
+    </div>
+    <div class="demo">
+      <span class="label">🕯️ אופציית נר — מצב שבת פעיל</span>
+      <div id="b2"></div>
+    </div>
+    <div class="demo">
+      <span class="label">סטטוס "מצהיר ששומר שבת" (declared)</span>
+      <div id="b3"></div>
+    </div>
+
+    <script>
+      function banner({ active, headline, sub }) {
+        const el = document.createElement("div");
+        el.id = "shabbat-closed-banner";
+        el.className = "shabbat-closed-banner" + (active ? " is-active" : "");
+        el.dir = "rtl";
+        el.innerHTML = `
+          <div class="scb-text">
+            <div class="scb-headline">${headline}</div>
+            <div class="scb-sub">${sub}</div>
+          </div>
+          <div class="scb-spacer"></div>
+          <div class="scb-actions">
+            <a class="scb-link" href="#">מקור</a>
+            <button class="scb-close">✕</button>
+          </div>`;
+        return el;
+      }
+      document.getElementById("b1").appendChild(banner({ active: false, headline: "⚠️ שימו לב · האתר סגור בשבת ⚠️", sub: "האתר נחסם לגלישה בשבת · כניסת שבת הקרובה יום ו׳ 18:46" }));
+      document.getElementById("b2").appendChild(banner({ active: true, headline: "🕯️ שימו לב · האתר סגור בשבת 🕯️", sub: "פעולות ומשלוחים מושהים בשבת" }));
+      document.getElementById("b3").appendChild(banner({ active: false, headline: "⚠️ שימו לב · האתר שומר שבת ⚠️", sub: "האתר מצהיר ששומר שבת · כניסת שבת הקרובה יום ו׳ 18:46" }));
+    </script>
+  </body>
+</html>

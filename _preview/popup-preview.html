@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../src/popup.css" />
+    <title>preview</title>
+    <style>
+      body { margin: 24px; background: #d9d5cc; }
+      .frame { width: 336px; box-shadow: 0 8px 30px rgba(0,0,0,.25); border-radius: 12px; overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <script>
+      window.chrome = {
+        storage: {
+          sync: { _v: {}, get(d, cb){ cb(Object.assign({}, d, this._v)); }, set(p, cb){ Object.assign(this._v, p); cb && cb(); } },
+          onChanged: { addListener() {} },
+        },
+        tabs: { query(_q, cb){ cb([{ id: 1, url: "https://www.togonline.co.il/" }]); } },
+        runtime: {},
+      };
+    </script>
+    <div class="frame" id="mount"></div>
+    <script src="../data/sites.js"></script>
+    <script src="../src/lib.js"></script>
+    <script>
+      fetch("../src/popup.html").then(r => r.text()).then(html => {
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        const mount = document.getElementById("mount");
+        mount.innerHTML = doc.body.innerHTML;
+        mount.querySelectorAll("script").forEach(s => s.remove());
+        const sc = document.createElement("script");
+        sc.src = "../src/popup.js";
+        sc.onload = () => document.dispatchEvent(new Event("DOMContentLoaded"));
+        document.body.appendChild(sc);
+      });
+    </script>
+  </body>
+</html>
