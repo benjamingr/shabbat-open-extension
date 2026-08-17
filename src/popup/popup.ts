@@ -4,6 +4,7 @@ import './popup.css'
 import { applyStaticStrings, t } from '../i18n/index.ts'
 import { sites } from '../lib/dataset.ts'
 import { hostFromUrl, matchSite } from '../lib/domain.ts'
+import { appealFormUrl, reportFormUrl } from '../lib/forms.ts'
 import { proofPageUrl } from '../lib/proof.ts'
 import { getSettings, setSettings } from '../lib/settings.ts'
 import { getShabbatWindow } from '../lib/shabbat.ts'
@@ -69,6 +70,17 @@ async function render(): Promise<void> {
 
   const host = hostFromUrl(tab?.url)
   const site = matchSite(host, sites)
+
+  // Reporting is always available — the point is to hear about sites not on the list.
+  // Appealing only makes sense against an actual listing.
+  const report = document.getElementById('report') as HTMLAnchorElement | null
+  if (report) report.href = reportFormUrl(host || null)
+
+  const appeal = document.getElementById('appeal') as HTMLAnchorElement | null
+  if (appeal) {
+    appeal.classList.toggle('hidden', !site)
+    if (site) appeal.href = appealFormUrl(site.domain, site.verified)
+  }
 
   if (!site) {
     const line = document.createElement('div')

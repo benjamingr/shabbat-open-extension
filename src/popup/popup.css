@@ -88,6 +88,33 @@ body {
   color: var(--muted);
   font-weight: 600;
 }
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.actions .btn {
+  flex: 1 1 auto;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--accent);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-decoration: none;
+}
+.actions .btn:hover {
+  border-color: var(--accent);
+}
+.actions .btn.hidden {
+  display: none;
+}
+
 .status-body .evidence {
   display: inline-block;
   margin-top: 10px;

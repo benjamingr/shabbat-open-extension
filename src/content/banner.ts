@@ -7,6 +7,7 @@ import bannerCss from './banner.css?inline'
 import { t } from '../i18n/index.ts'
 import { sites } from '../lib/dataset.ts'
 import { matchSite, normalizeHost } from '../lib/domain.ts'
+import { appealFormUrl } from '../lib/forms.ts'
 import { dismissDomain, getSettings } from '../lib/settings.ts'
 import { proofPageUrl } from '../lib/proof.ts'
 import { getShabbatWindow } from '../lib/shabbat.ts'
@@ -96,6 +97,14 @@ function renderBanner(site: Site, settings: Settings, dismissKey: string): void 
   link.textContent = t('banner.source')
   if (site.evidence_text) link.title = site.evidence_text
   actions.append(link)
+
+  const appeal = document.createElement('a')
+  appeal.className = 'scb-link'
+  appeal.href = appealFormUrl(site.domain, site.verified)
+  appeal.target = '_blank'
+  appeal.rel = 'noopener noreferrer'
+  appeal.textContent = t('banner.appeal')
+  actions.append(appeal)
 
   const never = document.createElement('button')
   never.type = 'button'

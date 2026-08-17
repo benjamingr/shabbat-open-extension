@@ -11,6 +11,7 @@ import './proof.css'
 import { applyStaticStrings, t } from '../i18n/index.ts'
 import { dataset, sites } from '../lib/dataset.ts'
 import { normalizeHost } from '../lib/domain.ts'
+import { appealFormUrl } from '../lib/forms.ts'
 import { confidenceLabel, isStrong, statusLabel } from '../lib/site.ts'
 import type { Site } from '../types.ts'
 
@@ -97,6 +98,9 @@ function render(site: Site): void {
 
   const verified = el('verified-on')
   if (verified) verified.textContent = t('proof.verifiedOn', { date: formatDate(site.verified) })
+
+  const appeal = el<HTMLAnchorElement>('appeal')
+  if (appeal) appeal.href = appealFormUrl(site.domain, site.verified)
 
   show(el('content'), true)
 }
