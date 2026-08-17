@@ -5,14 +5,23 @@ import { DEFAULTS, type Settings } from '../types.ts'
  * under a single object. Flat means a new field is simply a key nobody has written yet,
  * so `DEFAULTS` fills it in and no install ever needs a migration.
  */
+/**
+ * Spreading DEFAULTS is not enough: that copies the reference to `dismissedDomains`, so
+ * every caller would share one array with the module-level constant and a single push
+ * would corrupt the defaults for the lifetime of the worker.
+ */
+function detach(settings: Settings): Settings {
+  return { ...settings, dismissedDomains: [...settings.dismissedDomains] }
+}
+
 export async function getSettings(): Promise<Settings> {
   try {
     // Passing the defaults as the query fills in every key that has never been written.
-    const stored = await chrome.storage.sync.get({ ...DEFAULTS } as Record<string, unknown>)
-    return { ...DEFAULTS, ...(stored as Partial<Settings>) }
+    const stored = await chrome.storage.sync.get(detach(DEFAULTS) as unknown as Record<string, unknown>)
+    return detach({ ...DEFAULTS, ...(stored as Partial<Settings>) })
   } catch {
     // Storage can be unavailable in a torn-down context; defaults keep the UI working.
-    return { ...DEFAULTS }
+    return detach(DEFAULTS)
   }
 }
 
