@@ -95,6 +95,37 @@ node scripts/build-data.mjs
 This regenerates `data/sites.js` and rewrites the `content_scripts.matches` in
 `manifest.json`. Reload the extension in `chrome://extensions` afterward.
 
+## Development & CI
+
+```bash
+npm ci            # install dev deps (crx3)
+npm test          # run the test suite (node --test)
+npm run build     # regenerate data/sites.js + manifest matches
+npm run pack      # build dist/*.crx and dist/*.zip
+```
+
+Tests (`test/`) cover the Shabbat-time math, domain matching, and dataset
+integrity (well-formed entries, no duplicate domains, generated files in sync
+with `sites.json`).
+
+**GitHub Actions** (`.github/workflows/ci.yml`):
+
+- On every push and PR: verifies the generated files are up to date, then runs
+  the tests.
+- On push to `main`: packs a signed `.crx` + `.zip` and publishes a GitHub
+  Release tagged `build-<short-sha>`, targeting that commit.
+
+The `.crx` is signed with the `CRX_KEY` repository secret (a private-key PEM,
+raw or base64). Generate one once and keep it stable so the extension id doesn't
+change between builds:
+
+```bash
+openssl genrsa 2048 > key.pem      # then paste its contents into the CRX_KEY secret
+```
+
+Without the secret, CI falls back to an ephemeral key (build still succeeds, but
+the extension id is not stable).
+
 ## How Shabbat time is computed
 
 Sunset is computed in pure JS (USNO almanac algorithm) for **Jerusalem** as a
@@ -135,5 +166,8 @@ so DST is handled automatically.
 | `scripts/build-data.mjs` | Regenerates `sites.js` + manifest matches |
 | `scripts/merge-candidates.mjs` | Merge verified new sites into `sites.json` |
 | `scripts/make-icons.mjs` | Regenerate the PNG icons |
+| `scripts/pack-crx.mjs` | Build `dist/*.crx` + `dist/*.zip` (signed) |
+| `test/` | Test suite (`node --test`) |
+| `.github/workflows/ci.yml` | CI: test on push/PR, release `.crx` on `main` |
 | `dev-preview/` | Dev-only popup/banner previews (not shipped) |
 | `dev-store/` | Dev-only store screenshot/promo slides (not shipped) |

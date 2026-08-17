@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - name: Generated files are up to date
+        run: |
+          node scripts/build-data.mjs
+          git diff --exit-code data/sites.js manifest.json
+      - name: Tests
+        run: npm test
+
+  release:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - name: Pack CRX + ZIP
+        env:
+          # Optional: a stable signing key (PEM, raw or base64). Without it an
+          # ephemeral key is used and the extension id will not be stable.
+          CRX_KEY: ${{ secrets.CRX_KEY }}
+        run: node scripts/pack-crx.mjs
+      - name: Compute release metadata
+        id: meta
+        run: |
+          echo "tag=build-$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+          echo "version=$(node -p "require('./manifest.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Publish release (tagged by commit)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.meta.outputs.tag }}" \
+            dist/shabbat-closed-extension.crx \
+            dist/shabbat-closed-extension.zip \
+            --target "${{ github.sha }}" \
+            --title "v${{ steps.meta.outputs.version }} (${{ steps.meta.outputs.tag }})" \
+            --notes "Automated build of commit ${{ github.sha }} (manifest v${{ steps.meta.outputs.version }})."

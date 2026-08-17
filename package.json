@@ -1,0 +1,15 @@
+{
+  "name": "shabbat-closed-extension",
+  "version": "0.1.1",
+  "private": true,
+  "type": "module",
+  "description": "Chrome extension that flags Israeli shomer-Shabbat e-commerce sites.",
+  "scripts": {
+    "build": "node scripts/build-data.mjs",
+    "test": "node --test",
+    "pack": "node scripts/pack-crx.mjs"
+  },
+  "devDependencies": {
+    "crx3": "^1.1.3"
+  }
+}
