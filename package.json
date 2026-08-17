@@ -7,13 +7,17 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run validate && tsc --noEmit && vite build",
+    "build": "npm run validate && tsc --noEmit && vite build && npm run check:manifest",
     "preview": "vite preview",
     "validate": "node scripts/build-data.mjs",
+    "check:manifest": "node scripts/check-manifest.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "pack": "node scripts/pack-crx.mjs"
+  },
+  "engines": {
+    "node": ">=20.19"
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.7.1",

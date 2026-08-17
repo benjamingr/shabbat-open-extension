@@ -4,6 +4,15 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+
+# A force-push or a quick follow-up commit makes the in-flight run irrelevant.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   test:
@@ -13,13 +22,35 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 22
+          cache: npm
+
       - run: npm ci
-      - name: Generated files are up to date
-        run: |
-          node scripts/build-data.mjs
-          git diff --exit-code data/sites.js manifest.json
-      - name: Tests
+
+      # Separate steps rather than one `npm run build`, so a red run names the thing
+      # that broke instead of just "build failed".
+      - name: Validate the dataset
+        run: npm run validate
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
         run: npm test
+
+      - name: Build
+        run: npx vite build
+
+      # The build cannot catch these: crxjs generates the manifest, and both a broad
+      # host permission and an unbundled page are silent successes at build time.
+      - name: Check the built manifest
+        run: npm run check:manifest
+
+      - name: Upload the unpacked extension
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
 
   release:
     needs: test
@@ -32,25 +63,34 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 22
+          cache: npm
+
       - run: npm ci
+
+      # pack-crx.mjs packages the built extension, so the build has to run first.
+      - name: Build
+        run: npm run build
+
       - name: Pack CRX + ZIP
         env:
           # Optional: a stable signing key (PEM, raw or base64). Without it an
           # ephemeral key is used and the extension id will not be stable.
           CRX_KEY: ${{ secrets.CRX_KEY }}
-        run: node scripts/pack-crx.mjs
+        run: npm run pack
+
       - name: Compute release metadata
         id: meta
         run: |
           echo "tag=build-$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
-          echo "version=$(node -p "require('./manifest.json').version")" >> "$GITHUB_OUTPUT"
+          echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
       - name: Publish release (tagged by commit)
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "${{ steps.meta.outputs.tag }}" \
-            dist/shabbat-closed-extension.crx \
-            dist/shabbat-closed-extension.zip \
+            release/shabbat-closed-extension.crx \
+            release/shabbat-closed-extension.zip \
             --target "${{ github.sha }}" \
             --title "v${{ steps.meta.outputs.version }} (${{ steps.meta.outputs.tag }})" \
             --notes "Automated build of commit ${{ github.sha }} (manifest v${{ steps.meta.outputs.version }})."
