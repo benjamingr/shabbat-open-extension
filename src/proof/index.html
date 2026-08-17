@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n="proof.title"></title>
+  </head>
+  <body>
+    <main class="page" id="page">
+      <p class="notfound hidden" id="notfound" data-i18n="proof.notFound"></p>
+
+      <div id="content" class="hidden">
+        <h1 id="site-name"></h1>
+        <p class="domain" id="site-domain"></p>
+
+        <div class="pill-row" id="pills"></div>
+
+        <section class="card">
+          <h2 data-i18n="proof.evidenceHeading"></h2>
+          <blockquote class="quote" id="evidence-text"></blockquote>
+          <p class="hint hidden" id="mechanism"></p>
+          <a class="btn" id="evidence-link" target="_blank" rel="noopener noreferrer"></a>
+        </section>
+
+        <section class="card" id="screenshot-card">
+          <h2 data-i18n="proof.screenshotHeading"></h2>
+          <img id="screenshot" alt="" />
+          <p class="hint hidden" id="screenshot-missing" data-i18n="proof.screenshotMissing"></p>
+        </section>
+
+        <section class="card">
+          <h2 data-i18n="proof.meaningHeading"></h2>
+          <p id="status-definition"></p>
+          <p class="hint" id="confidence-definition"></p>
+          <p class="hint" id="verified-on"></p>
+        </section>
+      </div>
+    </main>
+    <script type="module" src="./proof.ts"></script>
+  </body>
+</html>

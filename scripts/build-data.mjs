@@ -72,6 +72,12 @@ for (const [i, site] of (data.sites ?? []).entries()) {
   if (site.holidays !== null && typeof site.holidays !== "boolean") {
     fail(`${where} (${domain}): holidays must be true, false, or null`);
   }
+
+  // A screenshot is optional; a reference to one that isn't in the repo is not. The
+  // proof page would render a broken image and say nothing about why.
+  if (site.proof_image && !existsSync(join(root, "public", "proof", site.proof_image))) {
+    fail(`${where} (${domain}): proof_image "${site.proof_image}" not found in public/proof/`);
+  }
 }
 
 /*

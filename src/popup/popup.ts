@@ -4,6 +4,7 @@ import './popup.css'
 import { applyStaticStrings, t } from '../i18n/index.ts'
 import { sites } from '../lib/dataset.ts'
 import { hostFromUrl, matchSite } from '../lib/domain.ts'
+import { proofPageUrl } from '../lib/proof.ts'
 import { getSettings, setSettings } from '../lib/settings.ts'
 import { getShabbatWindow } from '../lib/shabbat.ts'
 import { confidenceLabel, isStrong, meetsConfidence, statusLabel } from '../lib/site.ts'
@@ -116,16 +117,14 @@ async function render(): Promise<void> {
     body.append(note)
   }
 
-  if (site.evidence_url) {
-    const a = document.createElement('a')
-    a.className = 'evidence'
-    a.href = site.evidence_url
-    a.target = '_blank'
-    a.rel = 'noopener noreferrer'
-    a.textContent = t('popup.evidence')
-    if (site.evidence_text) a.title = site.evidence_text
-    body.append(a)
-  }
+  const a = document.createElement('a')
+  a.className = 'evidence'
+  a.href = proofPageUrl(site)
+  a.target = '_blank'
+  a.rel = 'noopener noreferrer'
+  a.textContent = t('popup.evidence')
+  if (site.evidence_text) a.title = site.evidence_text
+  body.append(a)
 }
 
 async function main(): Promise<void> {

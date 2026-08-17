@@ -8,6 +8,7 @@ import { t } from '../i18n/index.ts'
 import { sites } from '../lib/dataset.ts'
 import { matchSite, normalizeHost } from '../lib/domain.ts'
 import { dismissDomain, getSettings } from '../lib/settings.ts'
+import { proofPageUrl } from '../lib/proof.ts'
 import { getShabbatWindow } from '../lib/shabbat.ts'
 import { isStrong, meetsConfidence, statusLabel } from '../lib/site.ts'
 import type { Settings, Site } from '../types.ts'
@@ -85,16 +86,16 @@ function renderBanner(site: Site, settings: Settings, dismissKey: string): void 
   const actions = document.createElement('div')
   actions.className = 'scb-actions'
 
-  if (site.evidence_url) {
-    const link = document.createElement('a')
-    link.className = 'scb-link'
-    link.href = site.evidence_url
-    link.target = '_blank'
-    link.rel = 'noopener noreferrer'
-    link.textContent = t('banner.source')
-    if (site.evidence_text) link.title = site.evidence_text
-    actions.append(link)
-  }
+  // Points at the packaged evidence page, not straight out to the site: the reader gets
+  // the quoted text, the mechanism, and the audit date, with the live site one click on.
+  const link = document.createElement('a')
+  link.className = 'scb-link'
+  link.href = proofPageUrl(site)
+  link.target = '_blank'
+  link.rel = 'noopener noreferrer'
+  link.textContent = t('banner.source')
+  if (site.evidence_text) link.title = site.evidence_text
+  actions.append(link)
 
   const never = document.createElement('button')
   never.type = 'button'

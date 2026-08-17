@@ -18,6 +18,8 @@ function contentScriptMatches(): string[] {
   return [...domains].flatMap((domain) => [`*://${domain}/*`, `*://*.${domain}/*`])
 }
 
+const MATCHES = contentScriptMatches()
+
 export default defineManifest({
   manifest_version: 3,
   // `__MSG_*__` resolves from public/_locales. chrome.i18n is used *only* here, for the
@@ -55,9 +57,20 @@ export default defineManifest({
     type: 'module',
   },
 
+  // The banner links to the proof page, and a link from a content script into an
+  // extension page only resolves if that page is web-accessible. Scoped to the same
+  // listed domains — no other site can address it. crxjs adds its own entry here for the
+  // content script's chunks; both end up in the generated manifest.
+  web_accessible_resources: [
+    {
+      resources: ['src/proof/index.html'],
+      matches: MATCHES,
+    },
+  ],
+
   content_scripts: [
     {
-      matches: contentScriptMatches(),
+      matches: MATCHES,
       js: ['src/content/banner.ts'],
       // No `css` entry: the stylesheet is imported by banner.ts and injected into the
       // banner's shadow root, so it never becomes part of the host page.

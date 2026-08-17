@@ -60,5 +60,17 @@
   "options.statAudited": "תאריך הביקורת",
   "options.privacyHeading": "פרטיות",
   "options.privacyBody": "התוסף אינו אוסף מידע, אינו שולח מידע, ואינו יוצר שום בקשת רשת. רשימת האתרים מוטמעת בתוסף עצמו, וכל הבדיקות מתבצעות במחשב שלכם בלבד.",
-  "options.privacyPermissions": "ההרשאות מוגבלות לאתרים שברשימה בלבד — לא לכל האתרים."
+  "options.privacyPermissions": "ההרשאות מוגבלות לאתרים שברשימה בלבד — לא לכל האתרים.",
+
+  "proof.title": "העדות שבבסיס הרישום",
+  "proof.titleFor": "העדות שבבסיס הרישום — {name}",
+  "proof.notFound": "האתר הזה אינו מופיע ברשימה.",
+  "proof.evidenceHeading": "מה שנמצא באתר",
+  "proof.mechanism": "מנגנון הסגירה: {mechanism}",
+  "proof.openSite": "פתיחת האתר לבדיקה עצמאית",
+  "proof.screenshotHeading": "צילום מסך",
+  "proof.screenshotMissing": "לא צולם מסך לרישום הזה. העדות מבוססת על הטקסט שלמעלה.",
+  "proof.screenshotAlt": "צילום מסך של {name} סגור בשבת",
+  "proof.meaningHeading": "מה זה אומר",
+  "proof.verifiedOn": "נבדק ב-{date}."
 }

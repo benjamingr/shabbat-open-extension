@@ -21,6 +21,12 @@ export interface Site {
   /** First-party text the audit found, quoted verbatim. */
   evidence_text: string
   evidence_url: string
+  /**
+   * Filename of a screenshot in `public/proof/`, if one was captured. Optional: most
+   * listings rest on `evidence_text` alone, and a closure page can only be photographed
+   * during Shabbat.
+   */
+  proof_image?: string
   /** ISO date, `YYYY-MM-DD`. */
   verified: string
 }
