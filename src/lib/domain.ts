@@ -12,11 +12,19 @@ export function normalizeHost(host: string | null | undefined): string {
   return host.toLowerCase().replace(/^www\./, '').replace(/\.$/, '')
 }
 
-/** Hostname of a URL string, or "" when it is not a parseable URL. */
+/**
+ * Hostname of an http(s) URL, or "" for anything else.
+ *
+ * The scheme check is not decoration: `new URL('chrome://extensions')` parses happily
+ * and yields the hostname "extensions". Nothing dotless can match a listed domain today,
+ * but a browser-internal page has no business producing a host at all.
+ */
 export function hostFromUrl(url: string | undefined): string {
   if (!url) return ''
   try {
-    return new URL(url).hostname
+    const parsed = new URL(url)
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return ''
+    return parsed.hostname
   } catch {
     return ''
   }
