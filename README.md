@@ -40,11 +40,27 @@ npm run build
 2. Enable **Developer mode** (top-right).
 3. Click **Load unpacked** and select the generated **`dist/`** folder.
 
-`npm run dev` runs the same build in watch mode.
-
 The extension only requests access to the domains in the dataset — the content
 script's `matches` are generated from `data/sites.json` at build time, not
 `<all_urls>`.
+
+## Development
+
+```bash
+npm run dev        # rebuild dist/ on change; reload the extension to pick it up
+npm test           # vitest
+npm run typecheck  # tsc --noEmit
+npm run validate   # check data/sites.json without building
+npm run build      # validate + typecheck + build, in that order
+```
+
+`dev-preview/` renders the popup and the banner without loading the extension.
+Both need the dev server, because the popup preview imports the TypeScript
+module directly: run `npm run dev` and open
+`/dev-preview/popup-preview.html` or `/dev-preview/banner-preview.html`.
+
+Note that `banner-preview.html` hand-builds the banner markup rather than
+importing it, so it has to be updated by hand when the real banner changes.
 
 ## Settings (popup)
 
@@ -55,7 +71,9 @@ script's `matches` are generated from `data/sites.json` at build time, not
   site is below your threshold.
 - **Extension enabled** — master on/off.
 
-The banner always shows on a listed site. Shabbat times are computed internally
+The banner shows on any listed site that is above your confidence threshold and
+that you haven't silenced — regardless of the day, since the warning is most
+useful before Shabbat. Shabbat times are computed internally
 (Jerusalem sunset, 30 min before / 40 min after) only to drive the "currently
 Shabbat" cue (banner tint, gold badge, popup indicator) — there's no timing to
 configure.
@@ -77,14 +95,26 @@ That only ever happens on your click.
 
 ## Language
 
-All UI copy lives in `src/i18n/he.json` and is reached through `t()`; nothing is
-hardcoded in the components. Hebrew is currently the only bundle — adding
-`en.json` with the same keys and registering it in `src/i18n/index.ts` is the
-whole job.
+All UI copy lives in `src/i18n/he.json` and is reached through `t()`; no string
+is hardcoded in a component or a template. Hebrew is currently the only bundle.
+
+Adding English is more than dropping in an `en.json`. The copy is extracted, but
+the *layout* is still Hebrew-only, and four things would have to change with it:
+
+- `lang="he" dir="rtl"` is hardcoded in `src/popup/index.html`,
+  `src/options/index.html`, and `src/proof/index.html`; the banner sets
+  `dir = 'rtl'` on its bar directly. `dirFor()` exists for this and is currently
+  unused outside its own test.
+- Date formatting is pinned to `he-IL` in `src/options/options.ts` and
+  `src/proof/proof.ts`.
+- `t()` resolves against `DEFAULT_LANG`; picking a language at runtime means
+  threading the active `Lang` through, or making it a module-level setting.
+- A `lang` setting and a control to change it — neither exists.
 
 `chrome.i18n` is used only for the manifest's store-facing name and description,
 which Chrome reads before any extension code runs. It picks its locale from the
-browser and cannot be overridden, so it could never honour a language setting.
+browser and cannot be overridden, so it could never honour such a setting — which
+is why the in-extension copy has its own bundle rather than using `_locales`.
 
 ## The data
 
@@ -114,22 +144,44 @@ expansion.
 Note: `or-ad.com` and `chez-mishel.co.il` served a closure page even on the
 Sunday of the audit — worth confirming their block is time-gated, not stuck.
 
-`data/sites.json` is the editable source of truth. Each entry:
+`data/sites.json` is the editable source of truth. A full entry:
 
 ```json
 {
-  "domain": "togonline.co.il",
-  "name": "TOGO Shoes",
-  "status": "operations_paused",
+  "domain": "or-ad.com",
+  "name": "אור-עד תאורה",
+  "category": "lighting",
+  "status": "site_blocked",
   "confidence": "verified",
-  "evidence_url": "https://www.togonline.co.il/"
+  "holidays": true,
+  "mechanism": "full-screen closure modal disables browsing",
+  "evidence_text": "האתר בו הנך מבקר שומר שבת וחג, ולכן הגלישה בו אינה מתאפשרת בזמן זה",
+  "evidence_url": "https://www.or-ad.com/",
+  "verified": "2026-08-16"
 }
 ```
+
+| Field | | Notes |
+| --- | --- | --- |
+| `domain` | required | Lowercase, no `www.`, no scheme. A subdomain is fine. |
+| `name` | required | Shown in the badge tooltip, popup, and proof page. |
+| `category` | required | Free-form; not currently surfaced in the UI. |
+| `status` | required | See below. |
+| `confidence` | required | `verified`, `high`, or `medium`. |
+| `holidays` | required | `true`, `false`, or `null` when the audit couldn't tell. |
+| `evidence_text` | required | The site's own words, quoted verbatim. |
+| `evidence_url` | required | Must be `https:`. |
+| `verified` | required | `YYYY-MM-DD`. |
+| `mechanism` | optional | How a `site_blocked` site enforces closure. |
+| `proof_image` | optional | Filename in `public/proof/` — see that folder's README. |
 
 `status` (strongest → weakest): `site_blocked`, `purchase_blocked`,
 `operations_paused`, `declared_shabbat_observant`. The first three get the firm
 "האתר סגור בשבת" banner; `declared_shabbat_observant` gets "האתר שומר שבת".
-Optional `mechanism` names how a `site_blocked` site enforces closure.
+
+Matching is exact-or-subdomain, so a listed domain sitting under another listed
+domain is unreachable — the first one in the array always wins. `npm run
+validate` warns when that happens.
 
 ### Adding / editing sites
 
@@ -176,7 +228,14 @@ the extension id is not stable).
 ## Moderation
 
 Users can report a missing site or appeal a listing from the extension. Both are
-Google Forms, identified in `src/config.ts`.
+Google Forms, identified by ID in `src/config.ts` — replace those IDs if the
+forms move or if you fork the project, since a fork would otherwise send its
+reports to this project's inbox.
+
+Prefill is opt-in per question: `FORM_FIELDS` maps a question's `entry.NNNNNNN`
+name (from the form's "Get pre-filled link") to a value. A `null` means the
+question opens blank, and Google ignores unknown names, so a stale ID degrades
+to an empty field rather than a broken form.
 
 ### Triage
 
@@ -233,12 +292,18 @@ so DST is handled automatically.
   few minutes — covered by the default offsets.
 - **The list only changes with a release.** It is compiled into the extension,
   so a correction reaches users when the next version ships, not before.
+- **No screenshots yet.** `public/proof/` is empty, so every proof page
+  currently rests on `evidence_text` and says plainly that no screenshot was
+  captured. The strongest evidence — a closure page photographed during Shabbat
+  — has still to be collected.
 
 ## Files
 
 | Path | Purpose |
 | --- | --- |
 | `manifest.config.ts` | MV3 manifest; match patterns derived from the dataset |
+| `vite.config.ts` | Build; registers the proof page as an extra entry point |
+| `vitest.config.ts`, `tsconfig.json` | Test and compiler config |
 | `public/icons/icon*.png` | Extension icons (16/32/48/128), generated |
 | `data/sites.json` | Editable dataset (source of truth) |
 | `src/types.ts` | Dataset and settings types |
