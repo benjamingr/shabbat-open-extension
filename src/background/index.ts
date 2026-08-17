@@ -6,38 +6,30 @@
 import { t } from '../i18n/index.ts'
 import { sites } from '../lib/dataset.ts'
 import { hostFromUrl, matchSite } from '../lib/domain.ts'
+import { badgeFor } from '../lib/display.ts'
 import { getSettings, onSettingsChanged } from '../lib/settings.ts'
 import { getShabbatWindow } from '../lib/shabbat.ts'
-import { isStrong, meetsConfidence, statusLabel } from '../lib/site.ts'
-
-const BADGE_SHABBAT = '#c9a227'
-const BADGE_STRONG = '#2f7d4f'
-const BADGE_WEAK = '#8a8a8a'
+import { statusLabel } from '../lib/site.ts'
 
 async function updateBadge(tabId: number, url: string | undefined): Promise<void> {
   const site = matchSite(hostFromUrl(url), sites)
   const settings = await getSettings()
+  const win = getShabbatWindow(new Date(), settings.candleOffsetMin, settings.havdalahOffsetMin)
 
-  // The confidence threshold gates the badge as well as the banner. Gating only the
-  // banner left a site below the threshold silently badged and tooltipped, which is
-  // exactly what "אתרים מתחת לסף לא יתויגו" promises not to happen.
-  if (!site || !settings.enabled || !meetsConfidence(site, settings.minConfidence)) {
+  const badge = badgeFor(site, settings, win.active)
+
+  if (!badge.flagged) {
     await chrome.action.setBadgeText({ tabId, text: '' })
     return
   }
 
-  const win = getShabbatWindow(new Date(), settings.candleOffsetMin, settings.havdalahOffsetMin)
+  await chrome.action.setBadgeText({ tabId, text: badge.text })
+  await chrome.action.setBadgeBackgroundColor({ tabId, color: badge.color })
 
-  await chrome.action.setBadgeText({ tabId, text: '●' })
-  await chrome.action.setBadgeBackgroundColor({
-    tabId,
-    color: win.active ? BADGE_SHABBAT : isStrong(site) ? BADGE_STRONG : BADGE_WEAK,
-  })
-
-  const vars = { name: site.name, status: statusLabel(site.status) }
+  const vars = { name: site!.name, status: statusLabel(site!.status) }
   await chrome.action.setTitle({
     tabId,
-    title: win.active ? t('badge.titleShabbat', vars) : t('badge.title', vars),
+    title: badge.shabbatActive ? t('badge.titleShabbat', vars) : t('badge.title', vars),
   })
 }
 

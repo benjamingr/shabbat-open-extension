@@ -8,36 +8,37 @@ import { t } from '../i18n/index.ts'
 import { sites } from '../lib/dataset.ts'
 import { matchSite, normalizeHost } from '../lib/domain.ts'
 import { appealFormUrl } from '../lib/forms.ts'
+import { shouldShowBanner } from '../lib/display.ts'
 import { dismissDomain, getSettings } from '../lib/settings.ts'
 import { proofPageUrl } from '../lib/proof.ts'
 import { getShabbatWindow } from '../lib/shabbat.ts'
-import { isStrong, meetsConfidence, statusLabel } from '../lib/site.ts'
+import { isStrong, statusLabel } from '../lib/site.ts'
 import type { Settings, Site } from '../types.ts'
 
 const BANNER_ID = 'shabbat-closed-banner'
+
+/** The per-tab "not right now" flag. Blocked storage reads as "not dismissed". */
+function isSessionDismissed(key: string): boolean {
+  try {
+    return sessionStorage.getItem(key) === '1'
+  } catch {
+    // sessionStorage can be blocked by the page's storage partitioning; ignore.
+    return false
+  }
+}
 
 async function main(): Promise<void> {
   const site = matchSite(location.hostname, sites)
   if (!site) return // shouldn't happen given the match patterns, but be safe
 
   const settings = await getSettings()
-  if (!settings.enabled) return
-  if (!meetsConfidence(site, settings.minConfidence)) return
-
-  // A permanent dismissal, made once and synced to every machine.
-  const listedDomain = normalizeHost(site.domain)
-  if (settings.dismissedDomains.includes(listedDomain)) return
-
-  // ...and a per-tab one, which lasts only as long as this browsing session.
   const dismissKey = 'shabbatClosedDismissed:' + normalizeHost(location.hostname)
-  try {
-    if (sessionStorage.getItem(dismissKey) === '1') return
-  } catch {
-    // sessionStorage can be blocked by the page's storage partitioning; ignore.
-  }
 
-  // The banner always shows on a listed site — the alert is most useful *before* Shabbat,
-  // since during Shabbat the site being closed is self-evident.
+  // Whether to show it is decided in lib/display.ts, shared with the badge so the two
+  // cannot drift apart. Note there is no check on the day: the alert is most useful
+  // *before* Shabbat, since during Shabbat the site being closed is self-evident.
+  if (!shouldShowBanner(site, settings, isSessionDismissed(dismissKey))) return
+
   renderBanner(site, settings, dismissKey)
 }
 
