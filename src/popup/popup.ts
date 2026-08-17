@@ -3,7 +3,7 @@ import './popup.css'
 
 import { sites } from '../lib/dataset.ts'
 import { hostFromUrl, matchSite } from '../lib/domain.ts'
-import { getSettings } from '../lib/settings.ts'
+import { getSettings, setSettings } from '../lib/settings.ts'
 import { getShabbatWindow } from '../lib/shabbat.ts'
 import { CONFIDENCE_LABEL_HE, isStrong, STATUS_LABEL_HE } from '../lib/site.ts'
 import type { Settings } from '../types.ts'
@@ -52,7 +52,7 @@ async function save(): Promise<void> {
       el.value = String(n)
     } else patch[name] = el.value
   }
-  await chrome.storage.sync.set(patch)
+  await setSettings(patch as Partial<Settings>)
   await render()
 }
 

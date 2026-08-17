@@ -5,7 +5,7 @@
  */
 import { sites } from '../lib/dataset.ts'
 import { hostFromUrl, matchSite } from '../lib/domain.ts'
-import { getSettings } from '../lib/settings.ts'
+import { getSettings, onSettingsChanged } from '../lib/settings.ts'
 import { getShabbatWindow } from '../lib/shabbat.ts'
 import { isStrong, STATUS_LABEL_HE } from '../lib/site.ts'
 
@@ -55,7 +55,7 @@ chrome.tabs.onActivated.addListener(({ tabId }) => {
 })
 
 // Re-tag the active tab when settings change (e.g. the confidence threshold moved).
-chrome.storage.onChanged.addListener(() => {
+onSettingsChanged(() => {
   chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
     if (tab?.id !== undefined) safeUpdate(tab.id, tab.url)
   })
