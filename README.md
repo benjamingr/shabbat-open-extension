@@ -19,13 +19,23 @@ during Shabbat the site being closed is self-evident.
 
 ## Install (unpacked)
 
+The extension is built from TypeScript sources, so it has to be compiled before
+Chrome can load it:
+
+```bash
+npm install
+npm run build
+```
+
 1. Open `chrome://extensions`.
 2. Enable **Developer mode** (top-right).
-3. Click **Load unpacked** and select this folder
-   (`shabbat-closed-extension`).
+3. Click **Load unpacked** and select the generated **`dist/`** folder.
+
+`npm run dev` runs the same build in watch mode.
 
 The extension only requests access to the domains in the dataset — the content
-script's `matches` are generated from the list, not `<all_urls>`.
+script's `matches` are generated from `data/sites.json` at build time, not
+`<all_urls>`.
 
 ## Settings (popup)
 
@@ -89,11 +99,12 @@ Optional `mechanism` names how a `site_blocked` site enforces closure.
 Edit `data/sites.json`, then rebuild:
 
 ```bash
-node scripts/build-data.mjs
+npm run build
 ```
 
-This regenerates `data/sites.js` and rewrites the `content_scripts.matches` in
-`manifest.json`. Reload the extension in `chrome://extensions` afterward.
+The build validates the dataset first (`npm run validate` on its own does just
+that), then regenerates `content_scripts.matches` in the manifest from the
+domain list. Reload the extension in `chrome://extensions` afterward.
 
 ## Development & CI
 
@@ -155,15 +166,18 @@ so DST is handled automatically.
 
 | Path | Purpose |
 | --- | --- |
-| `manifest.json` | MV3 manifest (matches + icons wired in) |
-| `icons/icon*.png` | Extension icons (16/32/48/128), generated |
+| `manifest.config.ts` | MV3 manifest; match patterns derived from the dataset |
+| `public/icons/icon*.png` | Extension icons (16/32/48/128), generated |
 | `data/sites.json` | Editable dataset (source of truth) |
-| `data/sites.js` | Generated; `globalThis.SHABBAT_DATA` |
-| `src/lib.js` | Sunset/Shabbat math + domain matching |
-| `src/content.js` + `src/banner.css` | The on-page banner |
-| `src/background.js` | Per-tab toolbar badge |
-| `src/popup.html/.css/.js` | Status + settings UI |
-| `scripts/build-data.mjs` | Regenerates `sites.js` + manifest matches |
+| `src/types.ts` | Dataset and settings types |
+| `src/lib/shabbat.ts` | Sunset / Shabbat-window math |
+| `src/lib/domain.ts` | Hostname normalization + dataset matching |
+| `src/lib/site.ts` | Status/confidence labels and ranking |
+| `src/lib/dataset.ts` | Typed access to `data/sites.json` |
+| `src/content/banner.ts` + `banner.css` | The on-page banner |
+| `src/background/index.ts` | Per-tab toolbar badge |
+| `src/popup/` | Status + settings UI |
+| `scripts/build-data.mjs` | Validates `sites.json` (`npm run validate`) |
 | `scripts/merge-candidates.mjs` | Merge verified new sites into `sites.json` |
 | `scripts/make-icons.mjs` | Regenerate the PNG icons |
 | `scripts/pack-crx.mjs` | Build `dist/*.crx` + `dist/*.zip` (signed) |

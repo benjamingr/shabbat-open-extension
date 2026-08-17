@@ -2,7 +2,6 @@
 <html lang="he" dir="rtl">
   <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../src/popup.css" />
     <title>preview</title>
     <style>
       body { margin: 24px; background: #d9d5cc; }
@@ -10,30 +9,37 @@
     </style>
   </head>
   <body>
+    <!--
+      Dev-only. The popup is a TypeScript module now, so this page has to be served:
+      run `npm run dev` and open /dev-preview/popup-preview.html. The chrome mock must be
+      installed before the module is imported, hence the dynamic import at the end.
+    -->
     <script>
+      const store = {};
       window.chrome = {
         storage: {
-          sync: { _v: {}, get(d, cb){ cb(Object.assign({}, d, this._v)); }, set(p, cb){ Object.assign(this._v, p); cb && cb(); } },
+          sync: {
+            async get(defaults) { return Object.assign({}, defaults, store); },
+            async set(patch) { Object.assign(store, patch); },
+          },
           onChanged: { addListener() {} },
         },
-        tabs: { query(_q, cb){ cb([{ id: 1, url: "https://www.togonline.co.il/" }]); } },
+        tabs: {
+          async query() { return [{ id: 1, url: "https://www.togonline.co.il/" }]; },
+        },
         runtime: {},
       };
     </script>
     <div class="frame" id="mount"></div>
-    <script src="../data/sites.js"></script>
-    <script src="../src/lib.js"></script>
-    <script>
-      fetch("../src/popup.html").then(r => r.text()).then(html => {
-        const doc = new DOMParser().parseFromString(html, "text/html");
-        const mount = document.getElementById("mount");
-        mount.innerHTML = doc.body.innerHTML;
-        mount.querySelectorAll("script").forEach(s => s.remove());
-        const sc = document.createElement("script");
-        sc.src = "../src/popup.js";
-        sc.onload = () => document.dispatchEvent(new Event("DOMContentLoaded"));
-        document.body.appendChild(sc);
-      });
+    <script type="module">
+      const html = await (await fetch("../src/popup/index.html")).text();
+      const doc = new DOMParser().parseFromString(html, "text/html");
+      const mount = document.getElementById("mount");
+      for (const script of doc.body.querySelectorAll("script")) script.remove();
+      mount.innerHTML = doc.body.innerHTML;
+
+      // The popup module reads the DOM on import, so it must load after the mount.
+      await import("../src/popup/popup.ts");
     </script>
   </body>
 </html>

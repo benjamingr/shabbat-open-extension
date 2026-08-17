@@ -9,7 +9,8 @@ import { writeFileSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
-const outDir = join(dirname(fileURLToPath(import.meta.url)), "..", "icons");
+// public/ is copied verbatim into dist/ by Vite, so the icons land at dist/icons/.
+const outDir = join(dirname(fileURLToPath(import.meta.url)), "..", "public", "icons");
 mkdirSync(outDir, { recursive: true });
 
 const BG = [42, 35, 80]; // #2a2350 deep purple
@@ -151,5 +152,5 @@ function encodePNG(rgba, w, h) {
 for (const size of [16, 32, 48, 128]) {
   const png = renderPNG(size);
   writeFileSync(join(outDir, `icon${size}.png`), png);
-  console.log(`wrote icons/icon${size}.png (${png.length} bytes)`);
+  console.log(`wrote public/icons/icon${size}.png (${png.length} bytes)`);
 }
