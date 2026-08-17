@@ -22,6 +22,23 @@ export async function setSettings(patch: Partial<Settings>): Promise<void> {
 }
 
 /**
+ * Stop showing the banner on a listed domain, permanently and across machines.
+ *
+ * Keyed by the *listed* domain rather than the current hostname, so dismissing from
+ * `shop.example.co.il` also covers `example.co.il` — it is one listing either way.
+ */
+export async function dismissDomain(domain: string): Promise<void> {
+  const { dismissedDomains } = await getSettings()
+  if (dismissedDomains.includes(domain)) return
+  await setSettings({ dismissedDomains: [...dismissedDomains, domain] })
+}
+
+export async function undismissDomain(domain: string): Promise<void> {
+  const { dismissedDomains } = await getSettings()
+  await setSettings({ dismissedDomains: dismissedDomains.filter((d) => d !== domain) })
+}
+
+/**
  * Fires whenever any settings key changes, including from another window or another
  * synced machine. The handler receives the full merged settings, not the diff, so
  * callers never have to reason about which keys were in the change set.

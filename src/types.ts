@@ -55,6 +55,8 @@ export interface Settings {
   havdalahOffsetMin: number
   /** Sites below this confidence are not flagged at all. */
   minConfidence: Confidence
+  /** Listed domains the user has chosen to stop seeing the banner on. */
+  dismissedDomains: string[]
 }
 
 export const DEFAULTS: Settings = {
@@ -63,4 +65,5 @@ export const DEFAULTS: Settings = {
   candleOffsetMin: 30,
   havdalahOffsetMin: 40,
   minConfidence: 'medium',
+  dismissedDomains: [],
 }

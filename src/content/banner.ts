@@ -7,7 +7,7 @@ import bannerCss from './banner.css?inline'
 import { t } from '../i18n/index.ts'
 import { sites } from '../lib/dataset.ts'
 import { matchSite, normalizeHost } from '../lib/domain.ts'
-import { getSettings } from '../lib/settings.ts'
+import { dismissDomain, getSettings } from '../lib/settings.ts'
 import { getShabbatWindow } from '../lib/shabbat.ts'
 import { isStrong, meetsConfidence, statusLabel } from '../lib/site.ts'
 import type { Settings, Site } from '../types.ts'
@@ -22,7 +22,11 @@ async function main(): Promise<void> {
   if (!settings.enabled) return
   if (!meetsConfidence(site, settings.minConfidence)) return
 
-  // Respect a per-tab dismissal for this host.
+  // A permanent dismissal, made once and synced to every machine.
+  const listedDomain = normalizeHost(site.domain)
+  if (settings.dismissedDomains.includes(listedDomain)) return
+
+  // ...and a per-tab one, which lasts only as long as this browsing session.
   const dismissKey = 'shabbatClosedDismissed:' + normalizeHost(location.hostname)
   try {
     if (sessionStorage.getItem(dismissKey) === '1') return
@@ -91,6 +95,17 @@ function renderBanner(site: Site, settings: Settings, dismissKey: string): void 
     if (site.evidence_text) link.title = site.evidence_text
     actions.append(link)
   }
+
+  const never = document.createElement('button')
+  never.type = 'button'
+  never.className = 'scb-never'
+  never.textContent = t('banner.never')
+  never.addEventListener('click', () => {
+    void dismissDomain(normalizeHost(site.domain))
+    clearOffset()
+    host.remove()
+  })
+  actions.append(never)
 
   const close = document.createElement('button')
   close.type = 'button'

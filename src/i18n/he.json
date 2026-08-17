@@ -16,6 +16,7 @@
   "banner.closed": "האתר סגור בשבת",
   "banner.observant": "האתר שומר שבת",
   "banner.source": "מקור",
+  "banner.never": "אל תציגו שוב באתר הזה",
   "banner.closeAria": "סגירת ההודעה עד סוף הגלישה",
 
   "badge.title": "{name} — {status}",
