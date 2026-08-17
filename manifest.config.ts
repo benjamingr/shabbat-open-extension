@@ -46,6 +46,8 @@ export default defineManifest({
     },
   },
 
+  options_page: 'src/options/index.html',
+
   permissions: ['tabs', 'storage'],
 
   background: {

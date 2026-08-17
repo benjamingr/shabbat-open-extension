@@ -1,0 +1,35 @@
+/* Shared palette for the extension's own pages (popup, options). */
+
+:root {
+  --bg: #faf7ef;
+  --card: #ffffff;
+  --border: #e7e0cc;
+  --ink: #1f1b12;
+  --muted: #7a7358;
+  --accent: #3a2d6b;
+  --gold: #c9a227;
+  --closed-bg: #f5e6c6;
+  --closed-ink: #7a5c14;
+  --observant-bg: #e2e8f4;
+  --observant-ink: #33477a;
+  --none-bg: #ececec;
+  --none-ink: #666;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #17151f;
+    --card: #201d2b;
+    --border: #322d40;
+    --ink: #ece7f3;
+    --muted: #a49cb5;
+    --accent: #b9a8ec;
+    --gold: #e6c14a;
+    --closed-bg: #4a3a12;
+    --closed-ink: #f0d99a;
+    --observant-bg: #26314a;
+    --observant-ink: #b9cbf0;
+    --none-bg: #2c2836;
+    --none-ink: #a49cb5;
+  }
+}

@@ -133,6 +133,10 @@ async function main(): Promise<void> {
   await loadFields()
   await render()
 
+  document.getElementById('open-options')?.addEventListener('click', () => {
+    void chrome.runtime.openOptionsPage()
+  })
+
   for (const name of FIELDS) {
     const el = field(name)
     if (!el) continue

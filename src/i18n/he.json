@@ -43,5 +43,22 @@
   "settings.minConfidenceHigh": "גבוה ומעלה",
   "settings.minConfidenceVerified": "מאומת בלבד — סגירה שאומתה",
   "settings.minConfidenceHint": "אתרים מתחת לסף לא יתויגו ולא יציגו באנר.",
-  "settings.enabled": "הרחבה פעילה"
+  "settings.enabled": "הרחבה פעילה",
+
+  "popup.openOptions": "הגדרות מתקדמות",
+
+  "options.title": "סגור בשבת — הגדרות",
+  "options.lede": "ההגדרות היומיומיות נמצאות בחלון הקופץ של התוסף. כאן נמצא מה שלא נכנס לשם.",
+  "options.dismissedHeading": "אתרים שהושתקו",
+  "options.dismissedHint": "אתרים שבחרתם לא לראות בהם באנר יותר. הסימון בסרגל הכלים ממשיך להופיע.",
+  "options.dismissedEmpty": "לא השתקתם אף אתר.",
+  "options.restore": "החזרת הבאנר",
+  "options.dataHeading": "הרשימה",
+  "options.dataHint": "הרשימה מגיעה עם התוסף ומתעדכנת עם כל גרסה. אין הורדה של נתונים בזמן ריצה.",
+  "options.statSites": "אתרים ברשימה",
+  "options.statRemoved": "נבדקו ונפסלו",
+  "options.statAudited": "תאריך הביקורת",
+  "options.privacyHeading": "פרטיות",
+  "options.privacyBody": "התוסף אינו אוסף מידע, אינו שולח מידע, ואינו יוצר שום בקשת רשת. רשימת האתרים מוטמעת בתוסף עצמו, וכל הבדיקות מתבצעות במחשב שלכם בלבד.",
+  "options.privacyPermissions": "ההרשאות מוגבלות לאתרים שברשימה בלבד — לא לכל האתרים."
 }
