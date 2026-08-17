@@ -3,11 +3,12 @@
  * Shabbat-observant Israeli site, and colors it differently while it is actually Shabbat
  * in Israel.
  */
+import { t } from '../i18n/index.ts'
 import { sites } from '../lib/dataset.ts'
 import { hostFromUrl, matchSite } from '../lib/domain.ts'
 import { getSettings, onSettingsChanged } from '../lib/settings.ts'
 import { getShabbatWindow } from '../lib/shabbat.ts'
-import { isStrong, STATUS_LABEL_HE } from '../lib/site.ts'
+import { isStrong, statusLabel } from '../lib/site.ts'
 
 const BADGE_SHABBAT = '#c9a227'
 const BADGE_STRONG = '#2f7d4f'
@@ -30,12 +31,10 @@ async function updateBadge(tabId: number, url: string | undefined): Promise<void
     color: win.active ? BADGE_SHABBAT : isStrong(site) ? BADGE_STRONG : BADGE_WEAK,
   })
 
-  const statusHe = STATUS_LABEL_HE[site.status]
+  const vars = { name: site.name, status: statusLabel(site.status) }
   await chrome.action.setTitle({
     tabId,
-    title: win.active
-      ? `${site.name} — ${statusHe}\nכעת שבת בישראל`
-      : `${site.name} — ${statusHe}`,
+    title: win.active ? t('badge.titleShabbat', vars) : t('badge.title', vars),
   })
 }
 

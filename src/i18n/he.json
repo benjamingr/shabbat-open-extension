@@ -1,0 +1,45 @@
+{
+  "appName": "סגור בשבת",
+  "app.tagline": "מסמן אתרים ישראליים שסגורים בשבת",
+  "app.shabbatNow": "כעת שבת בישראל",
+
+  "status.site_blocked": "האתר נחסם לגלישה בשבת",
+  "status.purchase_blocked": "לא ניתן לרכוש בשבת",
+  "status.operations_paused": "פעולות ומשלוחים מושהים בשבת",
+  "status.declared_shabbat_observant": "האתר מצהיר ששומר שבת",
+
+  "confidence.verified": "מאומת",
+  "confidence.high": "רמת ודאות גבוהה",
+  "confidence.medium": "רמת ודאות בינונית",
+
+  "banner.headline": "{symbol} שימו לב · {message} {symbol}",
+  "banner.closed": "האתר סגור בשבת",
+  "banner.observant": "האתר שומר שבת",
+  "banner.source": "מקור",
+  "banner.closeAria": "סגירת ההודעה עד סוף הגלישה",
+
+  "badge.title": "{name} — {status}",
+  "badge.titleShabbat": "{name} — {status}\nכעת שבת בישראל",
+
+  "popup.settings": "הגדרות",
+  "popup.loading": "טוען…",
+  "popup.notListed": "האתר הנוכחי אינו ברשימת האתרים שומרי השבת.",
+  "popup.noTab": "אין אתר פעיל.",
+  "popup.evidence": "מקור / עדות",
+  "popup.pillClosed": "סגור בשבת",
+  "popup.pillObservant": "מצהיר ששומר שבת",
+  "popup.pillActive": "כעת שבת",
+  "popup.pillNone": "לא ברשימה",
+  "popup.footer": "הבאנר מוצג בכל אתר שברשימה. החיווי \"כעת שבת\" מחושב לפי שקיעה בירושלים; חגים (יום־טוב) אינם נכללים.",
+
+  "settings.alertSymbol": "סמל ההתראה",
+  "settings.alertSymbolWarning": "⚠️ משולש אזהרה",
+  "settings.alertSymbolCandle": "🕯️ נר שבת",
+  "settings.alertSymbolPreview": "{symbol} שימו לב · האתר סגור בשבת {symbol}",
+  "settings.minConfidence": "סף ודאות מינימלי",
+  "settings.minConfidenceMedium": "בינוני ומעלה — כל האתרים",
+  "settings.minConfidenceHigh": "גבוה ומעלה",
+  "settings.minConfidenceVerified": "מאומת בלבד — סגירה שאומתה",
+  "settings.minConfidenceHint": "אתרים מתחת לסף לא יתויגו ולא יציגו באנר.",
+  "settings.enabled": "הרחבה פעילה"
+}

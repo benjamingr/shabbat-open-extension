@@ -20,8 +20,12 @@ function contentScriptMatches(): string[] {
 
 export default defineManifest({
   manifest_version: 3,
-  name: 'סגור בשבת — Closed on Shabbat',
-  description: 'מסמן אתרי מסחר ישראליים שומרי שבת ומציג באנר: האתר הזה סגור בשבת.',
+  // `__MSG_*__` resolves from public/_locales. chrome.i18n is used *only* here, for the
+  // strings Chrome reads before any extension code runs; everything else goes through
+  // src/i18n, which a language setting can override at runtime.
+  name: '__MSG_extName__',
+  description: '__MSG_extDescription__',
+  default_locale: 'he',
   version: pkg.version,
 
   icons: {
@@ -32,7 +36,7 @@ export default defineManifest({
   },
 
   action: {
-    default_title: 'סגור בשבת — סטטוס האתר',
+    default_title: '__MSG_actionTitle__',
     default_popup: 'src/popup/index.html',
     default_icon: {
       16: 'icons/icon16.png',

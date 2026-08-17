@@ -3,11 +3,12 @@
  * patterns in the manifest). Decides whether to show the "closed on Shabbat" banner for
  * the current site.
  */
+import { t } from '../i18n/index.ts'
 import { sites } from '../lib/dataset.ts'
 import { matchSite, normalizeHost } from '../lib/domain.ts'
 import { getSettings } from '../lib/settings.ts'
 import { getShabbatWindow } from '../lib/shabbat.ts'
-import { isStrong, meetsConfidence, STATUS_LABEL_HE } from '../lib/site.ts'
+import { isStrong, meetsConfidence, statusLabel } from '../lib/site.ts'
 import type { Settings, Site } from '../types.ts'
 
 const BANNER_ID = 'shabbat-closed-banner'
@@ -45,19 +46,21 @@ function renderBanner(site: Site, settings: Settings, dismissKey: string): void 
   el.setAttribute('aria-live', 'polite')
   el.className = 'shabbat-closed-banner' + (win.active ? ' is-active' : '')
 
-  const sym = settings.alertSymbol || '⚠️'
+  const symbol = settings.alertSymbol || '⚠️'
 
   const text = document.createElement('div')
   text.className = 'scb-text'
 
   const headline = document.createElement('div')
   headline.className = 'scb-headline'
-  const msg = isStrong(site) ? 'האתר סגור בשבת' : 'האתר שומר שבת'
-  headline.textContent = `${sym} שימו לב · ${msg} ${sym}`
+  headline.textContent = t('banner.headline', {
+    symbol,
+    message: t(isStrong(site) ? 'banner.closed' : 'banner.observant'),
+  })
 
   const sub = document.createElement('div')
   sub.className = 'scb-sub'
-  sub.textContent = STATUS_LABEL_HE[site.status]
+  sub.textContent = statusLabel(site.status)
 
   text.append(headline, sub)
 
@@ -73,7 +76,7 @@ function renderBanner(site: Site, settings: Settings, dismissKey: string): void 
     link.href = site.evidence_url
     link.target = '_blank'
     link.rel = 'noopener noreferrer'
-    link.textContent = 'מקור'
+    link.textContent = t('banner.source')
     if (site.evidence_text) link.title = site.evidence_text
     actions.append(link)
   }
@@ -81,7 +84,7 @@ function renderBanner(site: Site, settings: Settings, dismissKey: string): void 
   const close = document.createElement('button')
   close.type = 'button'
   close.className = 'scb-close'
-  close.setAttribute('aria-label', 'סגירת ההודעה עד סוף הגלישה')
+  close.setAttribute('aria-label', t('banner.closeAria'))
   close.textContent = '✕'
   close.addEventListener('click', dismiss)
   actions.append(close)

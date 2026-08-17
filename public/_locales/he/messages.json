@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "סגור בשבת — Closed on Shabbat",
+    "description": "Extension name shown in Chrome and on the store listing."
+  },
+  "extDescription": {
+    "message": "מסמן אתרי מסחר ישראליים שומרי שבת ומציג באנר: האתר הזה סגור בשבת.",
+    "description": "Short store description."
+  },
+  "actionTitle": {
+    "message": "סגור בשבת — סטטוס האתר",
+    "description": "Tooltip on the toolbar button before a site has been evaluated."
+  }
+}

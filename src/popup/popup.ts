@@ -1,11 +1,12 @@
 /* Popup: shows the current tab's Shabbat status and exposes settings. */
 import './popup.css'
 
+import { applyStaticStrings, t } from '../i18n/index.ts'
 import { sites } from '../lib/dataset.ts'
 import { hostFromUrl, matchSite } from '../lib/domain.ts'
 import { getSettings, setSettings } from '../lib/settings.ts'
 import { getShabbatWindow } from '../lib/shabbat.ts'
-import { CONFIDENCE_LABEL_HE, isStrong, STATUS_LABEL_HE } from '../lib/site.ts'
+import { confidenceLabel, isStrong, statusLabel } from '../lib/site.ts'
 import type { Settings } from '../types.ts'
 
 type Field = 'alertSymbol' | 'minConfidence' | 'enabled'
@@ -20,7 +21,7 @@ function field(id: Field): Input | null {
 function updateSymbolPreview(): void {
   const sel = field('alertSymbol')
   const prev = document.getElementById('symbolPreview')
-  if (sel && prev) prev.textContent = `${sel.value} שימו לב · האתר סגור בשבת ${sel.value}`
+  if (sel && prev) prev.textContent = t('settings.alertSymbolPreview', { symbol: sel.value })
 }
 
 async function loadFields(): Promise<void> {
@@ -68,11 +69,7 @@ async function render(): Promise<void> {
   const win = getShabbatWindow(new Date(), settings.candleOffsetMin, settings.havdalahOffsetMin)
 
   const nowEl = document.getElementById('shabbat-now')
-  if (nowEl) {
-    nowEl.textContent = win.active
-      ? 'כעת שבת בישראל'
-      : 'מסמן אתרים ישראליים שסגורים בשבת'
-  }
+  if (nowEl) nowEl.textContent = t(win.active ? 'app.shabbatNow' : 'app.tagline')
 
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
   const body = document.getElementById('status-body')
@@ -85,14 +82,16 @@ async function render(): Promise<void> {
   if (!site) {
     const line = document.createElement('div')
     line.className = 'status-line'
-    line.textContent = host
-      ? 'האתר הנוכחי אינו ברשימת האתרים שומרי השבת.'
-      : 'אין אתר פעיל.'
+    line.textContent = t(host ? 'popup.notListed' : 'popup.noTab')
     body.append(line)
 
     const row = document.createElement('div')
     row.className = 'pill-row'
-    row.append(win.active ? pill('active', 'כעת שבת') : pill('none', 'לא ברשימה'))
+    row.append(
+      win.active
+        ? pill('active', t('popup.pillActive'))
+        : pill('none', t('popup.pillNone')),
+    )
     body.append(row)
     return
   }
@@ -104,16 +103,18 @@ async function render(): Promise<void> {
 
   const line = document.createElement('div')
   line.className = 'status-line'
-  line.textContent = STATUS_LABEL_HE[site.status]
+  line.textContent = statusLabel(site.status)
   body.append(line)
 
   const row = document.createElement('div')
   row.className = 'pill-row'
   row.append(
-    isStrong(site) ? pill('closed', 'סגור בשבת') : pill('observant', 'מצהיר ששומר שבת'),
+    isStrong(site)
+      ? pill('closed', t('popup.pillClosed'))
+      : pill('observant', t('popup.pillObservant')),
   )
-  row.append(pill('confidence', CONFIDENCE_LABEL_HE[site.confidence]))
-  if (win.active) row.append(pill('active', 'כעת שבת'))
+  row.append(pill('confidence', confidenceLabel(site.confidence)))
+  if (win.active) row.append(pill('active', t('popup.pillActive')))
   body.append(row)
 
   if (site.evidence_url) {
@@ -122,13 +123,14 @@ async function render(): Promise<void> {
     a.href = site.evidence_url
     a.target = '_blank'
     a.rel = 'noopener noreferrer'
-    a.textContent = 'מקור / עדות'
+    a.textContent = t('popup.evidence')
     if (site.evidence_text) a.title = site.evidence_text
     body.append(a)
   }
 }
 
 async function main(): Promise<void> {
+  applyStaticStrings()
   await loadFields()
   await render()
 

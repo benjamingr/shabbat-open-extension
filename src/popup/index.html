@@ -3,51 +3,52 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>סגור בשבת</title>
+    <!-- Never rendered for a popup, but kept single-sourced with everything else. -->
+    <title data-i18n="appName"></title>
   </head>
   <body>
     <header class="hdr">
       <span class="flame" aria-hidden="true">🕯️</span>
       <div class="hdr-txt">
-        <h1>סגור בשבת</h1>
+        <h1 data-i18n="appName"></h1>
         <div class="hdr-sub" id="shabbat-now">—</div>
       </div>
     </header>
 
     <!-- Current site status -->
     <section class="status" id="status" aria-live="polite">
-      <div id="status-body" class="status-body">טוען…</div>
+      <div id="status-body" class="status-body" data-i18n="popup.loading"></div>
     </section>
 
     <!-- Settings -->
     <section class="settings">
-      <h2 class="section-title">הגדרות</h2>
+      <h2 class="section-title" data-i18n="popup.settings"></h2>
 
       <div class="field">
         <div class="field-head">
-          <label for="alertSymbol">סמל ההתראה</label>
+          <label for="alertSymbol" data-i18n="settings.alertSymbol"></label>
         </div>
         <select id="alertSymbol">
-          <option value="⚠️">⚠️ משולש אזהרה</option>
-          <option value="🕯️">🕯️ נר שבת</option>
+          <option value="⚠️" data-i18n="settings.alertSymbolWarning"></option>
+          <option value="🕯️" data-i18n="settings.alertSymbolCandle"></option>
         </select>
-        <p class="hint" id="symbolPreview">⚠️ שימו לב · האתר סגור בשבת ⚠️</p>
+        <p class="hint" id="symbolPreview"></p>
       </div>
 
       <div class="field">
         <div class="field-head">
-          <label for="minConfidence">סף ודאות מינימלי</label>
+          <label for="minConfidence" data-i18n="settings.minConfidence"></label>
         </div>
         <select id="minConfidence">
-          <option value="medium">בינוני ומעלה — כל האתרים</option>
-          <option value="high">גבוה ומעלה</option>
-          <option value="verified">מאומת בלבד — סגירה שאומתה</option>
+          <option value="medium" data-i18n="settings.minConfidenceMedium"></option>
+          <option value="high" data-i18n="settings.minConfidenceHigh"></option>
+          <option value="verified" data-i18n="settings.minConfidenceVerified"></option>
         </select>
-        <p class="hint">אתרים מתחת לסף לא יתויגו ולא יציגו באנר.</p>
+        <p class="hint" data-i18n="settings.minConfidenceHint"></p>
       </div>
 
       <div class="field switch-field">
-        <label for="enabled">הרחבה פעילה</label>
+        <label for="enabled" data-i18n="settings.enabled"></label>
         <label class="switch">
           <input id="enabled" type="checkbox" />
           <span class="track"><span class="thumb"></span></span>
@@ -55,10 +56,7 @@
       </div>
     </section>
 
-    <footer class="foot">
-      הבאנר מוצג בכל אתר שברשימה. החיווי "כעת שבת" מחושב לפי שקיעה בירושלים; חגים
-      (יום־טוב) אינם נכללים.
-    </footer>
+    <footer class="foot" data-i18n="popup.footer"></footer>
 
     <script type="module" src="./popup.ts"></script>
   </body>
