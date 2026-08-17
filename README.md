@@ -136,6 +136,39 @@ openssl genrsa 2048 > key.pem      # then paste its contents into the CRX_KEY se
 
 Without the secret, CI falls back to an ephemeral key (build still succeeds, but
 the extension id is not stable).
+## Moderation
+
+Users can report a missing site or appeal a listing from the extension. Both are
+Google Forms, identified in `src/config.ts`.
+
+### Triage
+
+1. A submission arrives by email (see notifications below).
+2. **Verify it first-hand.** Fetch the site and look for the evidence yourself —
+   a report is a lead, not a source. This is the whole basis of the dataset's
+   claim to be audited rather than crowdsourced.
+3. Write the candidate into a JSON file shaped like `sites[]`, then:
+   ```bash
+   node scripts/merge-candidates.mjs candidates.json
+   npm run validate
+   ```
+   `merge-candidates.mjs` skips domains already in `sites[]` or `removed[]`, so
+   a re-reported site that was previously rejected stays rejected.
+4. For an upheld appeal, move the entry to `removed[]` with a reason rather than
+   deleting it — that is what stops it being re-proposed later.
+5. Commit `data/sites.json`. The next release picks it up.
+
+### Notifications
+
+Google's built-in form notification only says that *a* response arrived. Install
+`scripts/notify-on-submit.gs` on each form (instructions are in the file header)
+to get the answers themselves by email, so triage starts from the inbox.
+
+### Accounts
+
+The forms and their response sheets belong to the project's **alias** Google
+account, never a personal one — a response sheet exposes its owner to anyone
+given access, and the Apps Script trigger sends mail as whoever installed it.
 
 ## How Shabbat time is computed
 
