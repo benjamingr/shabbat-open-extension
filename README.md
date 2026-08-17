@@ -8,14 +8,23 @@ observe Shabbat, and shows a direct banner on them:
 The alert is deliberately always-on — it's most useful *before* Shabbat, since
 during Shabbat the site being closed is self-evident.
 
-- **Banner** at the top of the page for every listed site. Sites with a real
-  closure get "האתר סגור בשבת"; sites that only *declare* observance get
-  "האתר שומר שבת". The symbol (`⚠️` / `🕯️`) is configurable. Dismissible per tab.
+- **Banner** at the top of the page for every listed site, rendered in a shadow
+  root so the host page's CSS cannot reach it. Sites with a real closure get
+  "האתר סגור בשבת"; sites that only *declare* observance get "האתר שומר שבת".
+  The symbol (`⚠️` / `🕯️`) is configurable. Dismissible for the session, or for
+  good.
 - **Toolbar badge** on every listed site: a green dot for sites that close on
   Shabbat, grey for sites that only declare observance, gold while it is
   actually Shabbat in Israel. Hover for details.
-- **Popup** shows the current site's status, evidence source, whether it is
-  currently Shabbat, and the settings.
+- **Popup** shows the current site's status, whether it is currently Shabbat,
+  and the settings.
+- **Proof page** for each listing: the quoted first-party text, the closure
+  mechanism, the audit date, an optional screenshot, and a link out to the live
+  site — so a claim can be checked rather than taken on trust.
+- **Report and appeal forms**, so a missing site or a wrong listing can be
+  raised from inside the extension.
+- **Options page** for the dismissed-sites list, dataset stats, and the privacy
+  statement.
 
 ## Install (unpacked)
 
@@ -41,13 +50,41 @@ script's `matches` are generated from `data/sites.json` at build time, not
 
 - **Alert symbol** — the emoji shown on both sides of the banner headline: `⚠️`
   (default) or `🕯️`. A live preview updates as you pick.
-- **Minimum confidence** — hide lower-confidence entries.
+- **Minimum confidence** — hide lower-confidence entries. Suppresses the badge
+  as well as the banner; the popup still explains what it knows, and says the
+  site is below your threshold.
 - **Extension enabled** — master on/off.
 
 The banner always shows on a listed site. Shabbat times are computed internally
 (Jerusalem sunset, 30 min before / 40 min after) only to drive the "currently
 Shabbat" cue (banner tint, gold badge, popup indicator) — there's no timing to
 configure.
+
+The options page (`chrome://extensions` → Details → Extension options, or the
+link at the foot of the popup) holds the sites you've silenced permanently, with
+a button to restore each.
+
+## Privacy
+
+The extension makes **no network request of its own**. The site list ships
+inside it, and every check runs locally. Host access is limited to the listed
+domains — the content script's `matches` are generated from `data/sites.json` at
+build time, so there is no `<all_urls>`.
+
+The one exception: clicking **דיווח על אתר** or **ערעור על הרישום** opens a
+Google Form in a new tab, and the domain travels to Google as part of that link.
+That only ever happens on your click.
+
+## Language
+
+All UI copy lives in `src/i18n/he.json` and is reached through `t()`; nothing is
+hardcoded in the components. Hebrew is currently the only bundle — adding
+`en.json` with the same keys and registering it in `src/i18n/index.ts` is the
+whole job.
+
+`chrome.i18n` is used only for the manifest's store-facing name and description,
+which Chrome reads before any extension code runs. It picks its locale from the
+browser and cannot be overridden, so it could never honour a language setting.
 
 ## The data
 
@@ -194,6 +231,8 @@ so DST is handled automatically.
   true`), but adding those dates needs a Hebrew-calendar table.
 - **Single location.** Sunset uses Jerusalem; other parts of Israel differ by a
   few minutes — covered by the default offsets.
+- **The list only changes with a release.** It is compiled into the extension,
+  so a correction reaches users when the next version ships, not before.
 
 ## Files
 
@@ -207,9 +246,19 @@ so DST is handled automatically.
 | `src/lib/domain.ts` | Hostname normalization + dataset matching |
 | `src/lib/site.ts` | Status/confidence labels and ranking |
 | `src/lib/dataset.ts` | Typed access to `data/sites.json` |
-| `src/content/banner.ts` + `banner.css` | The on-page banner |
+| `src/lib/settings.ts` | Reads/writes `chrome.storage.sync` |
+| `src/lib/forms.ts` + `src/config.ts` | Report / appeal form URLs |
+| `src/lib/proof.ts` | URL of the proof page for a listing |
+| `src/i18n/` | Message bundle and `t()` |
+| `src/ui/tokens.css` | Palette shared by the extension's own pages |
+| `src/content/banner.ts` + `banner.css` | The on-page banner (shadow root) |
 | `src/background/index.ts` | Per-tab toolbar badge |
 | `src/popup/` | Status + settings UI |
+| `src/options/` | Dismissed sites, dataset stats, privacy |
+| `src/proof/` | Per-listing evidence page |
+| `public/proof/` | Evidence screenshots (see its README) |
+| `tests/` | Vitest suites (`npm test`) |
+| `scripts/notify-on-submit.gs` | Apps Script: mail each form response |
 | `scripts/build-data.mjs` | Validates `sites.json` (`npm run validate`) |
 | `scripts/merge-candidates.mjs` | Merge verified new sites into `sites.json` |
 | `scripts/make-icons.mjs` | Regenerate the PNG icons |
