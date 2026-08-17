@@ -8,7 +8,7 @@ import { sites } from '../lib/dataset.ts'
 import { hostFromUrl, matchSite } from '../lib/domain.ts'
 import { getSettings, onSettingsChanged } from '../lib/settings.ts'
 import { getShabbatWindow } from '../lib/shabbat.ts'
-import { isStrong, statusLabel } from '../lib/site.ts'
+import { isStrong, meetsConfidence, statusLabel } from '../lib/site.ts'
 
 const BADGE_SHABBAT = '#c9a227'
 const BADGE_STRONG = '#2f7d4f'
@@ -16,13 +16,16 @@ const BADGE_WEAK = '#8a8a8a'
 
 async function updateBadge(tabId: number, url: string | undefined): Promise<void> {
   const site = matchSite(hostFromUrl(url), sites)
+  const settings = await getSettings()
 
-  if (!site) {
+  // The confidence threshold gates the badge as well as the banner. Gating only the
+  // banner left a site below the threshold silently badged and tooltipped, which is
+  // exactly what "אתרים מתחת לסף לא יתויגו" promises not to happen.
+  if (!site || !settings.enabled || !meetsConfidence(site, settings.minConfidence)) {
     await chrome.action.setBadgeText({ tabId, text: '' })
     return
   }
 
-  const settings = await getSettings()
   const win = getShabbatWindow(new Date(), settings.candleOffsetMin, settings.havdalahOffsetMin)
 
   await chrome.action.setBadgeText({ tabId, text: '●' })

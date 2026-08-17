@@ -6,7 +6,7 @@ import { sites } from '../lib/dataset.ts'
 import { hostFromUrl, matchSite } from '../lib/domain.ts'
 import { getSettings, setSettings } from '../lib/settings.ts'
 import { getShabbatWindow } from '../lib/shabbat.ts'
-import { confidenceLabel, isStrong, statusLabel } from '../lib/site.ts'
+import { confidenceLabel, isStrong, meetsConfidence, statusLabel } from '../lib/site.ts'
 import type { Settings } from '../types.ts'
 
 type Field = 'alertSymbol' | 'minConfidence' | 'enabled'
@@ -35,23 +35,13 @@ async function loadFields(): Promise<void> {
   updateSymbolPreview()
 }
 
-function clamp(value: string, lo: number, hi: number): number {
-  const n = Number(value)
-  if (!Number.isFinite(n)) return lo
-  return Math.min(hi, Math.max(lo, Math.round(n)))
-}
-
 async function save(): Promise<void> {
   const patch: Record<string, unknown> = {}
   for (const name of FIELDS) {
     const el = field(name)
     if (!el) continue
     if (el instanceof HTMLInputElement && el.type === 'checkbox') patch[name] = el.checked
-    else if (el instanceof HTMLInputElement && el.type === 'number') {
-      const n = clamp(el.value, 0, 120)
-      patch[name] = n
-      el.value = String(n)
-    } else patch[name] = el.value
+    else patch[name] = el.value
   }
   await setSettings(patch as Partial<Settings>)
   await render()
@@ -116,6 +106,15 @@ async function render(): Promise<void> {
   row.append(pill('confidence', confidenceLabel(site.confidence)))
   if (win.active) row.append(pill('active', t('popup.pillActive')))
   body.append(row)
+
+  // The popup always reports what the dataset knows, even for a site the badge and
+  // banner are suppressing — otherwise "why is there no badge here?" has no answer.
+  if (!meetsConfidence(site, settings.minConfidence)) {
+    const note = document.createElement('div')
+    note.className = 'status-line'
+    note.textContent = t('popup.belowThreshold')
+    body.append(note)
+  }
 
   if (site.evidence_url) {
     const a = document.createElement('a')
