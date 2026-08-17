@@ -12,10 +12,12 @@
  */
 import { readFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { dirname, join } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const sitesPath = join(root, "data", "sites.json");
+
+// Defaults to the real dataset; an explicit path lets the tests feed it fixtures.
+const sitesPath = process.argv[2] ? resolve(process.argv[2]) : join(root, "data", "sites.json");
 
 const STATUSES = new Set([
   "site_blocked",
@@ -31,10 +33,11 @@ const warnings = [];
 const fail = (msg) => errors.push(msg);
 const warn = (msg) => warnings.push(msg);
 
+const label = relative(root, sitesPath) || sitesPath;
 const data = JSON.parse(readFileSync(sitesPath, "utf8")); // throws on malformed JSON
 
 if (!Array.isArray(data.sites) || data.sites.length === 0) {
-  fail("data/sites.json has no sites[]");
+  fail(`${label} has no sites[]`);
 }
 
 const norm = (d) =>
@@ -100,12 +103,12 @@ for (const entry of data.removed ?? []) {
 for (const w of warnings) console.warn(`  ! ${w}`);
 
 if (errors.length > 0) {
-  console.error(`\ndata/sites.json is invalid — ${errors.length} error(s):`);
+  console.error(`\n${label} is invalid — ${errors.length} error(s):`);
   for (const e of errors) console.error(`  ✗ ${e}`);
   process.exit(1);
 }
 
 console.log(
-  `data/sites.json OK — ${domains.length} sites, ${(data.removed ?? []).length} removed, ` +
+  `${label} OK — ${domains.length} sites, ${(data.removed ?? []).length} removed, ` +
     `${domains.length * 2} match patterns.`,
 );
