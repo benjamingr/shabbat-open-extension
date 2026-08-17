@@ -1,7 +1,19 @@
-/* Injected on listed sites. Everything is scoped under #shabbat-closed-banner
-   and uses !important selectively so host-page CSS can't distort the banner. */
+/*
+ * Loaded into the banner's shadow root, not into the page.
+ *
+ * That is why nothing here needs an `#id` prefix or `!important` to win: host-page CSS
+ * cannot reach inside the shadow tree, and these rules cannot leak out of it. The one
+ * remaining `!important` is a genuine override of the rule above it.
+ *
+ * dev-preview/ and dev-store/ render this same markup in a plain document, so the
+ * selectors stay class-based rather than :host-relative.
+ */
 
-#shabbat-closed-banner.shabbat-closed-banner {
+:host {
+  all: initial;
+}
+
+.shabbat-closed-banner {
   position: fixed;
   top: 0;
   inset-inline: 0;
@@ -26,40 +38,40 @@
 }
 
 /* Active state = it is currently Shabbat in Israel: dusk palette. */
-#shabbat-closed-banner.shabbat-closed-banner.is-active {
+.shabbat-closed-banner.is-active {
   color: #f6f1dd;
   background: linear-gradient(90deg, #241d47 0%, #3a2d6b 60%, #4a3a80 100%);
   border-bottom-color: #e6c14a;
 }
 
-#shabbat-closed-banner .scb-text {
+.scb-text {
   flex: 0 1 auto;
   min-width: 0;
 }
-#shabbat-closed-banner .scb-headline {
+.scb-headline {
   margin: 0;
   font-weight: 800;
   font-size: 16px;
   letter-spacing: -0.01em;
 }
-#shabbat-closed-banner .scb-sub {
+.scb-sub {
   margin-top: 2px;
   font-size: 12.5px;
   font-weight: 500;
   opacity: 0.82;
 }
 
-#shabbat-closed-banner .scb-spacer {
+.scb-spacer {
   flex: 1 1 auto;
 }
 
-#shabbat-closed-banner .scb-actions {
+.scb-actions {
   flex: 0 0 auto;
   display: flex;
   align-items: center;
   gap: 6px;
 }
-#shabbat-closed-banner .scb-link {
+.scb-link {
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -70,42 +82,43 @@
   border-radius: 6px;
   white-space: nowrap;
 }
-#shabbat-closed-banner .scb-link:hover {
+.scb-link:hover {
   opacity: 1;
   background: rgba(0, 0, 0, 0.08);
 }
-#shabbat-closed-banner.is-active .scb-link:hover {
+.is-active .scb-link:hover {
   background: rgba(255, 255, 255, 0.14);
 }
 
-#shabbat-closed-banner .scb-close {
+.scb-close {
   cursor: pointer;
   background: transparent;
   border: none;
   color: inherit;
+  font: inherit;
   font-size: 15px;
   line-height: 1;
   padding: 6px 8px;
   border-radius: 6px;
   opacity: 0.65;
 }
-#shabbat-closed-banner .scb-close:hover {
+.scb-close:hover {
   opacity: 1;
   background: rgba(0, 0, 0, 0.1);
 }
-#shabbat-closed-banner.is-active .scb-close:hover {
+.is-active .scb-close:hover {
   background: rgba(255, 255, 255, 0.16);
 }
 
 @media (max-width: 560px) {
-  #shabbat-closed-banner.shabbat-closed-banner {
+  .shabbat-closed-banner {
     gap: 10px;
     padding: 9px 14px;
   }
-  #shabbat-closed-banner .scb-headline {
+  .scb-headline {
     font-size: 15px;
   }
-  #shabbat-closed-banner .scb-sub {
+  .scb-sub {
     font-size: 11.5px;
   }
 }
@@ -119,7 +132,7 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  #shabbat-closed-banner.shabbat-closed-banner {
+  .shabbat-closed-banner {
     animation: none !important;
   }
 }

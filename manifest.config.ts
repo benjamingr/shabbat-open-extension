@@ -57,7 +57,8 @@ export default defineManifest({
     {
       matches: contentScriptMatches(),
       js: ['src/content/banner.ts'],
-      css: ['src/content/banner.css'],
+      // No `css` entry: the stylesheet is imported by banner.ts and injected into the
+      // banner's shadow root, so it never becomes part of the host page.
       run_at: 'document_idle',
     },
   ],

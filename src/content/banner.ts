@@ -3,6 +3,7 @@
  * patterns in the manifest). Decides whether to show the "closed on Shabbat" banner for
  * the current site.
  */
+import bannerCss from './banner.css?inline'
 import { t } from '../i18n/index.ts'
 import { sites } from '../lib/dataset.ts'
 import { matchSite, normalizeHost } from '../lib/domain.ts'
@@ -39,8 +40,18 @@ function renderBanner(site: Site, settings: Settings, dismissKey: string): void 
 
   const win = getShabbatWindow(new Date(), settings.candleOffsetMin, settings.havdalahOffsetMin)
 
+  // The banner lives in a shadow root so the host page's stylesheet cannot reach it.
+  // A page-level stylesheet was losing to sites that style by tag or with !important.
+  const host = document.createElement('div')
+  host.id = BANNER_ID
+  host.style.setProperty('all', 'initial', 'important')
+  const shadow = host.attachShadow({ mode: 'open' })
+
+  const style = document.createElement('style')
+  style.textContent = bannerCss
+  shadow.append(style)
+
   const el = document.createElement('div')
-  el.id = BANNER_ID
   el.dir = 'rtl'
   el.setAttribute('role', 'status')
   el.setAttribute('aria-live', 'polite')
@@ -90,9 +101,11 @@ function renderBanner(site: Site, settings: Settings, dismissKey: string): void 
   actions.append(close)
 
   el.append(text, spacer, actions)
-  ;(document.body || document.documentElement).append(el)
+  shadow.append(el)
+  ;(document.body || document.documentElement).append(host)
 
-  // Push the page down so the banner doesn't cover the site's own header.
+  // Push the page down so the banner doesn't cover the site's own header. Measured on
+  // the bar inside the shadow root — the host itself is a zero-height `all: initial` box.
   applyOffset(el)
 
   function dismiss(): void {
@@ -102,7 +115,7 @@ function renderBanner(site: Site, settings: Settings, dismissKey: string): void 
       // Nothing to do — the banner still closes for this page view.
     }
     clearOffset()
-    el.remove()
+    host.remove()
   }
 }
 
