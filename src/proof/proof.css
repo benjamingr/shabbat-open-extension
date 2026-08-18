@@ -1,0 +1,134 @@
+@import "../ui/tokens.css";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Assistant", "Segoe UI", system-ui, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--bg);
+}
+
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+.hidden {
+  display: none;
+}
+
+h1 {
+  margin: 0 0 2px;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+h2 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.domain {
+  margin: 0 0 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  color: var(--muted);
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: start;
+}
+
+.notfound {
+  padding: 24px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 700;
+}
+.pill.closed {
+  background: var(--closed-bg);
+  color: var(--closed-ink);
+}
+.pill.observant {
+  background: var(--observant-bg);
+  color: var(--observant-ink);
+}
+.pill.confidence {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.card {
+  margin-bottom: 16px;
+  padding: 18px 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.card > :last-child {
+  margin-bottom: 0;
+}
+
+.hint {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+/* The site's own words, quoted. Border on the inline-start edge so it flips with dir. */
+.quote {
+  margin: 0 0 12px;
+  padding: 2px 14px;
+  border-inline-start: 3px solid var(--gold);
+  font-size: 16px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 8px 14px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.btn:hover {
+  border-color: var(--accent);
+}
+
+#screenshot {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}

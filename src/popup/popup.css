@@ -1,35 +1,4 @@
-:root {
-  --bg: #faf7ef;
-  --card: #ffffff;
-  --border: #e7e0cc;
-  --ink: #1f1b12;
-  --muted: #7a7358;
-  --accent: #3a2d6b;
-  --gold: #c9a227;
-  --closed-bg: #f5e6c6;
-  --closed-ink: #7a5c14;
-  --observant-bg: #e2e8f4;
-  --observant-ink: #33477a;
-  --none-bg: #ececec;
-  --none-ink: #666;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #17151f;
-    --card: #201d2b;
-    --border: #322d40;
-    --ink: #ece7f3;
-    --muted: #a49cb5;
-    --accent: #b9a8ec;
-    --gold: #e6c14a;
-    --closed-bg: #4a3a12;
-    --closed-ink: #f0d99a;
-    --observant-bg: #26314a;
-    --observant-ink: #b9cbf0;
-    --none-bg: #2c2836;
-    --none-ink: #a49cb5;
-  }
-}
+@import "../ui/tokens.css";
 
 * {
   box-sizing: border-box;
@@ -119,6 +88,33 @@ body {
   color: var(--muted);
   font-weight: 600;
 }
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.actions .btn {
+  flex: 1 1 auto;
+  padding: 7px 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-align: center;
+  color: var(--accent);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-decoration: none;
+}
+.actions .btn:hover {
+  border-color: var(--accent);
+}
+.actions .btn.hidden {
+  display: none;
+}
+
 .status-body .evidence {
   display: inline-block;
   margin-top: 10px;
@@ -251,4 +247,19 @@ select {
   font-size: 11px;
   color: var(--muted);
   line-height: 1.5;
+}
+.foot p {
+  margin: 0;
+}
+.linkish {
+  margin-top: 8px;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  color: var(--accent);
+  background: none;
+  border: none;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }

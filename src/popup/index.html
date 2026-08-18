@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Never rendered for a popup, but kept single-sourced with everything else. -->
+    <title data-i18n="appName"></title>
+  </head>
+  <body>
+    <header class="hdr">
+      <span class="flame" aria-hidden="true">🕯️</span>
+      <div class="hdr-txt">
+        <h1 data-i18n="appName"></h1>
+        <div class="hdr-sub" id="shabbat-now">—</div>
+      </div>
+    </header>
+
+    <!-- Current site status -->
+    <section class="status" id="status" aria-live="polite">
+      <div id="status-body" class="status-body" data-i18n="popup.loading"></div>
+      <div class="actions">
+        <a class="btn hidden" id="appeal" target="_blank" rel="noopener noreferrer"
+           data-i18n="action.appeal"></a>
+        <a class="btn" id="report" target="_blank" rel="noopener noreferrer"
+           data-i18n="action.report"></a>
+      </div>
+    </section>
+
+    <!-- Settings -->
+    <section class="settings">
+      <h2 class="section-title" data-i18n="popup.settings"></h2>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="alertSymbol" data-i18n="settings.alertSymbol"></label>
+        </div>
+        <select id="alertSymbol">
+          <option value="⚠️" data-i18n="settings.alertSymbolWarning"></option>
+          <option value="🕯️" data-i18n="settings.alertSymbolCandle"></option>
+        </select>
+        <p class="hint" id="symbolPreview"></p>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="minConfidence" data-i18n="settings.minConfidence"></label>
+        </div>
+        <select id="minConfidence">
+          <option value="medium" data-i18n="settings.minConfidenceMedium"></option>
+          <option value="high" data-i18n="settings.minConfidenceHigh"></option>
+          <option value="verified" data-i18n="settings.minConfidenceVerified"></option>
+        </select>
+        <p class="hint" data-i18n="settings.minConfidenceHint"></p>
+      </div>
+
+      <div class="field switch-field">
+        <label for="enabled" data-i18n="settings.enabled"></label>
+        <label class="switch">
+          <input id="enabled" type="checkbox" />
+          <span class="track"><span class="thumb"></span></span>
+        </label>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <p data-i18n="popup.footer"></p>
+      <button type="button" class="linkish" id="open-options" data-i18n="popup.openOptions"></button>
+    </footer>
+
+    <script type="module" src="./popup.ts"></script>
+  </body>
+</html>

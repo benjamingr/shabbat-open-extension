@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title data-i18n="options.title"></title>
+  </head>
+  <body>
+    <main class="page">
+      <h1 data-i18n="options.title"></h1>
+      <p class="lede" data-i18n="options.lede"></p>
+
+      <!--
+        Day-to-day settings stay in the popup, one click from the site they apply to.
+        This page carries only what does not fit there: a list to manage, a data panel,
+        and text to read.
+      -->
+      <section class="card">
+        <h2 data-i18n="options.dismissedHeading"></h2>
+        <p class="hint" data-i18n="options.dismissedHint"></p>
+        <ul class="domain-list" id="dismissed-list"></ul>
+        <p class="hint hidden" id="dismissed-empty" data-i18n="options.dismissedEmpty"></p>
+      </section>
+
+      <section class="card">
+        <h2 data-i18n="options.dataHeading"></h2>
+        <p class="hint" data-i18n="options.dataHint"></p>
+        <dl class="stats" id="data-stats"></dl>
+        <ul class="breakdown" id="status-breakdown"></ul>
+      </section>
+
+      <section class="card">
+        <h2 data-i18n="options.privacyHeading"></h2>
+        <p data-i18n="options.privacyBody"></p>
+        <p data-i18n="options.privacyForms"></p>
+        <p class="hint" data-i18n="options.privacyPermissions"></p>
+      </section>
+    </main>
+    <script type="module" src="./options.ts"></script>
+  </body>
+</html>
