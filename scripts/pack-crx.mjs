@@ -1,9 +1,16 @@
 #!/usr/bin/env node
 /*
- * Assemble a clean runtime-only build of the extension and pack it into a
- * signed .crx (CRX3) plus a matching .zip. Pure JS — no browser needed.
+ * Pack the built extension into a signed .crx (CRX3) plus a matching .zip.
  *
- *   node scripts/pack-crx.mjs
+ *   npm run build && npm run pack
+ *
+ * Packs dist/ as-is. It used to assemble its own build directory from a hand-listed
+ * set of root files (manifest.json, icons/, data/sites.js, src/), which was right when
+ * the repo *was* the extension. Now Vite produces the runtime tree, so duplicating that
+ * list here would be a second definition of "what ships" — one that goes stale silently.
+ *
+ * Output goes to release/, not dist/: the build lives in dist/, and this script used to
+ * delete it before packing.
  *
  * Signing key resolution (first match wins):
  *   1. $CRX_KEY       — the private-key PEM itself (raw, or base64-encoded).
@@ -12,31 +19,25 @@
  *                       will have an unstable extension id).
  *
  * Outputs (git-ignored):
- *   dist/shabbat-closed-extension.crx
- *   dist/shabbat-closed-extension.zip
+ *   release/shabbat-closed-extension.crx
+ *   release/shabbat-closed-extension.zip
  */
 import crx3 from "crx3";
 import { generateKeyPairSync, createPublicKey, createHash } from "node:crypto";
 import {
-  writeFileSync, readFileSync, mkdirSync, rmSync, cpSync, readdirSync, statSync,
+  writeFileSync, readFileSync, mkdirSync, rmSync, existsSync, readdirSync, statSync,
 } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const dist = join(root, "dist");
-const build = join(dist, "build");
+const release = join(root, "release");
 const NAME = "shabbat-closed-extension";
 
-// Runtime files that ship in the extension (mirrors the store zip).
-const INCLUDE = [
-  "manifest.json",
-  "icons",
-  "data/sites.js",
-  "data/sites.json",
-  "src",
-  "README.md",
-];
+// Repo documentation that Vite copies out of public/ but that has no business in a
+// published extension.
+const EXCLUDE = new Set(["proof/README.md"]);
 
 function resolveKeyPem() {
   if (process.env.CRX_KEY) {
@@ -63,27 +64,35 @@ function extensionId(privatePem) {
   return id;
 }
 
+/**
+ * Absolute paths, deliberately: crx3 derives the zip root from the *first* entry in the
+ * list, so a relative list beginning with "_locales/he/messages.json" makes it look for
+ * the manifest at "/manifest.json" and fail. Given absolute paths it strips the common
+ * parent, which is dist/, and the archive comes out correctly rooted.
+ */
 function walk(dir, base) {
   const out = [];
   for (const name of readdirSync(dir)) {
     const abs = join(dir, name);
     const rel = base ? base + "/" + name : name;
     if (statSync(abs).isDirectory()) out.push(...walk(abs, rel));
-    else out.push(rel);
+    else if (!EXCLUDE.has(rel)) out.push(abs);
   }
   return out;
 }
 
-// --- assemble clean build dir ---------------------------------------------
-rmSync(dist, { recursive: true, force: true });
-mkdirSync(build, { recursive: true });
-for (const item of INCLUDE) {
-  cpSync(join(root, item), join(build, item), { recursive: true });
+// --- preconditions --------------------------------------------------------
+if (!existsSync(join(dist, "manifest.json"))) {
+  console.error("dist/manifest.json not found — run `npm run build` first.");
+  process.exit(1);
 }
+
+rmSync(release, { recursive: true, force: true });
+mkdirSync(release, { recursive: true });
 
 // --- key ------------------------------------------------------------------
 const { pem, ephemeral } = resolveKeyPem();
-const keyPath = join(dist, "key.pem");
+const keyPath = join(release, "key.pem");
 writeFileSync(keyPath, pem);
 if (ephemeral) {
   console.warn(
@@ -94,11 +103,10 @@ if (ephemeral) {
 console.log("extension id:", extensionId(pem));
 
 // --- pack -----------------------------------------------------------------
-const crxPath = join(dist, `${NAME}.crx`);
-const zipPath = join(dist, `${NAME}.zip`);
-const files = walk(build);
+const crxPath = join(release, `${NAME}.crx`);
+const zipPath = join(release, `${NAME}.zip`);
+const files = walk(dist);
 
-process.chdir(build);
 await crx3(files, { keyPath, crxPath, zipPath });
 
 const crx = readFileSync(crxPath);

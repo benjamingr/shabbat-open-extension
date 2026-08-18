@@ -94,6 +94,19 @@ for (const path of referenced.filter((p) => p.endsWith(".html"))) {
   }
 }
 
+/*
+ * Carried over from test/data.test.js, which asserted these against the hand-written
+ * manifest.json. That file is generated now, so the assertions belong here.
+ */
+if (manifest.manifest_version !== 3) fail(`manifest_version is ${manifest.manifest_version}, expected 3`);
+if (!/^\d+\.\d+\.\d+$/.test(manifest.version ?? "")) {
+  fail(`version is not semver-ish: ${manifest.version}`);
+}
+for (const size of ["16", "32", "48", "128"]) {
+  if (!manifest.icons?.[size]) fail(`missing icon size ${size}`);
+  if (!manifest.action?.default_icon?.[size]) fail(`missing action icon size ${size}`);
+}
+
 // --- localization ---------------------------------------------------------
 if (manifest.default_locale) {
   const messages = join(dist, "_locales", manifest.default_locale, "messages.json");

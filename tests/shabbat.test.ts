@@ -89,3 +89,29 @@ describe('getShabbatWindow', () => {
     expect(israelTime(win.end)).toBe('19/12/2026, 17:18')
   })
 })
+
+/*
+ * Carried over from test/lib.test.js, which tested the pre-TypeScript globalThis.ShabbatLib
+ * and could not survive the port. The dates are independent of the ones chosen above, so
+ * they are kept rather than folded in — a second set of fixtures is worth more than tidiness.
+ */
+describe('getShabbatWindow (cases carried over from test/lib.test.js)', () => {
+  it('is active on Friday night in Israel', () => {
+    expect(getShabbatWindow(new Date('2026-08-14T17:00:00Z'), 30, 40).active).toBe(true)
+  })
+
+  it('is active at Saturday midday', () => {
+    expect(getShabbatWindow(new Date('2026-08-15T12:00:00Z'), 30, 40).active).toBe(true)
+  })
+
+  it('is not active on a weekday', () => {
+    expect(getShabbatWindow(new Date('2026-08-12T10:00:00Z'), 30, 40).active).toBe(false)
+  })
+
+  it('rolls to the upcoming Shabbat after havdalah', () => {
+    const now = new Date('2026-08-15T19:00:00Z') // Sat night, after the ~17:03Z end
+    const win = getShabbatWindow(now, 30, 40)
+    expect(win.active).toBe(false)
+    expect(win.start!.getTime()).toBeGreaterThan(now.getTime())
+  })
+})
