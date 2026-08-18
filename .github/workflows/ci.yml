@@ -6,10 +6,12 @@ on:
   pull_request:
   workflow_dispatch:
 
-# A force-push or a quick follow-up commit makes the in-flight run irrelevant.
+# A force-push or a quick follow-up commit makes an in-flight PR run irrelevant.
+# Never cancel on main: that branch publishes a release, and killing it partway
+# through `gh release create` would leave a tag with no assets behind it.
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
   contents: read
@@ -46,7 +48,7 @@ jobs:
         run: npm run check:manifest
 
       - name: Upload the unpacked extension
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: dist
           path: dist/
@@ -54,7 +56,9 @@ jobs:
 
   release:
     needs: test
-    if: github.ref == 'refs/heads/main'
+    # Push only. On a workflow_dispatch re-run of an already-released commit the tag
+    # would already exist and `gh release create` would fail.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: write
