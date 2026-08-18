@@ -3,7 +3,7 @@
  * Shabbat-observant Israeli site, and colors it differently while it is actually Shabbat
  * in Israel.
  */
-import { t } from '../i18n/index.ts'
+import { setLang, t } from '../i18n/index.ts'
 import { sites } from '../lib/dataset.ts'
 import { hostFromUrl, matchSite } from '../lib/domain.ts'
 import { badgeFor } from '../lib/display.ts'
@@ -14,6 +14,9 @@ import { statusLabel } from '../lib/site.ts'
 async function updateBadge(tabId: number, url: string | undefined): Promise<void> {
   const site = matchSite(hostFromUrl(url), sites)
   const settings = await getSettings()
+  // The worker is long-lived and the setting can change under it, so the language is
+  // re-read on every badge update rather than once at startup.
+  setLang(settings.lang)
   const win = getShabbatWindow(new Date(), settings.candleOffsetMin, settings.havdalahOffsetMin)
 
   const badge = badgeFor(site, settings, win.active)

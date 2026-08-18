@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "Closed on Shabbat — סגור בשבת",
+    "description": "Extension name shown in Chrome and on the store listing."
+  },
+  "extDescription": {
+    "message": "Flags Shabbat-observant Israeli shopping sites and shows a banner: this site is closed on Shabbat.",
+    "description": "Short store description."
+  },
+  "actionTitle": {
+    "message": "Closed on Shabbat — site status",
+    "description": "Tooltip on the toolbar button before a site has been evaluated."
+  }
+}

@@ -44,6 +44,9 @@
   "settings.minConfidenceVerified": "מאומת בלבד — סגירה שאומתה",
   "settings.minConfidenceHint": "אתרים מתחת לסף לא יתויגו ולא יציגו באנר.",
   "settings.enabled": "הרחבה פעילה",
+  "settings.language": "שפת הממשק",
+  "settings.languageHe": "עברית",
+  "settings.languageEn": "English",
 
   "popup.openOptions": "הגדרות מתקדמות",
 

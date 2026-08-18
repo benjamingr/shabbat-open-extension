@@ -30,6 +30,18 @@
     <section class="settings">
       <h2 class="section-title" data-i18n="popup.settings"></h2>
 
+      <!-- First, because it changes every other label on the page. -->
+      <div class="field">
+        <div class="field-head">
+          <label for="lang" data-i18n="settings.language"></label>
+        </div>
+        <select id="lang">
+          <!-- Language names stay in their own language in every bundle. -->
+          <option value="he" data-i18n="settings.languageHe"></option>
+          <option value="en" data-i18n="settings.languageEn"></option>
+        </select>
+      </div>
+
       <div class="field">
         <div class="field-head">
           <label for="alertSymbol" data-i18n="settings.alertSymbol"></label>

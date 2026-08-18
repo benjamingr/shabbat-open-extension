@@ -27,13 +27,12 @@
   font-family: "Assistant", "Segoe UI", system-ui, Arial, sans-serif;
   font-size: 15px;
   line-height: 1.35;
-  text-align: right;
+  text-align: start;
   color: #241f10;
   background: linear-gradient(90deg, #f7edc9 0%, #efdca4 100%);
   border: none;
   border-bottom: 2px solid #c9a227;
   box-shadow: 0 3px 14px rgba(0, 0, 0, 0.16);
-  direction: rtl;
   animation: scb-drop 0.28s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 

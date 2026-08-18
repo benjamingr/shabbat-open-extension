@@ -8,10 +8,11 @@
  */
 import './proof.css'
 
-import { applyStaticStrings, t } from '../i18n/index.ts'
+import { applyDocumentLang, applyStaticStrings, formatDate, setLang, t } from '../i18n/index.ts'
 import { dataset, sites } from '../lib/dataset.ts'
 import { normalizeHost } from '../lib/domain.ts'
 import { appealFormUrl } from '../lib/forms.ts'
+import { getSettings } from '../lib/settings.ts'
 import { confidenceLabel, isStrong, statusLabel } from '../lib/site.ts'
 import type { Site } from '../types.ts'
 
@@ -28,16 +29,6 @@ function pill(cls: string, text: string): HTMLElement {
   node.className = 'pill ' + cls
   node.textContent = text
   return node
-}
-
-function formatDate(iso: string): string {
-  const date = new Date(`${iso}T00:00:00`)
-  if (Number.isNaN(date.getTime())) return iso
-  return new Intl.DateTimeFormat('he-IL', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(date)
 }
 
 function render(site: Site): void {
@@ -105,7 +96,10 @@ function render(site: Site): void {
   show(el('content'), true)
 }
 
-function main(): void {
+async function main(): Promise<void> {
+  // Read before anything is written to the page: the whole page is rendered once.
+  setLang((await getSettings()).lang)
+  applyDocumentLang()
   applyStaticStrings()
 
   const wanted = normalizeHost(new URLSearchParams(location.search).get('domain') ?? '')
@@ -118,4 +112,4 @@ function main(): void {
   render(site)
 }
 
-main()
+void main()

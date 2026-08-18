@@ -4,7 +4,7 @@
  * the current site.
  */
 import bannerCss from './banner.css?inline'
-import { t } from '../i18n/index.ts'
+import { dirFor, getLang, setLang, t } from '../i18n/index.ts'
 import { sites } from '../lib/dataset.ts'
 import { matchSite, normalizeHost } from '../lib/domain.ts'
 import { appealFormUrl } from '../lib/forms.ts'
@@ -32,6 +32,7 @@ async function main(): Promise<void> {
   if (!site) return // shouldn't happen given the match patterns, but be safe
 
   const settings = await getSettings()
+  setLang(settings.lang)
   const dismissKey = 'shabbatClosedDismissed:' + normalizeHost(location.hostname)
 
   // Whether to show it is decided in lib/display.ts, shared with the badge so the two
@@ -59,7 +60,10 @@ function renderBanner(site: Site, settings: Settings, dismissKey: string): void 
   shadow.append(style)
 
   const el = document.createElement('div')
-  el.dir = 'rtl'
+  // Set on the bar rather than in the stylesheet: the host page's direction is its own
+  // business, and this one follows the extension's language setting.
+  el.lang = getLang()
+  el.dir = dirFor(getLang())
   el.setAttribute('role', 'status')
   el.setAttribute('aria-live', 'polite')
   el.className = 'shabbat-closed-banner' + (win.active ? ' is-active' : '')

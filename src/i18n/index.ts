@@ -1,3 +1,4 @@
+import en from './en.json'
 import he from './he.json'
 
 /**
@@ -8,15 +9,44 @@ import he from './he.json'
  * It is used only for the manifest's store-facing name and description, which Chrome
  * reads before any of this code runs (see `public/_locales`).
  *
- * Hebrew is currently the only bundle. Adding one is a drop-in: add `en.json` with the
- * same keys, extend `Lang`, and register it in `BUNDLES`.
+ * Adding a language is a drop-in: add `xx.json` with the same keys and register it in
+ * `BUNDLES`. `MessageKey` is keyed off the Hebrew bundle, so a bundle missing a key is a
+ * type error rather than a string that silently falls back at runtime.
  */
-const BUNDLES = { he } as const
+const BUNDLES = { he, en } as const
 
 export type Lang = keyof typeof BUNDLES
 export type MessageKey = keyof typeof he
 
 export const DEFAULT_LANG: Lang = 'he'
+export const LANGS = Object.keys(BUNDLES) as Lang[]
+
+/**
+ * Locale used for dates. English gets `en-GB` rather than `en-US` because the extension
+ * is about Israel, where dates read day-month-year.
+ */
+const LOCALES: Record<Lang, string> = { he: 'he-IL', en: 'en-GB' }
+
+/**
+ * The active language, as module state rather than an argument threaded through every
+ * call site. Each entry point (popup, options, proof page, banner, service worker) reads
+ * the setting and calls `setLang` before it renders anything; `translate` stays pure for
+ * anything that needs a specific language regardless of the setting.
+ */
+let activeLang: Lang = DEFAULT_LANG
+
+export function isLang(value: unknown): value is Lang {
+  return typeof value === 'string' && value in BUNDLES
+}
+
+/** Anything unrecognised — an older or hand-edited storage value — falls back. */
+export function setLang(lang: unknown): void {
+  activeLang = isLang(lang) ? lang : DEFAULT_LANG
+}
+
+export function getLang(): Lang {
+  return activeLang
+}
 
 /** `{name}` placeholders are replaced from `vars`; an unmatched one is left as-is. */
 export function translate(
@@ -33,11 +63,35 @@ export function translate(
 
 /** Translate in the active language. */
 export function t(key: MessageKey, vars?: Record<string, string | number>): string {
-  return translate(DEFAULT_LANG, key, vars)
+  return translate(activeLang, key, vars)
 }
 
 export function dirFor(lang: Lang): 'rtl' | 'ltr' {
   return lang === 'he' ? 'rtl' : 'ltr'
+}
+
+/**
+ * A date the reader can trust to be in their own language. Kept here rather than in each
+ * page so the locale follows the language setting in one place; an unparseable date is
+ * returned as-is instead of rendering "Invalid Date".
+ */
+export function formatDate(iso: string): string {
+  const date = new Date(`${iso}T00:00:00`)
+  if (Number.isNaN(date.getTime())) return iso
+  return new Intl.DateTimeFormat(LOCALES[activeLang], {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(date)
+}
+
+/**
+ * Point the document at the active language. The templates ship with `lang="he" dir="rtl"`
+ * so a page is readable before the setting has been read from storage; this corrects it.
+ */
+export function applyDocumentLang(doc: Document = document): void {
+  doc.documentElement.lang = activeLang
+  doc.documentElement.dir = dirFor(activeLang)
 }
 
 /**

@@ -1,8 +1,19 @@
 /**
  * @vitest-environment happy-dom
  */
-import { describe, expect, it } from 'vitest'
-import { applyStaticStrings, t } from '../src/i18n/index.ts'
+import { afterEach, describe, expect, it } from 'vitest'
+import {
+  DEFAULT_LANG,
+  LANGS,
+  applyDocumentLang,
+  applyStaticStrings,
+  setLang,
+  t,
+  translate,
+} from '../src/i18n/index.ts'
+import type { MessageKey } from '../src/i18n/index.ts'
+
+afterEach(() => setLang(DEFAULT_LANG))
 
 function html(markup: string): HTMLElement {
   const root = document.createElement('div')
@@ -54,12 +65,37 @@ describe('applyStaticStrings', () => {
     expect(root.querySelector('i')?.attributes.length).toBe(1)
   })
 
+  it('repaints in the language set when it runs', () => {
+    // This is what makes switching language in the popup redraw the whole page.
+    const root = html('<h1 data-i18n="appName"></h1>')
+    applyStaticStrings(root)
+    expect(root.querySelector('h1')?.textContent).toBe(translate('he', 'appName'))
+
+    setLang('en')
+    applyStaticStrings(root)
+    expect(root.querySelector('h1')?.textContent).toBe(translate('en', 'appName'))
+  })
+
   it('writes text, never markup', () => {
     // Copy is trusted, but the mechanism should not be a way to inject nodes.
     const root = html('<p data-i18n="appName"></p>')
     applyStaticStrings(root)
     const p = root.querySelector('p')!
     expect(p.children).toHaveLength(0)
+  })
+})
+
+describe('applyDocumentLang', () => {
+  it('sets lang and dir from the active language', () => {
+    setLang('en')
+    applyDocumentLang(document)
+    expect(document.documentElement.lang).toBe('en')
+    expect(document.documentElement.dir).toBe('ltr')
+
+    setLang('he')
+    applyDocumentLang(document)
+    expect(document.documentElement.lang).toBe('he')
+    expect(document.documentElement.dir).toBe('rtl')
   })
 })
 
@@ -87,7 +123,11 @@ describe('the shipped templates', () => {
 
       expect(keys.length, `${path} has no data-i18n keys`).toBeGreaterThan(0)
       for (const key of keys) {
-        expect(t(key as Parameters<typeof t>[0]), `${path} → ${key}`).not.toBe(key)
+        // In every language: a key present only in Hebrew ships an English page with a
+        // Hebrew sentence in it.
+        for (const lang of LANGS) {
+          expect(translate(lang, key as MessageKey), `${path} → ${lang} → ${key}`).not.toBe(key)
+        }
       }
     }
   })

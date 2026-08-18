@@ -108,26 +108,40 @@ That only ever happens on your click.
 
 ## Language
 
-All UI copy lives in `src/i18n/he.json` and is reached through `t()`; no string
-is hardcoded in a component or a template. Hebrew is currently the only bundle.
+All UI copy lives in `src/i18n/he.json` and `src/i18n/en.json` and is reached
+through `t()`; no string is hardcoded in a component or a template. Hebrew is the
+default; **the language picker is the first control in the popup**, and the choice
+is stored as the `lang` setting, so it follows you across machines through
+`chrome.storage.sync`.
 
-Adding English is more than dropping in an `en.json`. The copy is extracted, but
-the *layout* is still Hebrew-only, and four things would have to change with it:
+The active language is module state in `src/i18n/index.ts`, set once per entry
+point (popup, options, proof page, banner, service worker) right after the
+settings are read and before anything is drawn. `translate(lang, key)` is still
+there for anything that wants a specific language regardless of the setting.
+Switching language in the popup repaints it in place, and the options page
+repaints from `onSettingsChanged` if it is open in another tab.
 
-- `lang="he" dir="rtl"` is hardcoded in `src/popup/index.html`,
-  `src/options/index.html`, and `src/proof/index.html`; the banner sets
-  `dir = 'rtl'` on its bar directly. `dirFor()` exists for this and is currently
-  unused outside its own test.
-- Date formatting is pinned to `he-IL` in `src/options/options.ts` and
-  `src/proof/proof.ts`.
-- `t()` resolves against `DEFAULT_LANG`; picking a language at runtime means
-  threading the active `Lang` through, or making it a module-level setting.
-- A `lang` setting and a control to change it — neither exists.
+Direction and dates follow the setting: `applyDocumentLang()` writes `lang`/`dir`
+on each page, the banner sets them on its own bar, and `formatDate()` picks
+`he-IL` or `en-GB`. The templates still ship `lang="he" dir="rtl"` so a page reads
+correctly in the instant before storage has been read.
+
+What is *not* translated is the dataset. `evidence_text`, the site names, and the
+status and confidence definitions in `data/sites.json` are Hebrew source material,
+quoted verbatim from the sites themselves; the English UI frames them in English
+but does not translate the quotes.
+
+Adding a third language: drop in `xx.json` with the same keys, add it to `BUNDLES`
+and to `dirFor()`/`LOCALES`, and add an `<option>` to the popup. `MessageKey` is
+keyed off the Hebrew bundle, so a missing key is a compile error, and the bundle
+tests check key parity, empty strings, and placeholder preservation.
 
 `chrome.i18n` is used only for the manifest's store-facing name and description,
 which Chrome reads before any extension code runs. It picks its locale from the
-browser and cannot be overridden, so it could never honour such a setting — which
-is why the in-extension copy has its own bundle rather than using `_locales`.
+browser and cannot be overridden, so it could never honour the `lang` setting —
+which is why the in-extension copy has its own bundle rather than using
+`_locales`. Those manifest strings live in `public/_locales/{he,en}/messages.json`
+and are the one place where the browser's own locale still decides.
 
 ## The data
 
@@ -321,7 +335,7 @@ so DST is handled automatically.
 | `src/lib/settings.ts` | Reads/writes `chrome.storage.sync` |
 | `src/lib/forms.ts` + `src/config.ts` | Report / appeal form URLs |
 | `src/lib/proof.ts` | URL of the proof page for a listing |
-| `src/i18n/` | Message bundle and `t()` |
+| `src/i18n/` | Message bundles (`he`, `en`), `t()`, and the active-language state |
 | `src/ui/tokens.css` | Palette shared by the extension's own pages |
 | `src/content/banner.ts` + `banner.css` | The on-page banner (shadow root) |
 | `src/background/index.ts` | Per-tab toolbar badge |

@@ -1,7 +1,7 @@
 /* Popup: shows the current tab's Shabbat status and exposes settings. */
 import './popup.css'
 
-import { applyStaticStrings, t } from '../i18n/index.ts'
+import { applyDocumentLang, applyStaticStrings, setLang, t } from '../i18n/index.ts'
 import { sites } from '../lib/dataset.ts'
 import { hostFromUrl, matchSite } from '../lib/domain.ts'
 import { appealFormUrl, reportFormUrl } from '../lib/forms.ts'
@@ -11,8 +11,8 @@ import { getShabbatWindow } from '../lib/shabbat.ts'
 import { confidenceLabel, isStrong, meetsConfidence, statusLabel } from '../lib/site.ts'
 import type { Settings } from '../types.ts'
 
-type Field = 'alertSymbol' | 'minConfidence' | 'enabled'
-const FIELDS: Field[] = ['alertSymbol', 'minConfidence', 'enabled']
+type Field = 'lang' | 'alertSymbol' | 'minConfidence' | 'enabled'
+const FIELDS: Field[] = ['lang', 'alertSymbol', 'minConfidence', 'enabled']
 
 type Input = HTMLInputElement | HTMLSelectElement
 
@@ -46,7 +46,20 @@ async function save(): Promise<void> {
     else patch[name] = el.value
   }
   await setSettings(patch as Partial<Settings>)
+
+  // The language may have been what changed, so re-read it and repaint the static copy
+  // before rendering: everything on this page, including the select options, is text
+  // this popup wrote.
+  await applyLang()
+  applyStaticStrings()
+  updateSymbolPreview()
   await render()
+}
+
+/** Point `t()` and the document at the stored language. */
+async function applyLang(): Promise<void> {
+  setLang((await getSettings()).lang)
+  applyDocumentLang()
 }
 
 function pill(cls: string, text: string): HTMLElement {
@@ -140,6 +153,7 @@ async function render(): Promise<void> {
 }
 
 async function main(): Promise<void> {
+  await applyLang()
   applyStaticStrings()
   await loadFields()
   await render()

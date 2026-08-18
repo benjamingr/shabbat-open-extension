@@ -1,3 +1,5 @@
+import type { Lang } from './i18n/index.ts'
+
 /** Strongest → weakest. The first three justify a firm "closed on Shabbat" headline. */
 export type SiteStatus =
   | 'site_blocked'
@@ -53,6 +55,8 @@ export interface Dataset {
 
 export interface Settings {
   enabled: boolean
+  /** Language of the extension's own UI. Independent of the browser's locale. */
+  lang: Lang
   /** Shown on both sides of the banner headline: `⚠️` or `🕯️`. */
   alertSymbol: string
   /** Shabbat starts this many minutes before Friday sunset. */
@@ -67,6 +71,9 @@ export interface Settings {
 
 export const DEFAULTS: Settings = {
   enabled: true,
+  // Spelled out rather than imported as DEFAULT_LANG: this file is types-only at runtime,
+  // and the two are the same decision recorded in the two places that need it.
+  lang: 'he',
   alertSymbol: '⚠️',
   candleOffsetMin: 30,
   havdalahOffsetMin: 40,

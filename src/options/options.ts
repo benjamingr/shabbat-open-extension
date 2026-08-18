@@ -7,7 +7,7 @@
  */
 import './options.css'
 
-import { applyStaticStrings, t } from '../i18n/index.ts'
+import { applyDocumentLang, applyStaticStrings, formatDate, setLang, t } from '../i18n/index.ts'
 import { dataset, sites } from '../lib/dataset.ts'
 import { getSettings, onSettingsChanged, undismissDomain } from '../lib/settings.ts'
 import { statusLabel } from '../lib/site.ts'
@@ -56,16 +56,6 @@ function stat(label: string, value: string): HTMLElement {
   return wrap
 }
 
-function formatDate(iso: string): string {
-  const date = new Date(`${iso}T00:00:00`)
-  if (Number.isNaN(date.getTime())) return iso
-  return new Intl.DateTimeFormat('he-IL', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(date)
-}
-
 function renderDataPanel(): void {
   const stats = el<HTMLDListElement>('data-stats')
   if (stats) {
@@ -101,13 +91,21 @@ function renderDataPanel(): void {
 }
 
 async function main(): Promise<void> {
+  await paint()
+
+  // The list can also change from the banner's "never show here" button while this page
+  // is open in another tab — and the language can change from the popup, which repaints
+  // everything rather than just the list.
+  onSettingsChanged(() => void paint())
+}
+
+/** Everything on the page, in the currently stored language. */
+async function paint(): Promise<void> {
+  setLang((await getSettings()).lang)
+  applyDocumentLang()
   applyStaticStrings()
   renderDataPanel()
   await renderDismissed()
-
-  // The list can also change from the banner's "never show here" button while this page
-  // is open in another tab.
-  onSettingsChanged(() => void renderDismissed())
 }
 
 void main()
