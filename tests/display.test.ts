@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
+  BADGE_COLOR_CLOSED,
   BADGE_COLOR_SHABBAT,
-  BADGE_COLOR_STRONG,
   BADGE_COLOR_WEAK,
   badgeFor,
   isFlagged,
@@ -71,9 +71,9 @@ describe('shouldShowBanner', () => {
 })
 
 describe('badgeFor', () => {
-  it('is green for a site with a real closure', () => {
+  it('is red for a site with a real closure', () => {
     const badge = badgeFor(makeSite({ status: 'site_blocked' }), makeSettings(), false)
-    expect(badge).toMatchObject({ flagged: true, color: BADGE_COLOR_STRONG })
+    expect(badge).toMatchObject({ flagged: true, color: BADGE_COLOR_CLOSED })
   })
 
   it('is grey for a site that only declares observance', () => {

@@ -12,7 +12,7 @@ import type { Settings, Site } from '../types.ts'
 
 export const BADGE_TEXT = '●'
 export const BADGE_COLOR_SHABBAT = '#c9a227'
-export const BADGE_COLOR_STRONG = '#2f7d4f'
+export const BADGE_COLOR_CLOSED = '#c0392b'
 export const BADGE_COLOR_WEAK = '#8a8a8a'
 
 /**
@@ -50,12 +50,12 @@ export function badgeFor(
 ): BadgeState {
   if (!isFlagged(site, settings)) return { flagged: false }
 
-  // Gold takes precedence over both green and grey: "it is Shabbat right now" is the more
+  // Gold takes precedence over both red and grey: "it is Shabbat right now" is the more
   // urgent fact, whatever the site's status.
   const color = shabbatActive
     ? BADGE_COLOR_SHABBAT
     : isStrong(site!)
-      ? BADGE_COLOR_STRONG
+      ? BADGE_COLOR_CLOSED
       : BADGE_COLOR_WEAK
 
   return { flagged: true, text: BADGE_TEXT, color, shabbatActive }

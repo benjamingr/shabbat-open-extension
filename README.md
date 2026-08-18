@@ -13,7 +13,7 @@ during Shabbat the site being closed is self-evident.
   "האתר סגור בשבת"; sites that only *declare* observance get "האתר שומר שבת".
   The symbol (`⚠️` / `🕯️`) is configurable. Dismissible for the session, or for
   good.
-- **Toolbar badge** on every listed site: a green dot for sites that close on
+- **Toolbar badge** on every listed site: a red dot for sites that close on
   Shabbat, grey for sites that only declare observance, gold while it is
   actually Shabbat in Israel. Hover for details.
 - **Popup** shows the current site's status, whether it is currently Shabbat,
