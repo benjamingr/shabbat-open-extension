@@ -1,7 +1,7 @@
 {
   "schema_version": "1.1",
   "generated_at": "2026-08-16",
-  "audited_at": "2026-08-16",
+  "audited_at": "2026-08-21",
   "country": "IL",
   "purpose": "Dataset for a browser extension that identifies Israeli e-commerce websites that observe Shabbat.",
   "audit_note": "Every domain below was fetched and inspected on 2026-08-16. Entries with no first-party Shabbat evidence, or that were dead/unreachable, were removed (see removed[]). 'status' reflects what the audit actually found, not the original unverified claims.",
@@ -22,12 +22,12 @@
       "name": "אופני דניאל",
       "category": "bicycles",
       "status": "site_blocked",
-      "confidence": "high",
+      "confidence": "verified",
       "holidays": null,
       "mechanism": "embedded Shabbat closure-clock widget (enter/exit times)",
       "evidence_text": "נחזור לפעילות במוצאי שבת",
       "evidence_url": "https://danielbicycles.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21"
     },
     {
       "domain": "or-ad.com",
@@ -39,19 +39,8 @@
       "mechanism": "full-screen closure modal disables browsing",
       "evidence_text": "האתר בו הנך מבקר שומר שבת וחג, ולכן הגלישה בו אינה מתאפשרת בזמן זה",
       "evidence_url": "https://www.or-ad.com/",
-      "verified": "2026-08-16"
-    },
-    {
-      "domain": "ltdidactic.co.il",
-      "name": "אל.טי. דידקטיק",
-      "category": "toys_education",
-      "status": "site_blocked",
-      "confidence": "high",
-      "holidays": null,
-      "mechanism": "embeds shomershabes.com closure-service iframe",
-      "evidence_text": "משתמש בשירות סגירת אתר בשבת של shomershabes.com",
-      "evidence_url": "https://www.ltdidactic.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21",
+      "proof_image": "or-ad.com.webp"
     },
     {
       "domain": "chez-mishel.co.il",
@@ -63,7 +52,86 @@
       "mechanism": "closure notice with countdown disables browsing",
       "evidence_text": "אתר אצל מישל הינו אתר שומר שבת ומועדי ישראל ולכן לא ניתן לגלוש בו כעת",
       "evidence_url": "https://chez-mishel.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21",
+      "proof_image": "chez-mishel.co.il.webp"
+    },
+    {
+      "holidays": true,
+      "domain": "eshetchayil-art.co.il",
+      "name": "אשת חיל",
+      "category": "judaica_gifts",
+      "status": "site_blocked",
+      "confidence": "verified",
+      "mechanism": "wp-shamor plugin: HTTP 503 closure splash",
+      "evidence_text": "שבת שלום! נשוב לפעילות עם צאת השבת בשעה 20:08",
+      "evidence_url": "https://eshetchayil-art.co.il/",
+      "verified": "2026-08-21",
+      "proof_image": "eshetchayil-art.co.il.webp"
+    },
+    {
+      "holidays": true,
+      "domain": "bikurim.co.il",
+      "name": "ביכורים",
+      "category": "bakery_food",
+      "status": "site_blocked",
+      "confidence": "verified",
+      "mechanism": "wp-shamor plugin: HTTP 503 closure splash",
+      "evidence_text": "שבת שלום! נשוב לפעילות עם צאת השבת בשעה 20:08",
+      "evidence_url": "https://bikurim.co.il/",
+      "verified": "2026-08-21",
+      "proof_image": "bikurim.co.il.webp"
+    },
+    {
+      "holidays": true,
+      "domain": "bitzniuteh.com",
+      "name": "בצניעותך",
+      "category": "fashion",
+      "status": "site_blocked",
+      "confidence": "verified",
+      "mechanism": "wp-shamor-style HTTP 503 closure splash",
+      "evidence_text": "שבת שלום! נשוב לפעילות עם צאת השבת בשעה 20:09",
+      "evidence_url": "https://bitzniuteh.com/",
+      "verified": "2026-08-21",
+      "proof_image": "bitzniuteh.com.webp"
+    },
+    {
+      "holidays": true,
+      "domain": "goldbsd.co.il",
+      "name": "גולד ספרונים",
+      "category": "books",
+      "status": "site_blocked",
+      "confidence": "verified",
+      "mechanism": "wp-shamor plugin: HTTP 503 closure splash + Retry-After",
+      "evidence_text": "שבת שלום! נשוב לפעילות עם צאת השבת בשעה 20:18",
+      "evidence_url": "https://goldbsd.co.il/",
+      "verified": "2026-08-21",
+      "proof_image": "goldbsd.co.il.webp"
+    },
+    {
+      "holidays": true,
+      "domain": "gershi.co.il",
+      "name": "גרשי",
+      "category": "judaica_gifts",
+      "status": "site_blocked",
+      "confidence": "verified",
+      "mechanism": "wp-shamor plugin: HTTP 503 closure splash",
+      "evidence_text": "שבת שלום! נשוב לפעילות עם צאת השבת בשעה 20:09",
+      "evidence_url": "https://gershi.co.il/",
+      "verified": "2026-08-21",
+      "proof_image": "gershi.co.il.webp"
+    },
+    {
+      "holidays": true,
+      "domain": "artistofrabbinu.co.il",
+      "name": "האומן של רבינו",
+      "category": "judaica_gifts",
+      "status": "site_blocked",
+      "confidence": "verified",
+      "mechanism": "wp-shamor plugin: HTTP 503 closure + countdown",
+      "evidence_text": "אתרנו שומר שבת ואינו פעיל במהלך השבת. הזמנות ורכישות ניתן יהיה לבצע שוב עם צאת השבת",
+      "evidence_url": "https://artistofrabbinu.co.il/",
+      "verified": "2026-08-21",
+      "proof_image": "artistofrabbinu.co.il.webp"
     },
     {
       "domain": "itech-store.co.il",
@@ -75,43 +143,86 @@
       "mechanism": "dedicated /shabat/ closure page served on Shabbat & holidays",
       "evidence_text": "אתר המכירות של הייטקסטור סגור בשבתות וחגים. נשוב לפעילות עם צאת השבת/החג",
       "evidence_url": "https://www.itech-store.co.il/shabat/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21",
+      "proof_image": "itech-store.co.il.webp"
     },
     {
-      "domain": "dbs123.com",
-      "name": "המאגר התורני — די.בי.אס מחשבים",
-      "category": "software_judaica",
+      "holidays": true,
+      "domain": "amarpad-adigitali.co.il",
+      "name": "המרפ״ד הדיגיטלי",
+      "category": "digital_content",
       "status": "site_blocked",
       "confidence": "verified",
+      "mechanism": "WP-Shabbat plugin: HTTP 503 closure",
+      "evidence_text": "אתר שומר שבת ע'י WP-Shabbat · היום שבת",
+      "evidence_url": "https://amarpad-adigitali.co.il/",
+      "verified": "2026-08-21",
+      "proof_image": "amarpad-adigitali.co.il.webp"
+    },
+    {
+      "domain": "zoyaonline.co.il",
+      "name": "זויה",
+      "category": "fashion",
+      "status": "site_blocked",
+      "confidence": "verified",
+      "holidays": null,
+      "mechanism": "closure splash with countdown to Motzaei Shabbat (seen live)",
+      "evidence_text": "החנות סגורה במהלך השבת - נתראה במוצ\"ש",
+      "evidence_url": "https://zoyaonline.co.il/",
+      "verified": "2026-08-21",
+      "proof_image": "zoyaonline.co.il.webp"
+    },
+    {
+      "domain": "traklin.co.il",
+      "name": "טרקלין חשמל",
+      "category": "electronics_appliances",
+      "status": "site_blocked",
+      "confidence": "verified",
+      "holidays": null,
+      "evidence_text": "אתר שומר שבת",
+      "evidence_url": "https://www.traklin.co.il/",
+      "verified": "2026-08-21",
+      "mechanism": "Shabbat closure modal with countdown (seen live)",
+      "proof_image": "traklin.co.il.webp"
+    },
+    {
       "holidays": true,
-      "mechanism": "wp-shamor closure plugin ('שמור'), 503 during Shabbat/holidays",
-      "evidence_text": "אתר שומר שבת — נסגר בשבת ובחג (תוסף 'שמור')",
-      "evidence_url": "https://www.dbs123.com/",
-      "verified": "2026-08-16"
+      "domain": "judaica-chabad.co.il",
+      "name": "יודאיקה חב״ד נתניה",
+      "category": "judaica_gifts",
+      "status": "site_blocked",
+      "confidence": "verified",
+      "mechanism": "wp-shamor plugin: HTTP 503 closure + countdown",
+      "evidence_text": "אתר זה שומר שבת. נשמח לשרתכם לאחר צאת השבת.",
+      "evidence_url": "https://judaica-chabad.co.il/",
+      "verified": "2026-08-21",
+      "proof_image": "judaica-chabad.co.il.webp"
     },
     {
       "domain": "metav.co.il",
       "name": "מיטב ציוד משרדי",
       "category": "office_stationery",
       "status": "site_blocked",
-      "confidence": "medium",
+      "confidence": "verified",
       "holidays": null,
-      "mechanism": "Shabbat enter/exit time config in site code (shabat_enter/shabat_out)",
-      "evidence_text": "תצורת זמני כניסת/יציאת שבת בקוד האתר (18:45 / 20:05)",
+      "mechanism": "server-side Shabbat closure page (seen live)",
+      "evidence_text": "נחזור לפעילות מיד בצאת השבת",
       "evidence_url": "https://www.metav.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21",
+      "proof_image": "metav.co.il.webp"
     },
     {
       "domain": "myshemen-wellness.co.il",
       "name": "מיי שמן וולנס",
       "category": "wellness_personal_care",
       "status": "site_blocked",
-      "confidence": "high",
+      "confidence": "verified",
       "holidays": null,
       "mechanism": "closure notice with reopen countdown timer",
       "evidence_text": "האתר לא פעיל בשבת",
       "evidence_url": "https://myshemen-wellness.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21",
+      "proof_image": "myshemen-wellness.co.il.webp"
     },
     {
       "domain": "lmbakery.co.il",
@@ -123,19 +234,20 @@
       "mechanism": "wp-shamor closure plugin ('שמור')",
       "evidence_text": "אתר זה שומר שבת",
       "evidence_url": "https://lmbakery.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21"
     },
     {
       "domain": "namon.co.il",
       "name": "נמון (NAMON)",
       "category": "fashion",
       "status": "site_blocked",
-      "confidence": "high",
+      "confidence": "verified",
       "holidays": null,
       "mechanism": "Shabbat site-lock with havdalah time + weekly parsha",
       "evidence_text": "האתר סגור בשבת. אנא חזרו במוצאי שבת.",
       "evidence_url": "https://namon.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21",
+      "proof_image": "namon.co.il.webp"
     },
     {
       "domain": "familygame.co.il",
@@ -145,93 +257,113 @@
       "confidence": "verified",
       "holidays": true,
       "mechanism": "wp-shamor closure plugin ('שמור'), 503 during Shabbat/holidays",
-      "evidence_text": "אתר שומר שבת — נסגר בשבת ובחג (תוסף 'שמור')",
+      "evidence_text": "שבת שלום! נשוב לפעילות עם צאת השבת בשעה 20:08",
       "evidence_url": "https://www.familygame.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21",
+      "proof_image": "familygame.co.il.webp"
     },
     {
-      "domain": "annava.co.il",
-      "name": "ענוה",
-      "category": "fashion",
-      "status": "site_blocked",
-      "confidence": "high",
       "holidays": true,
-      "mechanism": "dedicated Shabbat & holiday closure page",
-      "evidence_text": "האתר סגור בשבת ובחגי ישראל",
-      "evidence_url": "https://www.annava.co.il/",
-      "verified": "2026-08-16"
-    },
-    {
-      "domain": "furor.co.il",
-      "name": "פורור",
-      "category": "fashion",
+      "domain": "feder-home.co.il",
+      "name": "פדר",
+      "category": "home_textiles",
       "status": "site_blocked",
       "confidence": "verified",
-      "holidays": true,
-      "mechanism": "wp-shamor closure plugin ('שמור'), 503 during Shabbat/holidays",
-      "evidence_text": "אתר שומר שבת — נסגר בשבת ובחג (תוסף 'שמור')",
-      "evidence_url": "https://furor.co.il/",
-      "verified": "2026-08-16"
+      "mechanism": "wp-shamor plugin: HTTP 503 closure",
+      "evidence_text": "אתר שומר שבת. יפתח לפעילות במוצ״ש",
+      "evidence_url": "https://feder-home.co.il/",
+      "verified": "2026-08-21"
     },
     {
-      "domain": "pitsponim.co.il",
-      "name": "פיצפונים",
+      "holidays": true,
+      "domain": "kidichic.co.il",
+      "name": "קידיצ'יק",
       "category": "baby_kids",
       "status": "site_blocked",
-      "confidence": "high",
-      "holidays": null,
-      "mechanism": "AutoPeak 'shabbat-blocker' plugin",
-      "evidence_text": "אתר שומר שבת (מופעל באמצעות AutoPeak shabbat-blocker)",
-      "evidence_url": "https://www.pitsponim.co.il/",
-      "verified": "2026-08-16"
+      "confidence": "verified",
+      "mechanism": "full-page Shabbat/holiday closure overlay",
+      "evidence_text": "האתר סגור בשבתות וחגים. נחזור לפעול אוטומטית בצאת שבת/חג",
+      "evidence_url": "https://kidichic.co.il/",
+      "verified": "2026-08-21",
+      "proof_image": "kidichic.co.il.webp"
     },
     {
-      "domain": "playbackol.com",
-      "name": "פלייבקול",
-      "category": "music_downloads",
+      "holidays": true,
+      "domain": "cassias.co.il",
+      "name": "קסיאס",
+      "category": "furniture",
       "status": "site_blocked",
       "confidence": "verified",
-      "holidays": true,
-      "mechanism": "AutoPeak 'Shabbat Blocker' plugin (geo-gated closure)",
-      "evidence_text": "אתר שומר שבת · מופעל באמצעות AutoPeak",
-      "evidence_url": "https://playbackol.com/",
-      "verified": "2026-08-16"
+      "mechanism": "wp-shamor plugin: HTTP 503 closure splash + Retry-After",
+      "evidence_text": "שבת שלום! נשוב לפעילות עם צאת השבת בשעה 20:08",
+      "evidence_url": "https://cassias.co.il/",
+      "verified": "2026-08-21",
+      "proof_image": "cassias.co.il.webp"
     },
     {
       "domain": "royajudaica.co.il",
       "name": "רויה — יוקרה יהודית",
       "category": "judaica_gifts",
       "status": "site_blocked",
-      "confidence": "high",
+      "confidence": "verified",
       "holidays": null,
       "mechanism": "Shabbat site-lock with havdalah time + weekly parsha",
       "evidence_text": "האתר סגור בשבת. אנא חזרו במוצאי שבת.",
       "evidence_url": "https://royajudaica.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21",
+      "proof_image": "royajudaica.co.il.webp"
     },
     {
-      "domain": "showtimejs.co.il",
-      "name": "שואו טיים (Show Time)",
-      "category": "jewelry_watches",
+      "domain": "tehilot.co.il",
+      "name": "תהילות",
+      "category": "judaica_gifts",
       "status": "site_blocked",
-      "confidence": "high",
+      "confidence": "verified",
       "holidays": null,
-      "mechanism": "site closes on Shabbat (notice across store pages)",
-      "evidence_text": "האתר סגור בשבת",
-      "evidence_url": "https://showtimejs.co.il/",
-      "verified": "2026-08-16"
+      "evidence_text": "האתר שומר שבת. האתר יחזור לפעילות בצאת השבת",
+      "evidence_url": "https://www.tehilot.co.il/",
+      "verified": "2026-08-21",
+      "mechanism": "Shabbat closure page (seen live)",
+      "proof_image": "tehilot.co.il.webp"
     },
     {
-      "domain": "shirtext.com",
-      "name": "שירטקסט",
-      "category": "apparel_printing",
+      "holidays": null,
+      "domain": "cstyle.co.il",
+      "name": "CSTYLE",
+      "category": "fashion",
+      "status": "site_blocked",
+      "confidence": "verified",
+      "mechanism": "Shabbat closure splash with live countdown",
+      "evidence_text": "שבת שלום, החנות תיפתח בעוד",
+      "evidence_url": "https://cstyle.co.il/",
+      "verified": "2026-08-21",
+      "proof_image": "cstyle.co.il.webp"
+    },
+    {
+      "domain": "kukab.co.il",
+      "name": "KukaB",
+      "category": "judaica_gifts",
+      "status": "site_blocked",
+      "confidence": "verified",
+      "holidays": null,
+      "evidence_text": "אתר זה שומר שבת, נחזור לפעילות במוצאי שבת בע\"ה",
+      "evidence_url": "https://kukab.co.il/",
+      "verified": "2026-08-21",
+      "mechanism": "server-side Shabbat closure page (seen live)",
+      "proof_image": "kukab.co.il.webp"
+    },
+    {
+      "domain": "vanak-market.com",
+      "name": "Vanak Market",
+      "category": "grocery_food",
       "status": "site_blocked",
       "confidence": "verified",
       "holidays": true,
-      "mechanism": "wp-shamor closure plugin ('שמור'), closes the whole site on Shabbat",
-      "evidence_text": "האתר שומר שבת ומועדי ישראל",
-      "evidence_url": "https://shirtext.com/",
-      "verified": "2026-08-16"
+      "evidence_text": "אתר שומר שבת · יפתח שוב לפעילות מיד בצאת השבת / חג",
+      "evidence_url": "https://www.vanak-market.com/",
+      "verified": "2026-08-21",
+      "mechanism": "server-side Shabbat closure page (seen live)",
+      "proof_image": "vanak-market.com.webp"
     },
     {
       "domain": "hezi-luski-woodwork.co.il",
@@ -243,7 +375,7 @@
       "mechanism": "'add to cart' disabled on Shabbat/holidays, reopens Motzaei Shabbat",
       "evidence_text": "האתר סגור בשבת ובחג · הכפתור 'הוספה לסל' יפתח במוצאי שבת",
       "evidence_url": "https://hezi-luski-woodwork.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21"
     },
     {
       "domain": "tti.org.il",
@@ -254,7 +386,19 @@
       "holidays": null,
       "evidence_text": "האתר שומר שבת - לא ניתן לתרום או לרכוש כרטיסים בשבת",
       "evidence_url": "https://tti.org.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21"
+    },
+    {
+      "domain": "irit-irit.com",
+      "name": "IRIT Design",
+      "category": "fashion",
+      "status": "purchase_blocked",
+      "confidence": "verified",
+      "holidays": null,
+      "evidence_text": "🕯️ אתר שומר שבת - לא ניתן להשלים רכישות בשבת 🕯️",
+      "evidence_url": "https://irit-irit.com/",
+      "verified": "2026-08-21",
+      "mechanism": "checkout disabled on Shabbat (seen live)"
     },
     {
       "domain": "papu-barbers.co.il",
@@ -265,7 +409,7 @@
       "holidays": true,
       "evidence_text": "אתר זה שומר שבת וחג, משלוחים יוצאים אך ורק בימי חול",
       "evidence_url": "https://www.papu-barbers.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21"
     },
     {
       "domain": "togonline.co.il",
@@ -276,7 +420,7 @@
       "holidays": true,
       "evidence_text": "האתר שומר שבת - לא מתבצעות פעולות על ידי עובדים בשבת ובחגים",
       "evidence_url": "https://www.togonline.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21"
     },
     {
       "domain": "apets.co.il",
@@ -287,7 +431,18 @@
       "holidays": null,
       "evidence_text": "שעות פתיחה: א'-ה' 7:00-21:00, ו' 8:00-15:00 · אתר שומר שבת",
       "evidence_url": "https://apets.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21"
+    },
+    {
+      "domain": "ltdidactic.co.il",
+      "name": "אל.טי. דידקטיק",
+      "category": "toys_education",
+      "status": "declared_shabbat_observant",
+      "confidence": "high",
+      "holidays": null,
+      "evidence_text": "מוטמע וידג'ט shomershabes (הצהרת שמירת שבת)",
+      "evidence_url": "https://www.ltdidactic.co.il/",
+      "verified": "2026-08-21"
     },
     {
       "domain": "iratfashion.com",
@@ -298,7 +453,7 @@
       "holidays": null,
       "evidence_text": "אתר שומר שבת",
       "evidence_url": "https://www.iratfashion.com/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21"
     },
     {
       "domain": "babyline.co.il",
@@ -309,7 +464,7 @@
       "holidays": null,
       "evidence_text": "האתר שומר שבת · שבת סגור",
       "evidence_url": "https://www.babyline.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21"
     },
     {
       "domain": "vagshalbooks.co.il",
@@ -320,7 +475,18 @@
       "holidays": null,
       "evidence_text": "אתר זה שומר שבת ויפסיק לפעול בשבת",
       "evidence_url": "https://www.vagshalbooks.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21"
+    },
+    {
+      "domain": "dbs123.com",
+      "name": "המאגר התורני — די.בי.אס מחשבים",
+      "category": "software_judaica",
+      "status": "declared_shabbat_observant",
+      "confidence": "medium",
+      "holidays": true,
+      "evidence_text": "תוסף 'שמור' בקוד המקור (לא נאכף בעת הבדיקה)",
+      "evidence_url": "https://www.dbs123.com/",
+      "verified": "2026-08-21"
     },
     {
       "domain": "yudaica.starmap.co.il",
@@ -334,29 +500,6 @@
       "verified": "2026-08-16"
     },
     {
-      "domain": "zoyaonline.co.il",
-      "name": "זויה",
-      "category": "fashion",
-      "status": "declared_shabbat_observant",
-      "confidence": "verified",
-      "holidays": null,
-      "mechanism": "persistent footer badge with countdown to Motzaei Shabbat",
-      "evidence_text": "החנות סגורה במהלך השבת - נתראה במוצ\"ש",
-      "evidence_url": "https://zoyaonline.co.il/",
-      "verified": "2026-08-16"
-    },
-    {
-      "domain": "traklin.co.il",
-      "name": "טרקלין חשמל",
-      "category": "electronics_appliances",
-      "status": "declared_shabbat_observant",
-      "confidence": "high",
-      "holidays": null,
-      "evidence_text": "אתר שומר שבת",
-      "evidence_url": "https://www.traklin.co.il/",
-      "verified": "2026-08-16"
-    },
-    {
       "domain": "lovelygifts.co.il",
       "name": "לאבלי גיפטס",
       "category": "personalized_gifts",
@@ -366,7 +509,7 @@
       "mechanism": "footer closure notice for Shabbat & holidays",
       "evidence_text": "האתר סגור בשבת וחג, נשמח לעמוד לשירותכם בצאת השבת/חג",
       "evidence_url": "https://www.lovelygifts.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21"
     },
     {
       "domain": "mikicom.co.il",
@@ -377,7 +520,7 @@
       "holidays": null,
       "evidence_text": "אתר שומר שבת",
       "evidence_url": "https://mikicom.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21"
     },
     {
       "domain": "citysport.co.il",
@@ -388,7 +531,7 @@
       "holidays": null,
       "evidence_text": "אתר שומר שבת",
       "evidence_url": "https://www.citysport.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21"
     },
     {
       "domain": "sporthari.co.il",
@@ -399,7 +542,51 @@
       "holidays": null,
       "evidence_text": "אתר שומר שבת",
       "evidence_url": "https://sporthari.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21"
+    },
+    {
+      "holidays": null,
+      "domain": "sifreiorhachaim.co.il",
+      "name": "ספרי אור החיים",
+      "category": "books_judaica",
+      "status": "declared_shabbat_observant",
+      "confidence": "verified",
+      "evidence_text": "האתר סגור בשבת",
+      "evidence_url": "https://sifreiorhachaim.co.il/",
+      "verified": "2026-08-21"
+    },
+    {
+      "domain": "pitsponim.co.il",
+      "name": "פיצפונים",
+      "category": "baby_kids",
+      "status": "declared_shabbat_observant",
+      "confidence": "high",
+      "holidays": null,
+      "evidence_text": "אתר שומר שבת (מופעל באמצעות AutoPeak)",
+      "evidence_url": "https://www.pitsponim.co.il/",
+      "verified": "2026-08-21"
+    },
+    {
+      "domain": "playbackol.com",
+      "name": "פלייבקול",
+      "category": "music_downloads",
+      "status": "declared_shabbat_observant",
+      "confidence": "high",
+      "holidays": true,
+      "evidence_text": "אתר שומר שבת · מופעל באמצעות AutoPeak",
+      "evidence_url": "https://playbackol.com/",
+      "verified": "2026-08-21"
+    },
+    {
+      "domain": "showtimejs.co.il",
+      "name": "שואו טיים (Show Time)",
+      "category": "jewelry_watches",
+      "status": "declared_shabbat_observant",
+      "confidence": "high",
+      "holidays": null,
+      "evidence_text": "האתר לא פעיל בשבת וחג",
+      "evidence_url": "https://showtimejs.co.il/",
+      "verified": "2026-08-21"
     },
     {
       "domain": "shiranigifts.co.il",
@@ -410,7 +597,7 @@
       "holidays": null,
       "evidence_text": "אתר שומר שבת",
       "evidence_url": "https://www.shiranigifts.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21"
     },
     {
       "domain": "tavlinim.co.il",
@@ -421,18 +608,7 @@
       "holidays": true,
       "evidence_text": "אתר זה מנוהל ע\"י יהודים שומרי שבת, לא יתקבלו הזמנות בשבת וחג",
       "evidence_url": "https://tavlinim.co.il/",
-      "verified": "2026-08-16"
-    },
-    {
-      "domain": "tehilot.co.il",
-      "name": "תהילות",
-      "category": "judaica_gifts",
-      "status": "declared_shabbat_observant",
-      "confidence": "high",
-      "holidays": null,
-      "evidence_text": "אתר שומר שבת",
-      "evidence_url": "https://www.tehilot.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21"
     },
     {
       "domain": "shopelectrons.co.il",
@@ -443,7 +619,7 @@
       "holidays": null,
       "evidence_text": "אתר שומר שבת",
       "evidence_url": "https://www.shopelectrons.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21"
     },
     {
       "domain": "enolla.co.il",
@@ -454,7 +630,7 @@
       "holidays": null,
       "evidence_text": "האתר שומר שבת",
       "evidence_url": "https://www.enolla.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21"
     },
     {
       "domain": "giftsplus.co.il",
@@ -465,7 +641,7 @@
       "holidays": null,
       "evidence_text": "האתר שומר שבת",
       "evidence_url": "https://giftsplus.co.il/",
-      "verified": "2026-08-16"
+      "verified": "2026-08-21"
     },
     {
       "domain": "hailo-furniture.co.il",
@@ -479,39 +655,6 @@
       "verified": "2026-08-16"
     },
     {
-      "domain": "homeil.co.il",
-      "name": "HOME IL",
-      "category": "furniture_home",
-      "status": "declared_shabbat_observant",
-      "confidence": "high",
-      "holidays": null,
-      "evidence_text": "אתר שומר שבת",
-      "evidence_url": "https://homeil.co.il/",
-      "verified": "2026-08-16"
-    },
-    {
-      "domain": "irit-irit.com",
-      "name": "IRIT Design",
-      "category": "fashion",
-      "status": "declared_shabbat_observant",
-      "confidence": "high",
-      "holidays": null,
-      "evidence_text": "אתר שומר שבת",
-      "evidence_url": "https://irit-irit.com/",
-      "verified": "2026-08-16"
-    },
-    {
-      "domain": "kukab.co.il",
-      "name": "KukaB",
-      "category": "judaica_gifts",
-      "status": "declared_shabbat_observant",
-      "confidence": "high",
-      "holidays": null,
-      "evidence_text": "אתר זה שומר שבת, נחזור לפעילות במוצאי שבת בע\"ה",
-      "evidence_url": "https://kukab.co.il/",
-      "verified": "2026-08-16"
-    },
-    {
       "domain": "sharpen-il.co.il",
       "name": "Sharpen",
       "category": "office_stationery",
@@ -521,24 +664,9 @@
       "evidence_text": "אתר שומר שבת",
       "evidence_url": "https://sharpen-il.co.il/",
       "verified": "2026-08-16"
-    },
-    {
-      "domain": "vanak-market.com",
-      "name": "Vanak Market",
-      "category": "grocery_food",
-      "status": "declared_shabbat_observant",
-      "confidence": "high",
-      "holidays": true,
-      "evidence_text": "אתר שומר שבת · יפתח שוב לפעילות מיד בצאת השבת / חג",
-      "evidence_url": "https://www.vanak-market.com/",
-      "verified": "2026-08-16"
     }
   ],
   "removed": [
-    {
-      "domain": "sifreiorhachaim.co.il",
-      "reason": "no Shabbat text found on the live site"
-    },
     {
       "domain": "liael.co.il",
       "reason": "Shopify storefront loads fully; no closure/password page"
@@ -582,12 +710,28 @@
     {
       "domain": "luziacosmetics.com",
       "reason": "unreachable — Cloudflare 'suspected phishing' block"
+    },
+    {
+      "domain": "annava.co.il",
+      "reason": "served a normal storefront during Shabbat (2026-08-21), no closure or declaration; earlier closure-page claim not reproduced"
+    },
+    {
+      "domain": "furor.co.il",
+      "reason": "wp-shamor no longer enforcing — served a normal store during Shabbat (2026-08-21), no declaration"
+    },
+    {
+      "domain": "shirtext.com",
+      "reason": "wp-shamor no longer enforcing — served a normal store during Shabbat (2026-08-21), no declaration"
+    },
+    {
+      "domain": "homeil.co.il",
+      "reason": "shomer-shabbat declaration no longer present (2026-08-21 recheck)"
     }
   ],
   "notes": [
-    "Only site_blocked / purchase_blocked / operations_paused get the firm 'האתר הזה סגור בשבת' headline; declared_shabbat_observant gets 'האתר הזה שומר שבת'.",
-    "declared_shabbat_observant means the site *says* it keeps Shabbat (a badge); it does not prove browsing/checkout is technically blocked.",
-    "or-ad.com and chez-mishel.co.il served closure pages even on a Sunday during the audit — re-check that their block is time-gated and not stuck.",
+    "Re-verified live during Shabbat on 2026-08-21 from an Israeli IP: closures were confirmed by rendering the site during Shabbat, not merely inferred from source.",
+    "Only site_blocked / purchase_blocked / operations_paused get the firm 'האתר סגור בשבת' headline; declared_shabbat_observant gets 'האתר שומר שבת'.",
+    "Client-side blockers (AutoPeak, HolyClock, shomershabes widget) often do not actually block and were downgraded to declared unless a real closure was seen.",
     "Re-verify periodically; store policies and site implementations change."
   ]
 }
