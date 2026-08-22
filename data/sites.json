@@ -1,13 +1,13 @@
 {
   "schema_version": "1.1",
   "generated_at": "2026-08-16",
-  "audited_at": "2026-08-21",
+  "audited_at": "2026-08-22",
   "country": "IL",
   "purpose": "Dataset for a browser extension that identifies Israeli e-commerce websites that observe Shabbat.",
-  "audit_note": "Every domain below was fetched and inspected on 2026-08-16. Entries with no first-party Shabbat evidence, or that were dead/unreachable, were removed (see removed[]). 'status' reflects what the audit actually found, not the original unverified claims.",
+  "audit_note": "Every domain below was fetched and inspected on 2026-08-16. Entries with no first-party Shabbat evidence, or that were dead/unreachable, were removed (see removed[]). 'status' reflects what the audit actually found, not the original unverified claims. A second live pass on 2026-08-22 (Shabbat, Israeli IP) tested 30 mainstream-chain candidates by rendering each site and driving a real add-to-cart/checkout attempt; all but B&H were rejected because they traded normally during Shabbat (see removed[]).",
   "status_definitions": {
     "site_blocked": "A real closure mechanism blocks browsing/purchase on Shabbat (a closure page, a shomer-shabbat blocking plugin/iframe, or a Shabbat open/close time config in the site code).",
-    "purchase_blocked": "The site's own terms state purchasing/donating is unavailable on Shabbat.",
+    "purchase_blocked": "The site's own terms state purchasing/donating is unavailable on Shabbat, or a live block on the cart/checkout was observed while browsing stayed open.",
     "operations_paused": "The site declares that orders/shipping/employee actions pause on Shabbat (browsing may stay open).",
     "declared_shabbat_observant": "The site displays a first-party 'אתר שומר שבת' declaration/badge, but no technical block was observed."
   },
@@ -181,8 +181,8 @@
       "holidays": null,
       "evidence_text": "אתר שומר שבת",
       "evidence_url": "https://www.traklin.co.il/",
-      "verified": "2026-08-21",
-      "mechanism": "Shabbat closure modal with countdown (seen live)",
+      "verified": "2026-08-22",
+      "mechanism": "Shabbat closure modal with countdown to Shabbat exit (seen live 2026-08-22)",
       "proof_image": "traklin.co.il.webp"
     },
     {
@@ -399,6 +399,19 @@
       "evidence_url": "https://irit-irit.com/",
       "verified": "2026-08-21",
       "mechanism": "checkout disabled on Shabbat (seen live)"
+    },
+    {
+      "domain": "bhphotovideo.com",
+      "name": "B&H Photo Video",
+      "category": "electronics_appliances",
+      "status": "purchase_blocked",
+      "confidence": "verified",
+      "holidays": true,
+      "mechanism": "checkout disabled sitewide during Shabbat: sitewide banner with a reopen timestamp/countdown and a 'Request Alert When Checkout Reopens' link; browsing and adding to cart stay open",
+      "evidence_text": "Thank you for your patience while we're closed for Shabbat. You may still add items to your cart or wish list for later checkout.",
+      "evidence_url": "https://www.bhphotovideo.com/",
+      "verified": "2026-08-22",
+      "proof_image": "bhphotovideo.com.webp"
     },
     {
       "domain": "papu-barbers.co.il",
@@ -726,10 +739,132 @@
     {
       "domain": "homeil.co.il",
       "reason": "shomer-shabbat declaration no longer present (2026-08-21 recheck)"
+    },
+    {
+      "domain": "gant.co.il",
+      "reason": "GANT Israel: WooCommerce store traded normally during Shabbat (2026-08-22) — added to cart and reached /cart with no closure"
+    },
+    {
+      "domain": "modan.co.il",
+      "reason": "Modan publishing: added to cart and reached the checkout page (/preshipping) during Shabbat (2026-08-22)"
+    },
+    {
+      "domain": "rami-levy.co.il",
+      "reason": "online supermarket fully operational during Shabbat (2026-08-22): product added to cart, no closure or block"
+    },
+    {
+      "domain": "victory.co.il",
+      "reason": "corporate site only states the chain does not work on Shabbat; the shop (victoryonline.co.il) rendered a live storefront during Shabbat (2026-08-22) with no closure — no first-party block on the shop itself"
+    },
+    {
+      "domain": "victoryonline.co.il",
+      "reason": "storefront rendered and priced normally during Shabbat (2026-08-22); no closure. Category API sits behind a Cloudflare bot challenge, which is not a Shabbat mechanism"
+    },
+    {
+      "domain": "yochananof.co.il",
+      "reason": "online store live during Shabbat (2026-08-22): branch selected, categories and prices served, checkout page reachable"
+    },
+    {
+      "domain": "osherad.co.il",
+      "reason": "brand/marketing site with no e-commerce at all (2026-08-22) — nothing to open or close on Shabbat"
+    },
+    {
+      "domain": "payngo.co.il",
+      "reason": "מחסני חשמל: product added to cart during Shabbat (2026-08-22), 'המוצר נוסף לעגלת הקניות', checkout reachable"
+    },
+    {
+      "domain": "shekem-electric.co.il",
+      "reason": "שקם אלקטריק: product added to cart during Shabbat (2026-08-22), cart counter incremented, no block"
+    },
+    {
+      "domain": "cwc.co.il",
+      "reason": "עולם הקולנוע והחשמל: product added to cart during Shabbat (2026-08-22), no closure"
+    },
+    {
+      "domain": "naaman.co.il",
+      "reason": "domain serves a bare 'hello' placeholder (2026-08-22); the brand's live store is vardinon.co.il"
+    },
+    {
+      "domain": "vardinon.co.il",
+      "reason": "added to cart during Shabbat (2026-08-22); a weekend promo was actively running on the cart page"
+    },
+    {
+      "domain": "shw.co.il",
+      "reason": "שמרת הזורע: added to cart during Shabbat (2026-08-22), no closure"
+    },
+    {
+      "domain": "redpirate.co.il",
+      "reason": "landing page only, no e-commerce (2026-08-22)"
+    },
+    {
+      "domain": "idan2000.co.il",
+      "reason": "branch/marketing site only, no online store (2026-08-22)"
+    },
+    {
+      "domain": "kiwi-kids.co.il",
+      "reason": "added to cart during Shabbat (2026-08-22), no closure"
+    },
+    {
+      "domain": "nimrod.co.il",
+      "reason": "נעלי נמרוד: added to cart during Shabbat (2026-08-22), cart counter incremented"
+    },
+    {
+      "domain": "gali.co.il",
+      "reason": "נעלי גלי: added to cart during Shabbat (2026-08-22), no closure"
+    },
+    {
+      "domain": "aminach.co.il",
+      "reason": "storefront and checkout reachable during Shabbat (2026-08-22), no closure"
+    },
+    {
+      "domain": "dr-gav.co.il",
+      "reason": "storefront and Magento cart reachable during Shabbat (2026-08-22), no closure"
+    },
+    {
+      "domain": "aeroflex.co.il",
+      "reason": "lead-generation site, no cart or checkout to block (2026-08-22)"
+    },
+    {
+      "domain": "soltam.co.il",
+      "reason": "added to cart during Shabbat (2026-08-22), no closure"
+    },
+    {
+      "domain": "optica-halperin.com",
+      "reason": "could not be verified: the site's WAF blocks automated access outright (403 to both the browser and a server-side fetch, 2026-08-22); no Shabbat closure observed on any reachable page"
+    },
+    {
+      "domain": "magnolia.co.il",
+      "reason": "homepage served a live 'WEEKEND SALE' with a running countdown during Shabbat (2026-08-22); cart page sits behind a Cloudflare challenge, which is not a Shabbat mechanism"
+    },
+    {
+      "domain": "ivory.co.il",
+      "reason": "אייבורי: added to cart during Shabbat (2026-08-22) — upsell popup and cart page both served normally"
+    },
+    {
+      "domain": "tornado-top.co.il",
+      "reason": "brand site with dealer locator, no e-commerce (2026-08-22)"
+    },
+    {
+      "domain": "carmelwines.co.il",
+      "reason": "catalog site; no cart or checkout found during Shabbat (2026-08-22), nothing to block"
+    },
+    {
+      "domain": "teperbergwinery.co.il",
+      "reason": "catalog/visitor-centre site; no cart or checkout (2026-08-22)"
+    },
+    {
+      "domain": "freshmarket.co.il",
+      "reason": "פרשמרקט: product added to cart during Shabbat (2026-08-22), cart showed 1 item / ₪5.95, no closure"
+    },
+    {
+      "domain": "halperin.co.il",
+      "reason": "signage/printing store (not the optics chain): added to cart and reached Checkout.asp during Shabbat (2026-08-22)"
     }
   ],
   "notes": [
     "Re-verified live during Shabbat on 2026-08-21 from an Israeli IP: closures were confirmed by rendering the site during Shabbat, not merely inferred from source.",
+    "2026-08-22 pass targeted large mainstream Israeli chains (supermarkets, appliances, footwear, sleep, housewares) that are widely said to keep Shabbat: verification drove a real add-to-cart and checkout attempt during Shabbat, and every one of them completed it. Off-line Shabbat observance in branches does not imply an online closure.",
+    "bhphotovideo.com is the one non-Israeli listing: it blocks checkout sitewide for Shabbat and Jewish holidays, which is exactly what the extension flags.",
     "Only site_blocked / purchase_blocked / operations_paused get the firm 'האתר סגור בשבת' headline; declared_shabbat_observant gets 'האתר שומר שבת'.",
     "Client-side blockers (AutoPeak, HolyClock, shomershabes widget) often do not actually block and were downgraded to declared unless a real closure was seen.",
     "Re-verify periodically; store policies and site implementations change."
