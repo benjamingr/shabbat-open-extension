@@ -8,3 +8,13 @@ release/
 test-results/
 playwright-report/
 blob-report/
+
+# Safari Web Extension wrapper (Xcode) — see apple/README.md.
+# The converter regenerates the Xcode project from dist/; it is a build
+# artifact, not source. Keep the hand-written apple/ docs, ignore the rest.
+apple/GeneratedProject/
+apple/**/DerivedData/
+apple/**/build/
+*.xcuserstate
+*.xcuserdatad/
+xcuserdata/
