@@ -547,6 +547,19 @@
       "proof_image": "liael.co.il.webp"
     },
     {
+      "domain": "swap.org.il",
+      "name": "SWAP",
+      "category": "fashion",
+      "status": "site_blocked",
+      "confidence": "verified",
+      "holidays": null,
+      "mechanism": "custom full-page Shabbat closure (HTTP 503) with reopen time",
+      "evidence_text": "האתר סגור כעת לכבוד שבת קודש. נשמח לעמוד לשירותכם שוב מיד לאחר צאת השבת.",
+      "evidence_url": "https://swap.org.il/",
+      "verified": "2026-08-22",
+      "proof_image": "swap.org.il.webp"
+    },
+    {
       "holidays": null,
       "domain": "thesurfclub.co.il",
       "name": "The Surf Club",
