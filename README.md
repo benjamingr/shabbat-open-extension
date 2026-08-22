@@ -108,6 +108,9 @@ That only ever happens on your click.
 
 Full **Privacy Policy & Terms of Service** (Hebrew, legal document): [PRIVACY.md](PRIVACY.md).
 
+Why it works only in desktop browsers for now — and the mobile plan, driven by
+the same zero-collection / minimal-permissions stance: [PLATFORMS.md](PLATFORMS.md) (Hebrew).
+
 ## Language
 
 All UI copy lives in `src/i18n/he.json` and `src/i18n/en.json` and is reached
