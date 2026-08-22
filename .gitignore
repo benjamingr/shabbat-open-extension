@@ -5,3 +5,6 @@ dist/
 release/
 *.pem
 .history/
+test-results/
+playwright-report/
+blob-report/
