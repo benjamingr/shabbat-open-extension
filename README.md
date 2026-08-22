@@ -106,6 +106,8 @@ The one exception: clicking **דיווח על אתר** or **ערעור על הר
 Google Form in a new tab, and the domain travels to Google as part of that link.
 That only ever happens on your click.
 
+Full **Privacy Policy & Terms of Service** (Hebrew, legal document): [PRIVACY.md](PRIVACY.md).
+
 ## Language
 
 All UI copy lives in `src/i18n/he.json` and `src/i18n/en.json` and is reached
