@@ -54,7 +54,14 @@ npm run validate        # check data/sites.json without building
 npm run check:manifest  # check dist/manifest.json (needs a build first)
 npm run build           # all of the above, in order
 npm run pack            # package the build for release (see Releases below)
+
+npm run build:firefox   # Firefox build -> dist-firefox/ (also Firefox for Android)
+npm run lint:firefox    # web-ext lint dist-firefox/
 ```
+
+The same source also builds a **Firefox** package (which is what installs on **Firefox
+for Android**), sharing the codebase through a `browser.*` shim. `npm run build` and the
+Chrome output are unchanged. See [`PORTING-FIREFOX.md`](./PORTING-FIREFOX.md).
 
 CI (`.github/workflows/ci.yml`) runs the same steps on every push and pull
 request, and uploads the built `dist/` as an artifact. On `main` it then packs

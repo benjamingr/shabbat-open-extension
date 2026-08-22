@@ -1,6 +1,8 @@
 /* Popup: shows the current tab's Shabbat status and exposes settings. */
 import './popup.css'
 
+import '../lib/browser-polyfill.ts'
+import { browser } from '../lib/browser.ts'
 import { applyDocumentLang, applyStaticStrings, setLang, t } from '../i18n/index.ts'
 import { sites } from '../lib/dataset.ts'
 import { hostFromUrl, matchSite } from '../lib/domain.ts'
@@ -76,7 +78,7 @@ async function render(): Promise<void> {
   const nowEl = document.getElementById('shabbat-now')
   if (nowEl) nowEl.textContent = t(win.active ? 'app.shabbatNow' : 'app.tagline')
 
-  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true })
+  const [tab] = await browser.tabs.query({ active: true, currentWindow: true })
   const body = document.getElementById('status-body')
   if (!body) return
   body.replaceChildren()
@@ -159,7 +161,7 @@ async function main(): Promise<void> {
   await render()
 
   document.getElementById('open-options')?.addEventListener('click', () => {
-    void chrome.runtime.openOptionsPage()
+    void browser.runtime.openOptionsPage()
   })
 
   for (const name of FIELDS) {

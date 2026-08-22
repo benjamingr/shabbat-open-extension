@@ -17,5 +17,13 @@
     "skipLibCheck": true,
     "types": ["chrome", "vite/client"]
   },
-  "include": ["src", "tests", "manifest.config.ts", "vite.config.ts", "vitest.config.ts"]
+  "include": [
+    "src",
+    "tests",
+    "manifest.config.ts",
+    "manifest.firefox.ts",
+    "vite.config.ts",
+    "vite.config.firefox.ts",
+    "vitest.config.ts"
+  ]
 }
