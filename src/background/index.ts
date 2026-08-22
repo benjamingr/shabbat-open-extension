@@ -3,6 +3,8 @@
  * Shabbat-observant Israeli site, and colors it differently while it is actually Shabbat
  * in Israel.
  */
+import '../lib/browser-polyfill.ts'
+import { browser } from '../lib/browser.ts'
 import { setLang, t } from '../i18n/index.ts'
 import { sites } from '../lib/dataset.ts'
 import { hostFromUrl, matchSite } from '../lib/domain.ts'
@@ -22,15 +24,15 @@ async function updateBadge(tabId: number, url: string | undefined): Promise<void
   const badge = badgeFor(site, settings, win.active)
 
   if (!badge.flagged) {
-    await chrome.action.setBadgeText({ tabId, text: '' })
+    await browser.action.setBadgeText({ tabId, text: '' })
     return
   }
 
-  await chrome.action.setBadgeText({ tabId, text: badge.text })
-  await chrome.action.setBadgeBackgroundColor({ tabId, color: badge.color })
+  await browser.action.setBadgeText({ tabId, text: badge.text })
+  await browser.action.setBadgeBackgroundColor({ tabId, color: badge.color })
 
   const vars = { name: site!.name, status: statusLabel(site!.status) }
-  await chrome.action.setTitle({
+  await browser.action.setTitle({
     tabId,
     title: badge.shabbatActive ? t('badge.titleShabbat', vars) : t('badge.title', vars),
   })
@@ -41,19 +43,25 @@ function safeUpdate(tabId: number, url: string | undefined): void {
   void updateBadge(tabId, url).catch(() => {})
 }
 
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' || changeInfo.url) safeUpdate(tabId, tab.url)
 })
 
-chrome.tabs.onActivated.addListener(({ tabId }) => {
-  chrome.tabs.get(tabId, (tab) => {
-    if (!chrome.runtime.lastError && tab) safeUpdate(tabId, tab.url)
-  })
+browser.tabs.onActivated.addListener(({ tabId }) => {
+  // The promise-based API rejects (rather than setting `runtime.lastError`) when the tab
+  // has already gone; a dropped badge update there is not worth surfacing.
+  void browser.tabs
+    .get(tabId)
+    .then((tab) => safeUpdate(tabId, tab.url))
+    .catch(() => {})
 })
 
 // Re-tag the active tab when settings change (e.g. the confidence threshold moved).
 onSettingsChanged(() => {
-  chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-    if (tab?.id !== undefined) safeUpdate(tab.id, tab.url)
-  })
+  void browser.tabs
+    .query({ active: true, currentWindow: true })
+    .then(([tab]) => {
+      if (tab?.id !== undefined) safeUpdate(tab.id, tab.url)
+    })
+    .catch(() => {})
 })

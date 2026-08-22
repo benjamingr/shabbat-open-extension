@@ -1,7 +1,8 @@
+import { browser } from './browser.ts'
 import { DEFAULTS, type Settings } from '../types.ts'
 
 /**
- * Settings live as flat keys in `chrome.storage.sync`, one key per field — not nested
+ * Settings live as flat keys in `browser.storage.sync`, one key per field — not nested
  * under a single object. Flat means a new field is simply a key nobody has written yet,
  * so `DEFAULTS` fills it in and no install ever needs a migration.
  */
@@ -17,7 +18,7 @@ function detach(settings: Settings): Settings {
 export async function getSettings(): Promise<Settings> {
   try {
     // Passing the defaults as the query fills in every key that has never been written.
-    const stored = await chrome.storage.sync.get(detach(DEFAULTS) as unknown as Record<string, unknown>)
+    const stored = await browser.storage.sync.get(detach(DEFAULTS) as unknown as Record<string, unknown>)
     return detach({ ...DEFAULTS, ...(stored as Partial<Settings>) })
   } catch {
     // Storage can be unavailable in a torn-down context; defaults keep the UI working.
@@ -27,7 +28,7 @@ export async function getSettings(): Promise<Settings> {
 
 /** Write only the given fields. Everything else in storage is left alone. */
 export async function setSettings(patch: Partial<Settings>): Promise<void> {
-  await chrome.storage.sync.set(patch)
+  await browser.storage.sync.set(patch)
 }
 
 /**
@@ -53,7 +54,7 @@ export async function undismissDomain(domain: string): Promise<void> {
  * callers never have to reason about which keys were in the change set.
  */
 export function onSettingsChanged(handler: (settings: Settings) => void): void {
-  chrome.storage.onChanged.addListener((changes, area) => {
+  browser.storage.onChanged.addListener((changes, area) => {
     if (area !== 'sync') return
     if (!Object.keys(changes).some((key) => key in DEFAULTS)) return
     void getSettings().then(handler)

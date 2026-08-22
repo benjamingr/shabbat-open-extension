@@ -2,7 +2,9 @@
 *.zip
 node_modules/
 dist/
+dist-firefox/
 release/
+web-ext-artifacts/
 *.pem
 .history/
 test-results/
