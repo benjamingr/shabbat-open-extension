@@ -250,6 +250,19 @@
       "proof_image": "traklin.co.il.webp"
     },
     {
+      "domain": "yad-sarah.net",
+      "name": "יד שרה",
+      "category": "medical_equipment",
+      "status": "site_blocked",
+      "confidence": "verified",
+      "holidays": true,
+      "mechanism": "wp-shamor plugin: HTTP 503 closure splash + countdown",
+      "evidence_text": "שבת שלום · נחזור לפעילות מיד בצאת השבת · האתר ייפתח בשעה 20:08",
+      "evidence_url": "https://yad-sarah.net/",
+      "verified": "2026-08-22",
+      "proof_image": "yad-sarah.net.webp"
+    },
+    {
       "holidays": true,
       "domain": "judaica-chabad.co.il",
       "name": "יודאיקה חב״ד נתניה",
