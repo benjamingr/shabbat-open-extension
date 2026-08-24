@@ -7,6 +7,7 @@
  */
 import './options.css'
 
+import '../lib/browser-polyfill.ts'
 import { applyDocumentLang, applyStaticStrings, formatDate, setLang, t } from '../i18n/index.ts'
 import { dataset, sites } from '../lib/dataset.ts'
 import { getSettings, onSettingsChanged, undismissDomain } from '../lib/settings.ts'
