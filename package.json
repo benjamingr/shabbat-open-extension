@@ -8,6 +8,9 @@
   "scripts": {
     "dev": "vite",
     "build": "npm run validate && tsc --noEmit && vite build && npm run check:manifest",
+    "build:firefox": "npm run validate && tsc --noEmit && vite build --config vite.config.firefox.ts",
+    "lint:firefox": "web-ext lint --source-dir dist-firefox",
+    "build:firefox-xpi": "web-ext build --source-dir dist-firefox --artifacts-dir release --overwrite-dest",
     "preview": "vite preview",
     "validate": "node scripts/build-data.mjs",
     "check:manifest": "node scripts/check-manifest.mjs",
@@ -24,10 +27,16 @@
     "@crxjs/vite-plugin": "^2.7.1",
     "@playwright/test": "^1.62.1",
     "@types/chrome": "^0.1.31",
+    "@types/webextension-polyfill": "^0.12.5",
     "crx3": "^1.1.3",
     "happy-dom": "^20.11.2",
     "typescript": "^5.9.0",
     "vite": "^8.2.1",
-    "vitest": "^4.1.10"
+    "vite-plugin-web-extension": "^4.5.1",
+    "vitest": "^4.1.10",
+    "web-ext": "^8.10.0"
+  },
+  "dependencies": {
+    "webextension-polyfill": "^0.12.0"
   }
 }

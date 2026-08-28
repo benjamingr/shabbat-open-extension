@@ -4,6 +4,7 @@
  * the current site.
  */
 import bannerCss from './banner.css?inline'
+import '../lib/browser-polyfill.ts'
 import { dirFor, getLang, setLang, t } from '../i18n/index.ts'
 import { sites } from '../lib/dataset.ts'
 import { matchSite, normalizeHost } from '../lib/domain.ts'
