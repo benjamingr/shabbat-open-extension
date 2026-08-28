@@ -685,6 +685,19 @@
       "proof_image": "bhphotovideo.com.webp"
     },
     {
+      "domain": "foodappeal-online.com",
+      "name": "Food Appeal",
+      "category": "home_kitchen",
+      "status": "purchase_blocked",
+      "confidence": "verified",
+      "holidays": null,
+      "mechanism": "JS modal — purchasing disabled during Shabbat (browsing stays open)",
+      "evidence_text": "זהו אתר שומר שבת ולכן הרכישה אינה זמינה במהלך השבת. מיד עם צאת השבת תוכלו לנצל את מבצעי החודש.",
+      "evidence_url": "https://foodappeal-online.com/",
+      "verified": "2026-08-28",
+      "proof_image": "foodappeal-online.com.webp"
+    },
+    {
       "domain": "irit-irit.com",
       "name": "IRIT Design",
       "category": "fashion",
@@ -963,10 +976,6 @@
     {
       "domain": "shekelexpress.co.il",
       "reason": "footer lists Sun-Fri hours but no shomer-shabbat claim"
-    },
-    {
-      "domain": "foodappeal-online.com",
-      "reason": "standard Shopify store, no Shabbat declaration"
     },
     {
       "domain": "yarid-b.co.il",
