@@ -8,6 +8,8 @@
  */
 import './proof.css'
 
+import '../lib/browser-polyfill.ts'
+import { browser } from '../lib/browser.ts'
 import { applyDocumentLang, applyStaticStrings, formatDate, setLang, t } from '../i18n/index.ts'
 import { dataset, sites } from '../lib/dataset.ts'
 import { normalizeHost } from '../lib/domain.ts'
@@ -69,7 +71,7 @@ function render(site: Site): void {
   const image = el<HTMLImageElement>('screenshot')
   if (site.proof_image && image) {
     // A packaged resource, so no network request and no host-page CSP to satisfy.
-    image.src = chrome.runtime.getURL(`proof/${site.proof_image}`)
+    image.src = browser.runtime.getURL(`proof/${site.proof_image}`)
     image.alt = t('proof.screenshotAlt', { name: site.name })
   } else {
     // The section still appears, saying plainly that no screenshot was captured —

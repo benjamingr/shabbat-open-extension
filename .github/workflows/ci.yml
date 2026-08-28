@@ -47,6 +47,14 @@ jobs:
       - name: Check the built manifest
         run: npm run check:manifest
 
+      # The Firefox target builds from the same source; web-ext lint is the closest
+      # thing to an AMO pre-check, so a broken Gecko manifest fails here, not at upload.
+      - name: Build Firefox target
+        run: npm run build:firefox
+
+      - name: Lint Firefox (web-ext)
+        run: npm run lint:firefox
+
       - name: Upload the unpacked extension
         uses: actions/upload-artifact@v5
         with:
