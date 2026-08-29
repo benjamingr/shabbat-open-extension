@@ -18,6 +18,19 @@
   },
   "sites": [
     {
+      "domain": "adikastyle.com",
+      "name": "אדיקה (ADIKA)",
+      "category": "fashion",
+      "status": "site_blocked",
+      "confidence": "verified",
+      "holidays": false,
+      "mechanism": "Shopify 'Shabbat Mode' app: full-screen closure page with countdown, every week Fri 18:30 → Sat 19:50 (Asia/Jerusalem); page scroll locked (seen live)",
+      "evidence_text": "!צעדיקות, נתראה במוצ\"ש · נפתח שוב ב 7:50 בערב ב שבת, אוגוסט 29",
+      "evidence_url": "https://adikastyle.com/",
+      "verified": "2026-08-29",
+      "proof_image": "adikastyle.com.webp"
+    },
+    {
       "holidays": null,
       "domain": "ahavaktana.co.il",
       "name": "אהבה קטנה",
