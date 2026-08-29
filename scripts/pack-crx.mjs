@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 /*
- * Pack the built extension into a signed .crx (CRX3) plus a matching .zip.
+ * Pack a built extension into a signed .crx (CRX3) plus a matching .zip.
  *
- *   npm run build && npm run pack
+ *   npm run build && npm run pack                 # dist/          -> the scoped build
+ *   npm run build:allhosts && npm run pack:allhosts   # dist-allhosts/ -> the <all_urls> variant
  *
- * Packs dist/ as-is. It used to assemble its own build directory from a hand-listed
- * set of root files (manifest.json, icons/, data/sites.js, src/), which was right when
- * the repo *was* the extension. Now Vite produces the runtime tree, so duplicating that
- * list here would be a second definition of "what ships" — one that goes stale silently.
+ * Packs the build directory as-is. It used to assemble its own from a hand-listed set of
+ * root files (manifest.json, icons/, data/sites.js, src/), which was right when the repo
+ * *was* the extension. Now Vite produces the runtime tree, so duplicating that list here
+ * would be a second definition of "what ships" — one that goes stale silently.
  *
- * Output goes to release/, not dist/: the build lives in dist/, and this script used to
- * delete it before packing.
+ * Output goes to release/, not into the build directory.
  *
  * Signing key resolution (first match wins):
  *   1. $CRX_KEY       — the private-key PEM itself (raw, or base64-encoded).
@@ -18,9 +18,16 @@
  *   3. none           — generate an EPHEMERAL key (prints a warning; the crx
  *                       will have an unstable extension id).
  *
+ * Given a real key, both variants are signed with it and so share one extension id (an
+ * ephemeral key is generated per run, so that does not hold without CRX_KEY). That is
+ * deliberate: installing one over the other is then an update rather than a second
+ * extension, which is the only way to observe what Chrome does when host patterns change
+ * between versions — the question the <all_urls> variant exists to answer. The cost is
+ * that the two cannot be installed side by side, hence the very different filenames.
+ *
  * Outputs (git-ignored):
- *   release/shabbat-closed-extension.crx
- *   release/shabbat-closed-extension.zip
+ *   release/shabbat-closed-extension.crx           release/shabbat-closed-extension.zip
+ *   release/shabbat-closed-extension-allhosts.crx  release/shabbat-closed-extension-allhosts.zip
  */
 import crx3 from "crx3";
 import { generateKeyPairSync, createPublicKey, createHash } from "node:crypto";
@@ -31,9 +38,14 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const dist = join(root, "dist");
 const release = join(root, "release");
-const NAME = "shabbat-closed-extension";
+
+const allHosts = process.argv.slice(2).includes("--all-hosts");
+const distName = allHosts ? "dist-allhosts" : "dist";
+const dist = join(root, distName);
+// The suffix is the only thing separating a build that runs on 81 listed sites from one
+// that runs everywhere. Worth being unmissable in a downloads list.
+const NAME = allHosts ? "shabbat-closed-extension-allhosts" : "shabbat-closed-extension";
 
 // Repo documentation that Vite copies out of public/ but that has no business in a
 // published extension.
@@ -83,12 +95,20 @@ function walk(dir, base) {
 
 // --- preconditions --------------------------------------------------------
 if (!existsSync(join(dist, "manifest.json"))) {
-  console.error("dist/manifest.json not found — run `npm run build` first.");
+  const script = allHosts ? "npm run build:allhosts" : "npm run build";
+  console.error(`${distName}/manifest.json not found — run \`${script}\` first.`);
   process.exit(1);
 }
 
-rmSync(release, { recursive: true, force: true });
+/*
+ * Only this variant's own outputs are cleared, not the whole directory. Wiping release/
+ * wholesale was fine while there was one build; now a release carries both, and the
+ * second pack would silently delete the first one's artifacts.
+ */
 mkdirSync(release, { recursive: true });
+for (const ext of ["crx", "zip"]) {
+  rmSync(join(release, `${NAME}.${ext}`), { force: true });
+}
 
 // --- key ------------------------------------------------------------------
 const { pem, ephemeral } = resolveKeyPem();
@@ -113,5 +133,6 @@ const crx = readFileSync(crxPath);
 const magic = crx.subarray(0, 4).toString("ascii");
 if (magic !== "Cr24") throw new Error("bad crx magic: " + magic);
 console.log(
-  `packed ${files.length} files -> ${NAME}.crx (CRX v${crx.readUInt32LE(4)}, ${crx.length} bytes) + ${NAME}.zip`
+  `packed ${files.length} files from ${distName}/ -> ${NAME}.crx ` +
+  `(CRX v${crx.readUInt32LE(4)}, ${crx.length} bytes) + ${NAME}.zip`
 );
