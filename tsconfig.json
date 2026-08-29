@@ -24,6 +24,7 @@
     "manifest.firefox.ts",
     "vite.config.ts",
     "vite.config.firefox.ts",
+    "vite.config.allhosts.ts",
     "vitest.config.ts"
   ]
 }

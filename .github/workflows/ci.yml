@@ -47,6 +47,13 @@ jobs:
       - name: Check the built manifest
         run: npm run check:manifest
 
+      # The <all_urls> variant shares every source file with the scoped build and differs
+      # only in one manifest field, so nothing but its own build step will notice when it
+      # stops building. `check:manifest:allhosts` also asserts the broad pattern is the
+      # *only* one, which is what stops the variant quietly drifting into the worst of both.
+      - name: Build the all-hosts variant
+        run: npm run build:allhosts
+
       # The Firefox target builds from the same source; web-ext lint is the closest
       # thing to an AMO pre-check, so a broken Gecko manifest fails here, not at upload.
       - name: Build Firefox target

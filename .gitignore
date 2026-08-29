@@ -3,6 +3,7 @@
 node_modules/
 dist/
 dist-firefox/
+dist-allhosts/
 release/
 web-ext-artifacts/
 *.pem
