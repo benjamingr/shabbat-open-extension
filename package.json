@@ -20,6 +20,7 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "pack": "node scripts/pack-crx.mjs",
+    "pack:allhosts": "node scripts/pack-crx.mjs --all-hosts",
     "test:e2e": "playwright test"
   },
   "engines": {
