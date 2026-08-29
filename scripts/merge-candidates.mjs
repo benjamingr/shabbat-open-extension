@@ -71,6 +71,7 @@ for (const c of candidates) {
   entry.evidence_text = c.evidence_text;
   entry.evidence_url = c.evidence_url || `https://${dom}/`;
   entry.verified = c.verified || data.audited_at;
+  if (c.proof_image) entry.proof_image = c.proof_image;
 
   data.sites.push(entry);
   known.add(dom);
