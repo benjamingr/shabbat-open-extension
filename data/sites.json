@@ -44,18 +44,6 @@
       "proof_image": "ahavaktana.co.il.webp"
     },
     {
-      "domain": "danielbicycles.co.il",
-      "name": "אופני דניאל",
-      "category": "bicycles",
-      "status": "site_blocked",
-      "confidence": "verified",
-      "holidays": null,
-      "mechanism": "embedded Shabbat closure-clock widget (enter/exit times)",
-      "evidence_text": "נחזור לפעילות במוצאי שבת",
-      "evidence_url": "https://danielbicycles.co.il/",
-      "verified": "2026-08-21"
-    },
-    {
       "domain": "or-ad.com",
       "name": "אור-עד תאורה",
       "category": "lighting",
@@ -677,6 +665,18 @@
       "proof_image": "vanak-market.com.webp"
     },
     {
+      "domain": "danielbicycles.co.il",
+      "name": "אופני דניאל",
+      "category": "bicycles",
+      "status": "purchase_blocked",
+      "confidence": "verified",
+      "holidays": null,
+      "mechanism": "site browsable; every product’s add-to-cart replaced with a Shabbat notice until Motzaei Shabbat",
+      "evidence_text": "נחזור לפעילות במוצאי שבת",
+      "evidence_url": "https://danielbicycles.co.il/",
+      "verified": "2026-08-29"
+    },
+    {
       "holidays": null,
       "domain": "goldt.co.il",
       "name": "גולד תקשורת",
@@ -750,17 +750,6 @@
       "evidence_url": "https://phonecover.co.il/",
       "verified": "2026-08-22",
       "proof_image": "phonecover.co.il.webp"
-    },
-    {
-      "domain": "tti.org.il",
-      "name": "תומכי צדקה ישראל",
-      "category": "charity_raffle",
-      "status": "purchase_blocked",
-      "confidence": "high",
-      "holidays": null,
-      "evidence_text": "האתר שומר שבת - לא ניתן לתרום או לרכוש כרטיסים בשבת",
-      "evidence_url": "https://tti.org.il/",
-      "verified": "2026-08-21"
     },
     {
       "domain": "bhphotovideo.com",
@@ -1197,6 +1186,10 @@
     {
       "domain": "halperin.co.il",
       "reason": "signage/printing store (not the optics chain): added to cart and reached Checkout.asp during Shabbat (2026-08-22)"
+    },
+    {
+      "domain": "tti.org.il",
+      "reason": "site offline (generic hosting-unavailable page), no Shabbat mechanism observed live 2026-08-29; re-check on a weekday"
     }
   ],
   "notes": [
