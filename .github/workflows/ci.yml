@@ -119,12 +119,20 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Build the all-hosts variant
+        run: npm run build:allhosts
+
       - name: Pack CRX + ZIP
         env:
           # Optional: a stable signing key (PEM, raw or base64). Without it an
           # ephemeral key is used and the extension id will not be stable.
           CRX_KEY: ${{ secrets.CRX_KEY }}
         run: npm run pack
+
+      - name: Pack the all-hosts CRX + ZIP
+        env:
+          CRX_KEY: ${{ secrets.CRX_KEY }}
+        run: npm run pack:allhosts
 
       - name: Compute release metadata
         id: meta
@@ -139,6 +147,25 @@ jobs:
           gh release create "${{ steps.meta.outputs.tag }}" \
             release/shabbat-closed-extension.crx \
             release/shabbat-closed-extension.zip \
+            release/shabbat-closed-extension-allhosts.crx \
+            release/shabbat-closed-extension-allhosts.zip \
             --target "${{ github.sha }}" \
             --title "v${{ steps.meta.outputs.version }} (${{ steps.meta.outputs.tag }})" \
-            --notes "Automated build of commit ${{ github.sha }} (manifest v${{ steps.meta.outputs.version }})."
+            --notes "$(cat <<'NOTES'
+          Automated build of commit ${{ github.sha }} (manifest v${{ steps.meta.outputs.version }}).
+
+          **`shabbat-closed-extension.{crx,zip}`** — the build that ships. Runs only on the
+          domains listed in `data/sites.json`.
+
+          **`shabbat-closed-extension-allhosts.{crx,zip}`** — an evaluation build, **not for
+          publishing**. Identical code and dataset, but its content script matches
+          `<all_urls>` instead of the listed domains, so Chrome shows the broadest install
+          warning. It still only shows a banner on listed sites — that narrowing is enforced
+          by `banner.ts` rather than by the browser. It exists to measure whether adding
+          domains between releases counts as a permission increase; see
+          `ManifestOptions.allHosts` in `manifest.config.ts`.
+
+          Both are signed with the same key and share one extension id, so installing one
+          replaces the other.
+          NOTES
+          )"
