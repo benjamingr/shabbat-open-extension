@@ -3,10 +3,16 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { existsSync } from 'node:fs'
 
-const extensionPath = join(dirname(fileURLToPath(import.meta.url)), '..', 'dist')
+/*
+ * Which build to load. Defaults to the scoped one; `EXT_DIST=dist-allhosts` runs the same
+ * suite against the `<all_urls>` variant, which is how the claim that the two behave
+ * identically is actually checked rather than asserted.
+ */
+const distName = process.env['EXT_DIST'] ?? 'dist'
+const extensionPath = join(dirname(fileURLToPath(import.meta.url)), '..', distName)
 
 if (!existsSync(join(extensionPath, 'manifest.json'))) {
-  throw new Error('dist/manifest.json not found — run `npm run build` before the e2e tests.')
+  throw new Error(`${distName}/manifest.json not found — build it before the e2e tests.`)
 }
 
 /**

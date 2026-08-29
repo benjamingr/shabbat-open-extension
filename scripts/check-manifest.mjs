@@ -8,18 +8,30 @@
  * and silently. A stray <all_urls> would sail through review; a page that crxjs copied
  * verbatim instead of bundling 404s only when a user clicks it.
  *
- * Run: node scripts/check-manifest.mjs  (after a build)
+ * Run: node scripts/check-manifest.mjs [dist-dir] [--all-hosts]   (after a build)
+ *
+ * `--all-hosts` checks the `dist-allhosts` variant instead, where one `<all_urls>` pattern
+ * is the intended answer rather than a defect. It is not a way to silence the check: the
+ * broad pattern becomes *required*, and required to be the only one, so a build that mixes
+ * `<all_urls>` with leftover per-domain patterns still fails. Every other assertion —
+ * emitted files, bundling, icons, locales — runs identically in both modes.
  */
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const dist = join(root, "dist");
+
+const args = process.argv.slice(2);
+const allHosts = args.includes("--all-hosts");
+const distName = args.find((arg) => !arg.startsWith("--")) ?? (allHosts ? "dist-allhosts" : "dist");
+
+const dist = join(root, distName);
 const manifestPath = join(dist, "manifest.json");
 
 if (!existsSync(manifestPath)) {
-  console.error("dist/manifest.json not found — run `npm run build` first.");
+  const script = allHosts ? "npm run build:allhosts" : "npm run build";
+  console.error(`${distName}/manifest.json not found — run \`${script}\` first.`);
   process.exit(1);
 }
 
@@ -32,18 +44,39 @@ const fail = (msg) => errors.push(msg);
 // --- host access ----------------------------------------------------------
 const BROAD = ["<all_urls>", "*://*/*", "http://*/*", "https://*/*"];
 const contentScripts = manifest.content_scripts ?? [];
-const allMatches = [
-  ...(manifest.host_permissions ?? []),
-  ...contentScripts.flatMap((cs) => cs.matches ?? []),
-];
-
-for (const pattern of allMatches) {
-  if (BROAD.includes(pattern)) fail(`broad host access requested: ${pattern}`);
-}
 
 if (contentScripts.length !== 1) {
   fail(`expected exactly 1 content script, found ${contentScripts.length}`);
+}
+
+const actual = new Set(contentScripts[0]?.matches ?? []);
+
+/*
+ * `host_permissions` is empty in both builds. The banner needs `content_scripts.matches`,
+ * which is a different grant: it lets the injected script touch those pages, but gives the
+ * service worker no cross-origin privileges. Nothing here needs those, so a
+ * `host_permissions` entry appearing at all is a regression whichever build this is.
+ */
+for (const pattern of manifest.host_permissions ?? []) {
+  fail(`host_permissions requested, which no part of the extension needs: ${pattern}`);
+}
+
+if (allHosts) {
+  /*
+   * The variant's whole purpose is that its host scope is a constant — one pattern that no
+   * release can change, so no update is ever a privilege increase. A build that widened to
+   * `<all_urls>` *and* kept the generated per-domain patterns would have the broad install
+   * warning and the changing permission set: the cost of both designs, the benefit of
+   * neither. So the pattern set must be exactly the one.
+   */
+  if (actual.size !== 1 || !actual.has("<all_urls>")) {
+    fail(`expected content_scripts.matches to be exactly ["<all_urls>"], got ${[...actual].join(", ")}`);
+  }
 } else {
+  for (const pattern of actual) {
+    if (BROAD.includes(pattern)) fail(`broad host access requested: ${pattern}`);
+  }
+
   // Two patterns per domain: the bare domain and its subdomains.
   const expected = new Set(
     sites.flatMap((site) => {
@@ -51,7 +84,6 @@ if (contentScripts.length !== 1) {
       return [`*://${d}/*`, `*://*.${d}/*`];
     }),
   );
-  const actual = new Set(contentScripts[0].matches ?? []);
   for (const pattern of expected) {
     if (!actual.has(pattern)) fail(`dataset domain missing from matches: ${pattern}`);
   }
@@ -60,11 +92,19 @@ if (contentScripts.length !== 1) {
   }
 }
 
-// Anything a web page can reach must be scoped to the listed domains too.
+/*
+ * Whatever a web page can reach has to match where the content script runs — no wider, and
+ * no narrower. Wider hands the proof page to sites the extension has nothing to say about;
+ * narrower gives the banner a "source" link that resolves nowhere on some of the very
+ * pages it appears on.
+ */
 for (const entry of manifest.web_accessible_resources ?? []) {
   for (const pattern of entry.matches ?? []) {
-    if (BROAD.includes(pattern)) {
-      fail(`web_accessible_resources exposed to ${pattern}: ${entry.resources?.join(", ")}`);
+    if (!actual.has(pattern)) {
+      fail(
+        `web_accessible_resources exposed to ${pattern}, which the content script does ` +
+          `not run on: ${entry.resources?.join(", ")}`,
+      );
     }
   }
 }
@@ -122,12 +162,15 @@ if (manifest.default_locale) {
 }
 
 if (errors.length > 0) {
-  console.error(`\ndist/manifest.json failed ${errors.length} check(s):`);
+  console.error(`\n${distName}/manifest.json failed ${errors.length} check(s):`);
   for (const e of errors) console.error(`  ✗ ${e}`);
   process.exit(1);
 }
 
 console.log(
-  `dist/manifest.json OK — ${contentScripts[0]?.matches?.length ?? 0} scoped match patterns, ` +
-    `no broad host access, ${referenced.length} referenced files present.`,
+  `${distName}/manifest.json OK — ` +
+    (allHosts
+      ? "one <all_urls> match pattern, a host scope no release can change"
+      : `${actual.size} scoped match patterns, no broad host access`) +
+    `, ${referenced.length} referenced files present.`,
 );
