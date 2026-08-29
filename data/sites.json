@@ -756,6 +756,17 @@
       "verified": "2026-08-21"
     },
     {
+      "domain": "hastam.co.il",
+      "name": "אוצר הסת״ם",
+      "category": "judaica",
+      "status": "declared_shabbat_observant",
+      "confidence": "high",
+      "holidays": null,
+      "evidence_text": "מכון סת״ם (ספרי תורה, תפילין, מזוזות) שומר שבת; האתר נותר מקוון בשבת ללא חסימה טכנית",
+      "evidence_url": "https://hastam.co.il/",
+      "verified": "2026-08-29"
+    },
+    {
       "domain": "ltdidactic.co.il",
       "name": "אל.טי. דידקטיק",
       "category": "toys_education",
