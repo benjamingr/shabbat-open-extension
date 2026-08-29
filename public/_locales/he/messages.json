@@ -3,9 +3,17 @@
     "message": "סגור בשבת — Closed on Shabbat",
     "description": "Extension name shown in Chrome and on the store listing."
   },
+  "extNameAllHosts": {
+    "message": "סגור בשבת: רשימה מתעדכנת — Closed on Shabbat: Live List",
+    "description": "Extension name for the all-hosts edition. Must differ from extName: the two are separate store listings, and a shared name reads as a duplicate submission."
+  },
   "extDescription": {
     "message": "מסמן אתרי מסחר ישראליים שומרי שבת ומציג באנר: האתר הזה סגור בשבת.",
     "description": "Short store description."
+  },
+  "extDescriptionAllHosts": {
+    "message": "מסמן אתרי מסחר ישראליים שומרי שבת ומציג באנר. הרשימה מתעדכנת מעצמה ככל שנבדקים אתרים חדשים.",
+    "description": "Short store description for the all-hosts edition. Names the self-updating list, which is what the broader host access buys the user."
   },
   "actionTitle": {
     "message": "סגור בשבת — סטטוס האתר",

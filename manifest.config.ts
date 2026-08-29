@@ -40,13 +40,27 @@ export interface ManifestOptions {
 export function chromeManifest({ allHosts = false }: ManifestOptions = {}) {
   const MATCHES = allHosts ? ['<all_urls>'] : contentScriptMatches()
 
+  /*
+   * The two builds are published as separate store listings, so they must not share a
+   * name or a description. Two items with identical text differing only in the permission
+   * they request read as a duplicate submission, and the broader one has nothing to show
+   * for the access it asks for.
+   *
+   * The differentiator is deliberately not the permission — nobody installs an extension
+   * *for* broader access. It is what the access buys: a list that stays current without
+   * an extension update. `extDescriptionAllHosts` says exactly that, which means it is
+   * only truthful once the dataset actually refreshes at runtime. Until then this build
+   * is the scoped one with a wider match pattern, and the claim would be false.
+   */
+  const suffix = allHosts ? 'AllHosts' : ''
+
   return defineManifest({
     manifest_version: 3,
     // `__MSG_*__` resolves from public/_locales. chrome.i18n is used *only* here, for the
     // strings Chrome reads before any extension code runs; everything else goes through
     // src/i18n, which a language setting can override at runtime.
-    name: '__MSG_extName__',
-    description: '__MSG_extDescription__',
+    name: `__MSG_extName${suffix}__`,
+    description: `__MSG_extDescription${suffix}__`,
     default_locale: 'he',
     version: pkg.version,
 

@@ -3,9 +3,17 @@
     "message": "Closed on Shabbat — סגור בשבת",
     "description": "Extension name shown in Chrome and on the store listing."
   },
+  "extNameAllHosts": {
+    "message": "Closed on Shabbat: Live List — סגור בשבת: רשימה מתעדכנת",
+    "description": "Extension name for the all-hosts edition. Must differ from extName: the two are separate store listings, and a shared name reads as a duplicate submission."
+  },
   "extDescription": {
     "message": "Flags Shabbat-observant Israeli shopping sites and shows a banner: this site is closed on Shabbat.",
     "description": "Short store description."
+  },
+  "extDescriptionAllHosts": {
+    "message": "Flags Shabbat-observant Israeli shopping sites and shows a banner. Its list updates itself as new sites are verified.",
+    "description": "Short store description for the all-hosts edition. Names the self-updating list, which is what the broader host access buys the user."
   },
   "actionTitle": {
     "message": "Closed on Shabbat — site status",

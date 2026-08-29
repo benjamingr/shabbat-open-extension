@@ -61,6 +61,24 @@ for (const pattern of manifest.host_permissions ?? []) {
   fail(`host_permissions requested, which no part of the extension needs: ${pattern}`);
 }
 
+/*
+ * The two builds go to the store as separate listings, so their name and description must
+ * differ. Identical text on two items that differ only in the permission they request is a
+ * duplicate submission, and the broader one has nothing to show for the extra access. This
+ * is a build-output property — the strings are `__MSG_` keys here and only resolve later —
+ * so it is asserted against the keys, and the message-definition check further down proves
+ * each key actually exists in _locales.
+ */
+const NAME_KEY = allHosts ? "__MSG_extNameAllHosts__" : "__MSG_extName__";
+const DESCRIPTION_KEY = allHosts ? "__MSG_extDescriptionAllHosts__" : "__MSG_extDescription__";
+
+if (manifest.name !== NAME_KEY) {
+  fail(`expected name ${NAME_KEY}, got ${manifest.name}`);
+}
+if (manifest.description !== DESCRIPTION_KEY) {
+  fail(`expected description ${DESCRIPTION_KEY}, got ${manifest.description}`);
+}
+
 if (allHosts) {
   /*
    * The variant's whole purpose is that its host scope is a constant — one pattern that no
