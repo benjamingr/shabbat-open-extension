@@ -33,6 +33,11 @@ jobs:
       - name: Validate the dataset
         run: npm run validate
 
+      # The GitHub Pages directory is generated from the dataset; build it here so a
+      # broken generator fails the PR instead of only surfacing at deploy time.
+      - name: Build the Pages site
+        run: npm run build:site
+
       - name: Typecheck
         run: npm run typecheck
 

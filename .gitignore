@@ -10,3 +10,5 @@ web-ext-artifacts/
 test-results/
 playwright-report/
 blob-report/
+# GitHub Pages build output (deployed via Actions, never committed)
+/site/
