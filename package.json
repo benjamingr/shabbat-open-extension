@@ -14,6 +14,7 @@
     "build:firefox-xpi": "web-ext build --source-dir dist-firefox --artifacts-dir release --overwrite-dest",
     "preview": "vite preview",
     "validate": "node scripts/build-data.mjs",
+    "build:site": "node scripts/build-site.mjs",
     "check:manifest": "node scripts/check-manifest.mjs",
     "check:manifest:allhosts": "node scripts/check-manifest.mjs --all-hosts",
     "test": "vitest run",

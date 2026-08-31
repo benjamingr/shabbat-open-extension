@@ -155,6 +155,24 @@ which is why the in-extension copy has its own bundle rather than using
 `_locales`. Those manifest strings live in `public/_locales/{he,en}/messages.json`
 and are the one place where the browser's own locale still decides.
 
+## Public directory (GitHub Pages)
+
+A browsable, RTL-Hebrew directory of every listed site — grouped by tier, with the
+verification evidence and (where we have one) the Shabbat screenshot — is published to
+GitHub Pages. It's the page to point users at.
+
+`scripts/build-site.mjs` reads `data/sites.json` and the proof screenshots and emits a
+self-contained static site (search, tier filters, screenshot lightbox). Build it locally:
+
+```bash
+npm run build:site   # → ./site/  (open site/index.html)
+```
+
+Nothing generated is committed: the **Deploy Pages** workflow
+(`.github/workflows/pages.yml`) rebuilds and deploys it on every push to `main`, so the
+published page always reflects `main`'s data. CI also runs `build:site` on PRs so a
+broken generator fails the check.
+
 ## The data
 
 The list was built in two verified passes on 2026-08-16, and **every entry was

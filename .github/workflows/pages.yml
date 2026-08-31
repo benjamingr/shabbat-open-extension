@@ -1,0 +1,50 @@
+name: Deploy Pages
+
+# Builds the public directory site (scripts/build-site.mjs) from data/sites.json and the
+# proof screenshots, and deploys it to GitHub Pages. Runs on every push to main so the
+# published page always reflects main's data — nothing generated is committed to the repo.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/sites.json'
+      - 'public/proof/**'
+      - 'scripts/build-site.mjs'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment; don't cancel an in-progress one mid-publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      # The generator uses only Node built-ins — no install step needed.
+      - run: node scripts/build-site.mjs
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
