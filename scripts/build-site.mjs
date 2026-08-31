@@ -156,6 +156,11 @@ const html = `<!doctype html>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Declare that the page handles both schemes itself. Without this, browsers with
+     "auto dark" (Chrome Auto Dark Mode, some mobile browsers) algorithmically invert the
+     page: they darken the light-mode backgrounds but leave text dark → black-on-dark.
+     Declaring color-scheme opts the page out of that and drives native controls/scrollbars. -->
+<meta name="color-scheme" content="light dark" />
 <title>סגור בשבת — רשימת האתרים</title>
 <meta name="description" content="רשימת אתרי המסחר הישראליים שומרי השבת המסומנים בתוסף «סגור בשבת», עם עדות אימות וצילומי מסך." />
 <meta property="og:title" content="סגור בשבת — רשימת האתרים" />
@@ -164,6 +169,7 @@ const html = `<!doctype html>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%95%AF%EF%B8%8F%3C/text%3E%3C/svg%3E" />
 <style>
 :root{
+  color-scheme:light dark;
   --bg:#f6f7f9; --panel:#ffffff; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0;
   --accent:#7c3aed; --shadow:0 1px 3px rgba(15,23,42,.08),0 8px 24px rgba(15,23,42,.05);
 }
