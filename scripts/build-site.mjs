@@ -151,23 +151,25 @@ const statBoxes = Object.entries(TIERS)
 const cardsHtml = sites.map(card).join('\n')
 const lastUpdate = data.audited_at || data.generated_at || ''
 
-const html = `<!doctype html>
-<html lang="he" dir="rtl">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<!-- Declare that the page handles both schemes itself. Without this, browsers with
-     "auto dark" (Chrome Auto Dark Mode, some mobile browsers) algorithmically invert the
-     page: they darken the light-mode backgrounds but leave text dark → black-on-dark.
-     Declaring color-scheme opts the page out of that and drives native controls/scrollbars. -->
-<meta name="color-scheme" content="light dark" />
-<title>סגור בשבת — רשימת האתרים</title>
-<meta name="description" content="רשימת אתרי המסחר הישראליים שומרי השבת המסומנים בתוסף «סגור בשבת», עם עדות אימות וצילומי מסך." />
-<meta property="og:title" content="סגור בשבת — רשימת האתרים" />
-<meta property="og:description" content="רשימת אתרי המסחר הישראליים שומרי השבת, עם עדות אימות וצילומי מסך." />
-<meta property="og:type" content="website" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%95%AF%EF%B8%8F%3C/text%3E%3C/svg%3E" />
-<style>
+// ---- store listings --------------------------------------------------------
+/*
+ * Two published items running the same code over the same list, differing only in host
+ * scope. The install page exists because that choice cannot be made from the store
+ * listings alone: they look near-identical, and the one thing separating them is a
+ * permission whose consequence takes a sentence to explain.
+ */
+const STORE_REGULAR =
+  'https://chromewebstore.google.com/detail/%D7%A1%D7%92%D7%95%D7%A8-%D7%91%D7%A9%D7%91%D7%AA-%E2%80%94-closed-on-sha/afhmkajnjeedoehomajhlnbedpjelfcl'
+const STORE_LIVE =
+  'https://chromewebstore.google.com/detail/%D7%A1%D7%92%D7%95%D7%A8-%D7%91%D7%A9%D7%91%D7%AA-%D7%A8%D7%A9%D7%99%D7%9E%D7%94-%D7%9E%D7%AA%D7%A2%D7%93%D7%9B%D7%A0%D7%AA-%E2%80%94/pdlnkkoecbhhndephflfbfemcahnpcjo'
+
+// ---- css -------------------------------------------------------------------
+/*
+ * BASE_CSS is the tokens plus the chrome both pages share (hero, CTA row, footer);
+ * DIRECTORY_CSS is everything only the listing page uses. Split rather than duplicated so
+ * the install page cannot drift visually from the directory.
+ */
+const BASE_CSS = `
 :root{
   color-scheme:light dark;
   --bg:#f6f7f9; --panel:#ffffff; --ink:#0f172a; --muted:#64748b; --line:#e2e8f0;
@@ -195,7 +197,13 @@ h1{font-size:clamp(1.9rem,4.4vw,3rem);margin:18px 0 8px;letter-spacing:-.5px}
 .cta a{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:12px;
   text-decoration:none;font-weight:700;border:1px solid var(--line);background:var(--panel);box-shadow:var(--shadow)}
 .cta a.primary{background:var(--accent);color:#fff;border-color:transparent}
+footer{border-top:1px solid var(--line);margin-top:40px;padding:28px 0 60px;color:var(--muted);font-size:.88rem}
+footer a{color:var(--accent);text-decoration:none}
+footer .note{max-width:760px;margin:0 auto 14px;text-align:center;line-height:1.7}
+@media (max-width:520px){header.hero{padding:38px 0 20px}}
+`
 
+const DIRECTORY_CSS = `
 .stats{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:30px 0 6px}
 .stat{cursor:pointer;font:inherit;border:1px solid var(--line);background:var(--panel);border-radius:14px;
   padding:12px 18px;min-width:120px;display:flex;flex-direction:column;align-items:center;gap:2px;
@@ -249,11 +257,6 @@ h1{font-size:clamp(1.9rem,4.4vw,3rem);margin:18px 0 8px;letter-spacing:-.5px}
 .meta{margin:auto 0 0;font-size:.8rem;color:var(--muted);padding-top:6px}
 
 .empty{display:none;text-align:center;color:var(--muted);padding:50px 0;font-size:1.05rem}
-
-footer{border-top:1px solid var(--line);margin-top:40px;padding:28px 0 60px;color:var(--muted);font-size:.88rem}
-footer a{color:var(--accent);text-decoration:none}
-footer .note{max-width:760px;margin:0 auto 14px;text-align:center;line-height:1.7}
-
 /* lightbox */
 .lb{position:fixed;inset:0;background:rgba(2,6,23,.86);display:none;align-items:center;justify-content:center;
   z-index:50;padding:24px}
@@ -263,17 +266,92 @@ footer .note{max-width:760px;margin:0 auto 14px;text-align:center;line-height:1.
 .lb figcaption{color:#e8edf5;text-align:center;font-weight:700}
 .lb .close{position:fixed;top:18px;inset-inline-end:22px;background:rgba(255,255,255,.12);color:#fff;border:0;
   font-size:1.6rem;width:44px;height:44px;border-radius:50%;cursor:pointer}
-@media (max-width:520px){header.hero{padding:38px 0 20px}}
-</style>
+`
+
+const INSTALL_CSS = `
+.options{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;margin:34px 0 10px}
+.opt{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:24px 22px;
+  box-shadow:var(--shadow);display:flex;flex-direction:column;gap:13px;position:relative}
+.opt h2{margin:0;font-size:1.22rem;line-height:1.3}
+.opt .scope{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;padding:11px 14px;border-radius:12px;
+  background:color-mix(in srgb,var(--ink) 4%,transparent);border:1px solid var(--line)}
+.opt .scope b{font-size:.79rem;color:var(--muted);font-weight:700;white-space:nowrap}
+.opt .scope span{font-weight:700}
+
+/* Pros and cons carry their own ✓/✗ marker, so neither list needs a heading colour or a
+   position on the card to say which it is. */
+.opt .col h3{margin:0 0 7px;font-size:.8rem;font-weight:800;color:var(--muted)}
+.opt .col ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px;font-size:.93rem}
+.opt .col li{display:flex;gap:8px;align-items:flex-start}
+.opt .col li::before{flex:0 0 auto;font-weight:800}
+.opt .pros li::before{content:"✓";color:#16a34a}
+.opt .cons li::before{content:"✗";color:#dc2626}
+
+/* Both buttons identical: styling the two options differently would recommend one of
+   them, which is exactly what this page declines to do. */
+.opt .go{margin-top:auto;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 18px;border-radius:12px;text-decoration:none;font-weight:800;
+  background:var(--accent);color:#fff;border:1px solid transparent}
+.opt .go:hover{filter:brightness(1.08)}
+
+.same{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px 24px;margin:26px 0}
+.same h2{margin:0 0 4px;font-size:1.1rem}
+.same p.sub{margin:0 0 14px;color:var(--muted);font-size:.92rem}
+/* Two columns, not auto-fit: these lines are sentences, and at three or four across they
+   wrap mid-phrase and stop reading as a list. */
+.same ul{margin:0;padding-inline-start:20px;display:grid;grid-template-columns:1fr 1fr;
+  gap:10px 30px;font-size:.94rem}
+.same ul li::marker{color:#16a34a}
+@media (max-width:680px){.same ul{grid-template-columns:1fr}}
+.back{display:block;text-align:center;margin:26px 0 0;color:var(--accent);text-decoration:none;font-weight:700}
+.back:hover{text-decoration:underline}
+`
+
+// ---- document shell --------------------------------------------------------
+/** Both pages differ only in title, description, page-specific css, and body. */
+function page({ title, description, css, body }) {
+  return `<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Declare that the page handles both schemes itself. Without this, browsers with
+     "auto dark" (Chrome Auto Dark Mode, some mobile browsers) algorithmically invert the
+     page: they darken the light-mode backgrounds but leave text dark → black-on-dark.
+     Declaring color-scheme opts the page out of that and drives native controls/scrollbars. -->
+<meta name="color-scheme" content="light dark" />
+<title>${esc(title)}</title>
+<meta name="description" content="${esc(description)}" />
+<meta property="og:title" content="${esc(title)}" />
+<meta property="og:description" content="${esc(description)}" />
+<meta property="og:type" content="website" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%95%AF%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+<style>${BASE_CSS}${css}</style>
 </head>
 <body>
-<header class="hero">
+${body}
+</body>
+</html>
+`
+}
+
+const footerHtml = `<footer>
+  <div class="wrap">
+    <p class="note">${esc(
+      'המידע נאסף מבדיקה חיה של כל אתר, מכתובת IP ישראלית, בשבת עצמה. אתר יכול לשנות את התנהלותו — אם מצאתם טעות, נשמח לעדכון.',
+    )}</p>
+    <p class="note">עודכן לאחרונה: ${esc(lastUpdate)} · <a href="${REPO_URL}/blob/main/data/sites.json" target="_blank" rel="noopener">מקור הנתונים</a> · <a href="${REPO_URL}/issues" target="_blank" rel="noopener">דיווח על אתר</a></p>
+  </div>
+</footer>`
+
+// ---- the directory ---------------------------------------------------------
+const directoryBody = `<header class="hero">
   <div class="wrap">
     <span class="badge">🕯️ תוסף דפדפן · מידע ציבורי</span>
     <h1>אילו אתרים סגורים בשבת?</h1>
     <p class="lead">רשימת אתרי המסחר הישראליים שומרי השבת שהתוסף «סגור בשבת» מסמן — כל רשומה אומתה חי (גלישה מישראל, בשבת), עם העדות שנמצאה וצילום מסך במידת האפשר.</p>
     <div class="cta">
-      <a class="primary" href="${REPO_URL}" target="_blank" rel="noopener">⬇︎ להתקנת התוסף</a>
+      <a class="primary" href="install.html">⬇︎ להתקנת התוסף</a>
       <a href="${REPO_URL}/blob/main/PRIVACY.md" target="_blank" rel="noopener">מדיניות פרטיות</a>
       <a href="${REPO_URL}" target="_blank" rel="noopener">קוד המקור (GitHub)</a>
     </div>
@@ -300,14 +378,7 @@ footer .note{max-width:760px;margin:0 auto 14px;text-align:center;line-height:1.
   <p class="empty" id="empty">לא נמצאו אתרים התואמים לחיפוש.</p>
 </main>
 
-<footer>
-  <div class="wrap">
-    <p class="note">${esc(
-      'המידע נאסף מבדיקה חיה של כל אתר, מכתובת IP ישראלית, בשבת עצמה. אתר יכול לשנות את התנהלותו — אם מצאתם טעות, נשמח לעדכון.',
-    )}</p>
-    <p class="note">עודכן לאחרונה: ${esc(lastUpdate)} · <a href="${REPO_URL}/blob/main/data/sites.json" target="_blank" rel="noopener">מקור הנתונים</a> · <a href="${REPO_URL}/issues" target="_blank" rel="noopener">דיווח על אתר</a></p>
-  </div>
-</footer>
+${footerHtml}
 
 <div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="צילום מסך">
   <button class="close" id="lbClose" aria-label="סגירה">×</button>
@@ -348,15 +419,111 @@ footer .note{max-width:760px;margin:0 auto 14px;text-align:center;line-height:1.
   lb.addEventListener('click',function(e){if(e.target===lb)close();});
   document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
 })();
-</script>
-</body>
-</html>
-`
+</script>`
+
+// ---- the install / which-edition page --------------------------------------
+/*
+ * Two equal options, not a recommendation. The trade is genuine in both directions - a
+ * narrower permission against a permission that never changes - and which side matters
+ * more is the reader's call, not ours. So: same card, same button, no default, and the
+ * cost of each stated as plainly as its benefit.
+ *
+ * Note the cons are the honest ones, including the one that counts against the edition
+ * asking for more: under <all_urls> the narrowing to listed sites lives in the extension's
+ * code rather than being enforced by the browser.
+ */
+const installBody = `<header class="hero">
+  <div class="wrap">
+    <span class="badge">🕯️ שתי גרסאות · אותה רשימה</span>
+    <h1>שתי גרסאות — במה הן נבדלות?</h1>
+    <p class="lead">שתי הגרסאות מסמנות בדיוק את אותם ${sites.length} אתרים ומתנהגות זהה. ההבדל היחיד ביניהן הוא היקף ההרשאה שהתוסף מבקש מהדפדפן — ולכל אחת מהאפשרויות יש יתרון וחיסרון.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="options" aria-label="שתי הגרסאות">
+
+    <article class="opt">
+      <h2>סגור בשבת</h2>
+      <div class="scope"><b>הרשאה:</b><span>${sites.length} האתרים שברשימה בלבד</span></div>
+      <div class="col pros">
+        <h3>יתרונות</h3>
+        <ul>
+          <li>הדפדפן נותן לתוסף גישה לאתרים שברשימה בלבד, ולא לאף אתר אחר.</li>
+          <li>אפשר לראות בדף ההרשאות בדיוק לאילו אתרים לתוסף יש גישה.</li>
+        </ul>
+      </div>
+      <div class="col cons">
+        <h3>חסרונות</h3>
+        <ul>
+          <li>אתרים שנוספים לרשימה מגיעים אליכם רק עם עדכון גרסה של התוסף.</li>
+          <li>כל עדכון שמוסיף אתרים מרחיב את ההרשאות, וייתכן שהדפדפן יבקש את אישורכם מחדש.</li>
+        </ul>
+      </div>
+      <a class="go" href="${STORE_REGULAR}" target="_blank" rel="noopener">התקנה מחנות Chrome</a>
+    </article>
+
+    <article class="opt">
+      <h2>סגור בשבת: רשימה מתעדכנת</h2>
+      <div class="scope"><b>הרשאה:</b><span>כל האתרים</span></div>
+      <div class="col pros">
+        <h3>יתרונות</h3>
+        <ul>
+          <li>ההרשאה אינה משתנה בין גרסאות — הרשימה יכולה לגדול בלי בקשת אישור חדשה.</li>
+          <li>אין הפסקה בפעולת התוסף בעקבות עדכון שמוסיף אתרים.</li>
+        </ul>
+      </div>
+      <div class="col cons">
+        <h3>חסרונות</h3>
+        <ul>
+          <li>הדפדפן מבקש הרשאת גישה לכל האתרים, גם לאלה שאינם ברשימה.</li>
+          <li>ההגבלה לאתרים שברשימה נשמרת בקוד התוסף, ואינה נאכפת על ידי הדפדפן.</li>
+        </ul>
+      </div>
+      <a class="go" href="${STORE_LIVE}" target="_blank" rel="noopener">התקנה מחנות Chrome</a>
+    </article>
+
+  </section>
+
+  <section class="same">
+    <h2>מה זהה בשתי הגרסאות</h2>
+    <p class="sub">ההבדל הוא בהרשאה בלבד. כל השאר — אותו קוד, אותה רשימה, אותה התנהגות.</p>
+    <ul>
+      <li>הבאנר מוצג רק באתרים שברשימה.</li>
+      <li>אין איסוף, שמירה או שידור של מידע כלשהו.</li>
+      <li>התוסף אינו קורא את תוכן הדפים שבהם אתם גולשים.</li>
+      <li>אותו קוד מקור, פתוח לבדיקה.</li>
+    </ul>
+  </section>
+
+  <a class="back" href="./">← לרשימת האתרים המסומנים</a>
+</main>
+
+${footerHtml}`
+
+// ---- emit ------------------------------------------------------------------
+const html = page({
+  title: 'סגור בשבת — רשימת האתרים',
+  description:
+    'רשימת אתרי המסחר הישראליים שומרי השבת המסומנים בתוסף «סגור בשבת», עם עדות אימות וצילומי מסך.',
+  css: DIRECTORY_CSS,
+  body: directoryBody,
+})
+
+const installHtml = page({
+  title: 'סגור בשבת — איזו גרסה להתקין?',
+  description:
+    'שתי גרסאות של התוסף «סגור בשבת»: אותה רשימה ואותה התנהגות, בהיקף הרשאות שונה. הסבר קצר וקישורי התקנה.',
+  css: INSTALL_CSS,
+  body: installBody,
+})
 
 writeFileSync(join(OUT, 'index.html'), html)
+writeFileSync(join(OUT, 'install.html'), installHtml)
 // 404 fallback so deep links land on the directory.
 writeFileSync(join(OUT, '404.html'), html)
 writeFileSync(join(OUT, '.nojekyll'), '')
 
 console.log(`site → ${OUT}`)
 console.log(`  ${sites.length} sites, ${copied} screenshots copied`)
+console.log('  pages: index.html, install.html, 404.html')
