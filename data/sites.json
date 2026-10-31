@@ -277,6 +277,19 @@
       "proof_image": "judaica-chabad.co.il.webp"
     },
     {
+      "domain": "ladycomfort.co.il",
+      "name": "ליידי קומפורט (Lady Comfort)",
+      "category": "footwear",
+      "status": "site_blocked",
+      "confidence": "verified",
+      "holidays": true,
+      "mechanism": "HolyClock: redirects every page to holyclock.com/closed during Shabbat and holidays, closure page with countdown (seen live)",
+      "evidence_text": "האתר בו הנך מבקר שומר שבת וחג, ולכן הגלישה בו אינה מתאפשרת בזמן זה",
+      "evidence_url": "https://www.ladycomfort.co.il/",
+      "verified": "2026-10-31",
+      "proof_image": "ladycomfort.co.il.webp"
+    },
+    {
       "holidays": true,
       "domain": "shop.limazor.co.il",
       "name": "למזור",
