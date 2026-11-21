@@ -406,6 +406,19 @@
       "proof_image": "einavbooblil.com.webp"
     },
     {
+      "domain": "noypasha.com",
+      "name": "נוי פשה (Noy Pasha)",
+      "category": "cosmetics",
+      "status": "site_blocked",
+      "confidence": "verified",
+      "holidays": true,
+      "mechanism": "Shopify shabbat-mode app: full-screen closure overlay with countdown to Motzaei Shabbat (seen live); app code also closes on major holidays via HebCal",
+      "evidence_text": "החנות תחזור לפעילות במוצ״ש",
+      "evidence_url": "https://noypasha.com/",
+      "verified": "2026-11-21",
+      "proof_image": "noypasha.com.webp"
+    },
+    {
       "holidays": true,
       "domain": "feder-home.co.il",
       "name": "פדר",
