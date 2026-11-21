@@ -40,9 +40,14 @@ export function firefoxManifest() {
       gecko: {
         id: 'shabbat-closed@benjamingr.github.io',
         strict_min_version: '115.0',
-        // The extension collects nothing and makes no network requests (see PRIVACY.md);
-        // `none` states that explicitly for AMO's data-consent flow, which Firefox is
-        // making a required manifest key.
+        // The extension collects nothing: no identifiers, no browsing data, nothing about
+        // the user leaves the machine. `none` states that for AMO's data-consent flow,
+        // which Firefox is making a required manifest key.
+        //
+        // It does make one network request of its own — an anonymous GET for the site
+        // list (see src/lib/remote.ts), which sends no data and can be switched off. That
+        // is not data collection, so it does not change the declaration below; PRIVACY.md
+        // describes it in full.
         data_collection_permissions: {
           required: ['none'],
         },

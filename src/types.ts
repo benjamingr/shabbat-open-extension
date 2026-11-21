@@ -41,6 +41,12 @@ export interface RemovedSite {
 
 export interface Dataset {
   schema_version: string
+  /**
+   * Bumped on every dataset edit. `schema_version` says whether a copy can be read at
+   * all; this says which of two readable copies is newer, which is what the runtime
+   * update check compares — audit dates do not move on every edit.
+   */
+  revision: number
   generated_at: string
   audited_at: string
   country: string
@@ -67,6 +73,8 @@ export interface Settings {
   minConfidence: Confidence
   /** Listed domains the user has chosen to stop seeing the banner on. */
   dismissedDomains: string[]
+  /** Fetch a newer site list from the project's repository in the background. */
+  autoUpdate: boolean
 }
 
 export const DEFAULTS: Settings = {
@@ -79,4 +87,5 @@ export const DEFAULTS: Settings = {
   havdalahOffsetMin: 40,
   minConfidence: 'medium',
   dismissedDomains: [],
+  autoUpdate: true,
 }

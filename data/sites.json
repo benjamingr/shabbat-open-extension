@@ -1,5 +1,6 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "1.2",
+  "revision": 1,
   "generated_at": "2026-08-16",
   "audited_at": "2026-08-28",
   "country": "IL",

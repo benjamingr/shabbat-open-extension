@@ -86,6 +86,20 @@ export function formatDate(iso: string): string {
 }
 
 /**
+ * A moment, rather than a calendar day: used for "last checked", where the time of day is
+ * the informative half. `formatDate` above takes the dataset's ISO day strings and would
+ * render every check today as the same thing.
+ */
+export function formatDateTime(ms: number): string {
+  const date = new Date(ms)
+  if (Number.isNaN(date.getTime())) return String(ms)
+  return new Intl.DateTimeFormat(LOCALES[activeLang], {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(date)
+}
+
+/**
  * Point the document at the active language. The templates ship with `lang="he" dir="rtl"`
  * so a page is readable before the setting has been read from storage; this corrects it.
  */

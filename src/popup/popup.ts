@@ -4,7 +4,7 @@ import './popup.css'
 import '../lib/browser-polyfill.ts'
 import { browser } from '../lib/browser.ts'
 import { applyDocumentLang, applyStaticStrings, setLang, t } from '../i18n/index.ts'
-import { sites } from '../lib/dataset.ts'
+import { getSites } from '../lib/dataset.ts'
 import { hostFromUrl, matchSite } from '../lib/domain.ts'
 import { appealFormUrl, reportFormUrl } from '../lib/forms.ts'
 import { proofPageUrl } from '../lib/proof.ts'
@@ -84,7 +84,7 @@ async function render(): Promise<void> {
   body.replaceChildren()
 
   const host = hostFromUrl(tab?.url)
-  const site = matchSite(host, sites)
+  const site = matchSite(host, await getSites())
 
   // Reporting is always available — the point is to hear about sites not on the list.
   // Appealing only makes sense against an actual listing.

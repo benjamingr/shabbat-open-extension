@@ -6,9 +6,10 @@
  * build but would misbehave in the browser.
  */
 import { describe, expect, it } from 'vitest'
-import { dataset, sites } from '../src/lib/dataset.ts'
+import { bundled, dataset, getSites, sites } from '../src/lib/dataset.ts'
 import { matchSite, normalizeHost } from '../src/lib/domain.ts'
 import { statusLabel, confidenceLabel } from '../src/lib/site.ts'
+import { installChromeMock, uninstallChromeMock } from './helpers.ts'
 
 describe('dataset', () => {
   it('is not empty', () => {
@@ -59,6 +60,41 @@ describe('dataset', () => {
     for (const site of sites) {
       expect(dataset.status_definitions[site.status], site.status).toBeTruthy()
       expect(dataset.confidence_definitions[site.confidence], site.confidence).toBeTruthy()
+    }
+  })
+
+  it('carries a revision an update can be compared against', () => {
+    // Without this, no fetched list can ever be recognised as newer. See remote.test.ts.
+    expect(Number.isInteger(dataset.revision)).toBe(true)
+    expect(dataset.revision).toBeGreaterThanOrEqual(0)
+  })
+})
+
+/*
+ * The synchronous `sites` export is the bundled list and must stay that way: the two
+ * manifests and `scripts/check-manifest.mjs` build `content_scripts.matches` from it, and
+ * host access has to be decided entirely at build time. If this export ever started
+ * reflecting a fetched list, the generated manifest would depend on whatever was in
+ * storage when the build ran.
+ */
+describe('the synchronous exports', () => {
+  it('are the bundled copy, whatever is in storage', async () => {
+    const mock = installChromeMock()
+    try {
+      mock.local['remoteDataset'] = {
+        dataset: { ...dataset, revision: dataset.revision + 1, sites: [] },
+        fetchedAt: Date.now(),
+        checkedAt: Date.now(),
+        etag: null,
+        lastError: null,
+      }
+      // getSites() sees the cached list...
+      expect(await getSites()).toEqual([])
+      // ...and `sites` does not.
+      expect(sites).toEqual(bundled.sites)
+      expect(sites.length).toBeGreaterThan(0)
+    } finally {
+      uninstallChromeMock()
     }
   })
 })

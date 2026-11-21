@@ -48,9 +48,9 @@ export function chromeManifest({ allHosts = false }: ManifestOptions = {}) {
    *
    * The differentiator is deliberately not the permission — nobody installs an extension
    * *for* broader access. It is what the access buys: a list that stays current without
-   * an extension update. `extDescriptionAllHosts` says exactly that, which means it is
-   * only truthful once the dataset actually refreshes at runtime. Until then this build
-   * is the scoped one with a wider match pattern, and the claim would be false.
+   * an extension update (`src/lib/remote.ts` fetches it at runtime). `extDescriptionAllHosts`
+   * says exactly that. Only this build can banner a site added after release; the scoped
+   * build's `content_scripts.matches` is fixed at install.
    */
   const suffix = allHosts ? 'AllHosts' : ''
 

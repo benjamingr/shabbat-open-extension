@@ -88,8 +88,10 @@ npx web-ext run --source-dir dist-firefox
 
 The extension is a good AMO citizen by construction, and the manifest says so:
 
-- **No network requests, no telemetry, no analytics, no remote code.** All logic and data
-  are local; the dataset is bundled. See [`PRIVACY.md`](./PRIVACY.md).
+- **No telemetry, no analytics, no remote code.** Nothing about the user or their
+  browsing is transmitted. The one automatic request is an anonymous GET for the site
+  list itself (`src/lib/remote.ts`) — JSON data only, no identifiers, user-switchable.
+  See [`PRIVACY.md`](./PRIVACY.md).
 - `browser_specific_settings.gecko.data_collection_permissions.required` is `["none"]`,
   the explicit "collects no data" declaration for Firefox's data-consent flow.
 - Host access is scoped to the listed domains only (never `<all_urls>`), and permissions
