@@ -9,6 +9,9 @@
  * - Skips duplicate domains within the candidate file.
  * - Validates required fields and enum values; rejects the whole run on error.
  * - Sorts final sites[] by status priority then name so the file stays tidy.
+ * - Bumps `revision`, which is how a running extension recognises a fetched copy as
+ *   newer than the one it already has. A merge that left it alone would ship to the
+ *   store but never reach an existing install.
  * Does NOT run the build — run `node scripts/build-data.mjs` afterward.
  */
 import { readFileSync, writeFileSync } from "node:fs";
@@ -78,13 +81,17 @@ for (const c of candidates) {
   added++;
 }
 
+// Bumped even when nothing was added: removed[] edits and hand-corrections between runs
+// are dataset changes too, and an unbumped revision is invisible to every install.
+data.revision = Number.isInteger(data.revision) ? data.revision + 1 : 1;
+
 data.sites.sort((a, b) => {
   const so = STATUS_ORDER[a.status] - STATUS_ORDER[b.status];
   return so !== 0 ? so : String(a.name).localeCompare(String(b.name), "he");
 });
 
 writeFileSync(sitesPath, JSON.stringify(data, null, 2) + "\n");
-console.log(`Added ${added}; total sites now ${data.sites.length}.`);
+console.log(`Added ${added}; total sites now ${data.sites.length}; revision ${data.revision}.`);
 if (skipped.length) {
   console.log("Skipped:");
   for (const [d, why] of skipped) console.log(`  - ${d}: ${why}`);

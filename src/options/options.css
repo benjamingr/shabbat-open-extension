@@ -90,7 +90,8 @@ h2 {
   unicode-bidi: isolate;
 }
 
-.restore {
+.restore,
+.action {
   flex: 0 0 auto;
   cursor: pointer;
   font: inherit;
@@ -105,8 +106,36 @@ h2 {
   text-underline-offset: 2px;
 }
 
-.restore:hover {
+.restore:hover,
+.action:hover {
   background: var(--none-bg);
+}
+
+.action[disabled] {
+  cursor: default;
+  opacity: 0.6;
+  text-decoration: none;
+}
+
+/* Updates panel */
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.switch-row input {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.hint.error {
+  color: var(--warn-ink);
 }
 
 /* Dataset panel */

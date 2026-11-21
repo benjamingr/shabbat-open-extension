@@ -1,6 +1,6 @@
 {
   "name": "shabbat-closed-extension",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "description": "Chrome extension that flags Israeli sites which close on Shabbat.",
   "license": "MIT",
@@ -17,6 +17,7 @@
     "build:site": "node scripts/build-site.mjs",
     "check:manifest": "node scripts/check-manifest.mjs",
     "check:manifest:allhosts": "node scripts/check-manifest.mjs --all-hosts",
+    "check:revision": "node scripts/check-revision.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",

@@ -42,7 +42,9 @@ npm run build
 
 The extension only requests access to the domains in the dataset — the content
 script's `matches` are generated from `data/sites.json` at build time, not
-`<all_urls>`.
+`<all_urls>`. That list is fixed at install: see [Updating the list without a
+release](#updating-the-list-without-a-release) for what a fetched dataset can and
+cannot change.
 
 ## Development
 
@@ -51,6 +53,7 @@ npm run dev             # rebuild dist/ on change; reload the extension to pick 
 npm test                # vitest
 npm run typecheck       # tsc --noEmit
 npm run validate        # check data/sites.json without building
+npm run check:revision  # fail if a dataset edit forgot to bump `revision`
 npm run check:manifest  # check dist/manifest.json (needs a build first)
 npm run build           # all of the above, in order
 npm run pack            # package the build for release (see Releases below)
@@ -104,14 +107,21 @@ a button to restore each.
 
 ## Privacy
 
-The extension makes **no network request of its own**. The site list ships
-inside it, and every check runs locally. Host access is limited to the listed
-domains — the content script's `matches` are generated from `data/sites.json` at
-build time, so there is no `<all_urls>`.
+The extension **sends nothing about you or your browsing, anywhere**. Every check
+runs locally against the list. Host access is limited to the listed domains — the
+content script's `matches` are generated from `data/sites.json` at build time, so
+there is no `<all_urls>`, and updating the list adds no permission.
 
-The one exception: clicking **דיווח על אתר** or **ערעור על הרישום** opens a
-Google Form in a new tab, and the domain travels to Google as part of that link.
-That only ever happens on your click.
+It makes two kinds of network request, and no others:
+
+- **Automatic, carrying no data.** Roughly every 12 hours it asks
+  `raw.githubusercontent.com` for the current `data/sites.json`, so a corrected
+  listing reaches you without waiting on store review. The request carries no
+  identifier, no install id, no visited URLs and no settings — GitHub sees an IP
+  and a timestamp, as it would for any web request. Only JSON data is downloaded;
+  no remote code is fetched or run. Switchable off in the options page.
+- **On your click.** **דיווח על אתר** or **ערעור על הרישום** opens a Google Form
+  in a new tab, and the domain travels to Google as part of that link.
 
 Full **Privacy Policy & Terms of Service** (Hebrew, legal document): [PRIVACY.md](PRIVACY.md).
 
@@ -242,7 +252,8 @@ validate` warns when that happens.
 
 ### Adding / editing sites
 
-Edit `data/sites.json`, then rebuild:
+Edit `data/sites.json` — **including its `revision`, which must go up** — then
+rebuild:
 
 ```bash
 npm run build
@@ -251,6 +262,36 @@ npm run build
 The build validates the dataset first (`npm run validate` on its own does just
 that), then regenerates `content_scripts.matches` in the manifest from the
 domain list. Reload the extension in `chrome://extensions` afterward.
+
+## Updating the list without a release
+
+The bundled copy of `data/sites.json` is not the only one the extension will use.
+Every ~12 hours it fetches the copy on `main` from `raw.githubusercontent.com`,
+validates it (`src/lib/validate.ts`), and caches it in `storage.local`, where
+`getSites()` prefers it over the bundled one. A corrected status, a withdrawn
+listing or a new site therefore reaches users in hours rather than at the pace of
+store review.
+
+Two gates decide whether a fetched copy is used:
+
+| Field | Rule |
+|---|---|
+| `schema_version` | Major must match the build's. `1.3` is fine for a build shipping `1.2`; `2.0` is refused and the bundled list stays. |
+| `revision` | Must be strictly greater than the list currently in use. Bump it on **every** dataset edit — `scripts/merge-candidates.mjs` does, and `npm run check:revision` fails a PR that forgot. |
+
+**What an update cannot do: make the in-page banner appear on a new domain.**
+`content_scripts.matches` is baked into the manifest at install and no fetched
+file can widen it. A site added by update gets the toolbar badge, the popup entry
+and the proof page — all of which work from the `tabs` permission alone — and its
+banner arrives with the next release. Corrections in the other direction *are*
+immediate: a listing removed or downgraded remotely stops bannering at once,
+because the content script reads the same list.
+
+Everything build-time — the manifests, `check-manifest.mjs`, `build-data.mjs` —
+reads the bundled copy and nothing else. `npm run check:manifest` passing is what
+proves the fetch cannot widen host access.
+
+Users can turn the whole thing off in the options page; see the Privacy section.
 
 ## Releases
 
@@ -303,7 +344,10 @@ to an empty field rather than a broken form.
    a re-reported site that was previously rejected stays rejected.
 4. For an upheld appeal, move the entry to `removed[]` with a reason rather than
    deleting it — that is what stops it being re-proposed later.
-5. Commit `data/sites.json`. The next release picks it up.
+5. Commit `data/sites.json`. Once it is on `main`, installs pick it up within
+   about 12 hours — no release needed, unless the change *adds* a domain that
+   needs an in-page banner (see [Updating the list without a
+   release](#updating-the-list-without-a-release)).
 
 ### Notifications
 
@@ -361,7 +405,9 @@ so DST is handled automatically.
 | `src/lib/shabbat.ts` | Sunset / Shabbat-window math |
 | `src/lib/domain.ts` | Hostname normalization + dataset matching |
 | `src/lib/site.ts` | Status/confidence labels and ranking |
-| `src/lib/dataset.ts` | Typed access to `data/sites.json` |
+| `src/lib/dataset.ts` | Typed access to the list — bundled copy, plus the cached update |
+| `src/lib/remote.ts` | Fetches and caches a newer `sites.json`; nothing else touches the network |
+| `src/lib/validate.ts` | Validates a fetched dataset before it is trusted |
 | `src/lib/settings.ts` | Reads/writes `chrome.storage.sync` |
 | `src/lib/forms.ts` + `src/config.ts` | Report / appeal form URLs |
 | `src/lib/proof.ts` | URL of the proof page for a listing |
@@ -381,6 +427,7 @@ so DST is handled automatically.
 | `scripts/build-data.mjs` | Validates `sites.json` (`npm run validate`) |
 | `scripts/check-manifest.mjs` | Checks the built manifest (`npm run check:manifest`) |
 | `scripts/merge-candidates.mjs` | Merge verified new sites into `sites.json` |
+| `scripts/check-revision.mjs` | Fails a dataset edit that did not bump `revision` |
 | `scripts/make-icons.mjs` | Regenerate the PNG icons |
 | `dev-preview/` | Dev-only popup/banner previews (not shipped) |
 | `dev-store/` | Dev-only store screenshot/promo slides (not shipped) |

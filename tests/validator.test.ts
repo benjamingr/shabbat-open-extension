@@ -56,7 +56,7 @@ function validate(data: unknown): Result {
 }
 
 function dataset(sites: unknown[], extra: Record<string, unknown> = {}): unknown {
-  return { sites, removed: [], ...extra }
+  return { schema_version: '1.2', revision: 1, sites, removed: [], ...extra }
 }
 
 describe('the real dataset', () => {
@@ -151,6 +151,25 @@ describe('rejects', () => {
   it('a removed entry with no reason', () => {
     const data = dataset([validSite()], { removed: [{ domain: 'other.co.il' }] })
     expect(validate(data).ok).toBe(false)
+  })
+
+  /*
+   * `revision` is the whole freshness signal for the runtime update check: an install
+   * accepts a fetched list only when this number is higher than the one it is using. A
+   * dataset that omits it, or leaves it non-numeric, is one no install would ever take.
+   */
+  it.each([undefined, '3', 3.5, -1])('a revision of %s', (revision) => {
+    const data = dataset([validSite()], { revision })
+    const result = validate(data)
+    expect(result.ok).toBe(false)
+    expect(result.output).toContain('revision')
+  })
+
+  it.each([undefined, '1', 'v1.2', '1'])('a schema_version of %s', (version) => {
+    const data = dataset([validSite()], { schema_version: version })
+    const result = validate(data)
+    expect(result.ok).toBe(false)
+    expect(result.output).toContain('schema_version')
   })
 
   it('reports every problem at once rather than stopping at the first', () => {

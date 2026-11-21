@@ -14,6 +14,8 @@
   --observant-ink: #33477a;
   --none-bg: #ececec;
   --none-ink: #666;
+  /* Only for a failure the reader has to notice, e.g. a failed update check. */
+  --warn-ink: #b3261e;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -31,5 +33,6 @@
     --observant-ink: #b9cbf0;
     --none-bg: #2c2836;
     --none-ink: #a49cb5;
+    --warn-ink: #f2b8b5;
   }
 }

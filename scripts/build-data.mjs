@@ -40,6 +40,19 @@ if (!Array.isArray(data.sites) || data.sites.length === 0) {
   fail(`${label} has no sites[]`);
 }
 
+/*
+ * The runtime update check compares `revision` to decide whether a fetched copy is newer
+ * than the one it already has, so a dataset edit that does not bump it never reaches
+ * anyone. Enforced here rather than left to review: the failure is silent by nature —
+ * everything builds, ships, and quietly serves the old list.
+ */
+if (!Number.isInteger(data.revision) || data.revision < 0) {
+  fail(`${label}: revision must be a non-negative integer, got ${JSON.stringify(data.revision)}`);
+}
+if (typeof data.schema_version !== "string" || !/^\d+\.\d+$/.test(data.schema_version)) {
+  fail(`${label}: schema_version must look like "1.2", got ${JSON.stringify(data.schema_version)}`);
+}
+
 const norm = (d) =>
   String(d || "").trim().toLowerCase().replace(/^https?:\/\//, "").replace(/\/.*$/, "").replace(/^www\./, "");
 
@@ -109,6 +122,6 @@ if (errors.length > 0) {
 }
 
 console.log(
-  `${label} OK — ${domains.length} sites, ${(data.removed ?? []).length} removed, ` +
-    `${domains.length * 2} match patterns.`,
+  `${label} OK — schema ${data.schema_version} rev ${data.revision}, ${domains.length} sites, ` +
+    `${(data.removed ?? []).length} removed, ${domains.length * 2} match patterns.`,
 );

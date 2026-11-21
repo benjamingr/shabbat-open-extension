@@ -6,7 +6,7 @@
 import bannerCss from './banner.css?inline'
 import '../lib/browser-polyfill.ts'
 import { dirFor, getLang, setLang, t } from '../i18n/index.ts'
-import { sites } from '../lib/dataset.ts'
+import { getSites } from '../lib/dataset.ts'
 import { matchSite, normalizeHost } from '../lib/domain.ts'
 import { appealFormUrl } from '../lib/forms.ts'
 import { shouldShowBanner } from '../lib/display.ts'
@@ -29,7 +29,12 @@ function isSessionDismissed(key: string): boolean {
 }
 
 async function main(): Promise<void> {
-  const site = matchSite(location.hostname, sites)
+  // The list is read rather than imported, so a listing corrected or withdrawn since this
+  // build shipped takes effect immediately — the script is still injected here by the
+  // manifest, but it now has nothing to say. The reverse does not hold: a site added to
+  // the list after this build cannot be bannered, because `content_scripts.matches` is
+  // fixed at install. It gets a badge and a popup entry instead, until the next release.
+  const site = matchSite(location.hostname, await getSites())
   if (!site) return // shouldn't happen given the match patterns, but be safe
 
   const settings = await getSettings()

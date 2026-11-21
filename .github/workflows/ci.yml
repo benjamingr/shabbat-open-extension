@@ -38,6 +38,15 @@ jobs:
       - name: Build the Pages site
         run: npm run build:site
 
+      # A dataset edit that does not bump `revision` still validates, still builds, and
+      # still ships — and reaches no existing install, because that number is the only
+      # thing a running extension compares. Silent by nature, so it is gated here.
+      - name: Check the dataset revision was bumped
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch --depth=1 origin "${{ github.base_ref }}"
+          node scripts/check-revision.mjs "origin/${{ github.base_ref }}"
+
       - name: Typecheck
         run: npm run typecheck
 
@@ -159,16 +168,13 @@ jobs:
             --notes "$(cat <<'NOTES'
           Automated build of commit ${{ github.sha }} (manifest v${{ steps.meta.outputs.version }}).
 
-          **`shabbat-closed-extension.{crx,zip}`** — the build that ships. Runs only on the
-          domains listed in `data/sites.json`.
+          **`shabbat-closed-extension.{crx,zip}`** — "Closed on Shabbat". Runs only on the
+          domains listed in `data/sites.json` at build time.
 
-          **`shabbat-closed-extension-allhosts.{crx,zip}`** — an evaluation build, **not for
-          publishing**. Identical code and dataset, but its content script matches
-          `<all_urls>` instead of the listed domains, so Chrome shows the broadest install
-          warning. It still only shows a banner on listed sites — that narrowing is enforced
-          by `banner.ts` rather than by the browser. It exists to measure whether adding
-          domains between releases counts as a permission increase; see
-          `ManifestOptions.allHosts` in `manifest.config.ts`.
+          **`shabbat-closed-extension-allhosts.{crx,zip}`** — "Closed on Shabbat: Live List".
+          Same code; its content script matches `<all_urls>` (narrowed to listed sites by
+          `banner.ts`), so sites added to `main` after release get the banner once the
+          runtime list refresh (`src/lib/remote.ts`) picks them up.
 
           Both are signed with the same key and share one extension id, so installing one
           replaces the other.

@@ -29,6 +29,26 @@
         <ul class="breakdown" id="status-breakdown"></ul>
       </section>
 
+      <!--
+        The one setting that is not per-site, so the popup is the wrong home for it: it
+        governs where the list itself comes from, and it is the only thing in the extension
+        that touches the network.
+      -->
+      <section class="card">
+        <h2 data-i18n="options.updatesHeading"></h2>
+        <p class="hint" data-i18n="options.updatesHint"></p>
+
+        <div class="switch-row">
+          <label for="autoUpdate" data-i18n="settings.autoUpdate"></label>
+          <input id="autoUpdate" type="checkbox" />
+        </div>
+
+        <dl class="stats" id="update-stats"></dl>
+        <p class="hint error hidden" id="update-error"></p>
+        <p class="hint" data-i18n="options.updatesBannerNote"></p>
+        <button type="button" class="action" id="check-now" data-i18n="options.checkNow"></button>
+      </section>
+
       <section class="card">
         <h2 data-i18n="options.privacyHeading"></h2>
         <p data-i18n="options.privacyBody"></p>

@@ -29,10 +29,12 @@ export function makeSettings(overrides: Partial<Settings> = {}): Settings {
  */
 export function installChromeMock(): {
   store: Record<string, unknown>
+  local: Record<string, unknown>
   fireChange: (changes: Record<string, unknown>, area?: string) => void
   listeners: ((changes: unknown, area: string) => void)[]
 } {
   const store: Record<string, unknown> = {}
+  const local: Record<string, unknown> = {}
   const listeners: ((changes: unknown, area: string) => void)[] = []
 
   const chromeMock = {
@@ -50,6 +52,26 @@ export function installChromeMock(): {
           Object.assign(store, patch)
         },
       },
+      /*
+       * The cached dataset lives here rather than in `sync`, whose 8 KB per-item quota is
+       * far under the list. Read with a bare key string rather than a defaults object,
+       * which is the other call shape the real API accepts.
+       */
+      local: {
+        async get(key?: string | string[] | Record<string, unknown>) {
+          if (key === undefined) return { ...local }
+          const keys = typeof key === 'string' ? [key] : Array.isArray(key) ? key : Object.keys(key)
+          const out: Record<string, unknown> = {}
+          for (const name of keys) if (name in local) out[name] = local[name]
+          return out
+        },
+        async set(patch: Record<string, unknown>) {
+          Object.assign(local, patch)
+        },
+        async remove(key: string) {
+          delete local[key]
+        },
+      },
       onChanged: {
         addListener(fn: (changes: unknown, area: string) => void) {
           listeners.push(fn)
@@ -65,6 +87,7 @@ export function installChromeMock(): {
 
   return {
     store,
+    local,
     listeners,
     fireChange(changes, area = 'sync') {
       for (const fn of listeners) fn(changes, area)
